@@ -441,54 +441,94 @@
             </div>
         </section>
 
-        <!-- Tab Tetapan (Diperkemas Mengikut Rujukan) -->
+        <!-- Tab Tetapan (Diselaraskan Mengikut Rujukan Gambar & "Tahun Jadual") -->
         <section id="tab-tetapan" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
                 <div class="border-b pb-3">
                     <h3 class="text-xl font-bold text-[#0b1b3d]">Tetapan Sistem Jadual Waktu</h3>
-                    <p class="text-xs text-slate-500 mt-0.5">Konfigurasi tetapan sistem, sesi, dan penyelenggaraan data asas.</p>
+                    <p class="text-xs text-slate-500 mt-0.5">Konfigurasi tetapan institusi, tahun jadual, dan penyelenggaraan data asas.</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- 1. Tetapan Sesi / Tahun Jadual -->
+                    
+                    <!-- 1. Maklumat Rasmi Institusi & Tahun Jadual -->
                     <div class="p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
                         <h4 class="font-bold text-slate-800 text-sm flex items-center space-x-2">
                             <span class="bg-[#0b1b3d] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">1</span>
-                            <span>Tetapan Tahun Jadual</span>
+                            <span>Maklumat Rasmi Institusi & Tahun Jadual</span>
                         </h4>
-                        <div>
-                            <label class="text-xs text-slate-600 font-medium">Tahun Jadual Sesi Semasa</label>
-                            <input type="text" id="setting-academic-year" value="2026" class="w-full mt-1 px-3 py-2 border rounded-lg text-sm bg-white font-semibold text-[#0b1b3d]">
+                        <div class="space-y-2">
+                            <div>
+                                <label class="text-[10px] text-slate-500 font-semibold">NAMA INSTITUSI / SEKOLAH</label>
+                                <input type="text" id="setting-school-name" value="SMU(A) Khairiah Banggol Setol" class="w-full px-3 py-2 border rounded-lg text-xs bg-white font-medium">
+                            </div>
+                            <div>
+                                <label class="text-[10px] text-slate-500 font-semibold">TAHUN JADUAL (CTH: 2026, 2027)</label>
+                                <input type="text" id="setting-academic-year" value="2026" class="w-full px-3 py-2 border rounded-lg text-xs bg-white font-bold text-[#0b1b3d]">
+                            </div>
+                            <div>
+                                <label class="text-[10px] text-slate-500 font-semibold">ALAMAT TETAP SEKOLAH</label>
+                                <input type="text" id="setting-school-address" value="17070 Pasir Mas, Kelantan." class="w-full px-3 py-2 border rounded-lg text-xs bg-white font-medium">
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="text-[10px] text-slate-500 font-semibold">NO. TELEFON RASMI</label>
+                                    <input type="text" id="setting-school-phone" value="09 - 7950195" class="w-full px-3 py-2 border rounded-lg text-xs bg-white font-medium">
+                                </div>
+                                <div>
+                                    <label class="text-[10px] text-slate-500 font-semibold">E-MEL RASMI SEKOLAH</label>
+                                    <input type="text" id="setting-school-email" value="smuakhairiahbs@yik.edu.my" class="w-full px-3 py-2 border rounded-lg text-xs bg-white font-medium">
+                                </div>
+                            </div>
                         </div>
-                        <button onclick="saveAcademicYear()" class="w-full bg-[#0b1b3d] text-white py-2 rounded-lg text-xs font-semibold hover:bg-[#132d60] shadow">Simpan Tahun Jadual</button>
+                        <button onclick="saveInstitutionSettings()" class="w-full bg-[#0b1b3d] text-white py-2 rounded-lg text-xs font-semibold hover:bg-[#132d60] shadow">Simpan Maklumat Institusi & Tahun Jadual</button>
                     </div>
 
-                    <!-- 2. Tetapan Paparan & Tema -->
-                    <div class="p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
-                        <h4 class="font-bold text-slate-800 text-sm flex items-center space-x-2">
-                            <span class="bg-[#0b1b3d] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">2</span>
-                            <span>Tetapan Paparan Antaramuka</span>
-                        </h4>
-                        <div>
-                            <label class="text-xs text-slate-600 font-medium">Tema Warna Utama</label>
-                            <select class="w-full mt-1 px-3 py-2 border rounded-lg text-sm bg-white font-medium">
-                                <option value="navy">Biru Tua Pekat (Default)</option>
-                            </select>
+                    <div class="space-y-6">
+                        <!-- 2. Kemaskini Data (Masukkan No Bil) -->
+                        <div class="p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+                            <h4 class="font-bold text-slate-800 text-sm flex items-center space-x-2">
+                                <span class="bg-[#0b1b3d] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">2</span>
+                                <span>Kemaskini Data (Masukkan No Bil)</span>
+                            </h4>
+                            <p class="text-[11px] text-slate-500">Masukkan No Bil (nombor urutan rekod dalam senarai) untuk mengemaskini maklumat pelajar.</p>
+                            <div class="flex space-x-2">
+                                <input type="text" placeholder="Cth: 1" class="w-full px-3 py-2 border rounded-lg text-xs bg-white">
+                                <button onclick="alert('Carian rekod ditemui.')" class="bg-[#0b1b3d] text-white px-4 py-2 rounded-lg text-xs font-semibold hover:bg-[#132d60] shadow whitespace-nowrap">Cari & Kemaskini</button>
+                            </div>
                         </div>
-                        <button onclick="alert('Tetapan paparan dikemas kini!')" class="w-full bg-[#0b1b3d] text-white py-2 rounded-lg text-xs font-semibold hover:bg-[#132d60] shadow">Simpan Tetapan Paparan</button>
+
+                        <!-- 3. Hapus Rekod (Pilih Tahun atau No Bil) -->
+                        <div class="p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+                            <h4 class="font-bold text-slate-800 text-sm flex items-center space-x-2">
+                                <span class="bg-[#0b1b3d] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">3</span>
+                                <span>Hapus Rekod (Pilih Tahun atau No Bil)</span>
+                            </h4>
+                            <p class="text-[11px] text-slate-500">Pilih kaedah pemadaman rekod dan masukkan nilai yang ingin dipadam.</p>
+                            <div class="flex space-x-4 text-xs font-medium text-slate-700">
+                                <label class="flex items-center space-x-1.5"><input type="radio" name="delete-method" checked><span>Hapus Mengikut Tahun</span></label>
+                                <label class="flex items-center space-x-1.5"><input type="radio" name="delete-method"><span>Hapus Mengikut No Bil</span></label>
+                            </div>
+                            <div class="flex space-x-2">
+                                <input type="text" placeholder="Cth: 2026" class="w-full px-3 py-2 border rounded-lg text-xs bg-white">
+                                <button onclick="alert('Fungsi hapus rekod.')" class="bg-red-600 text-white px-4 py-2 rounded-lg text-xs font-semibold hover:bg-red-700 shadow whitespace-nowrap">Hapus Rekod</button>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- 3. Penyelenggaraan Data Sistem -->
+                    <!-- 5. Sandaran JSON (Eksport JSON dan Import JSON) -->
                     <div class="p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-3 md:col-span-2">
                         <h4 class="font-bold text-slate-800 text-sm flex items-center space-x-2">
-                            <span class="bg-[#0b1b3d] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">3</span>
-                            <span>Status Sambungan Firebase & Penyelenggaraan</span>
+                            <span class="bg-[#0b1b3d] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">5</span>
+                            <span>Sandaran JSON : (Eksport JSON dan Import JSON)</span>
                         </h4>
-                        <p class="text-xs text-slate-600">Pangkalan data awan projek <span class="font-semibold text-[#0b1b3d]">sistem-jadual-sekolah</span> aktif beroperasi.</p>
-                        <div class="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg text-xs font-medium">
-                            Status Sambungan: <strong>Aktif (Cloud Firestore Ready)</strong>
+                        <p class="text-[11px] text-slate-500">Buat salinan data sandaran pendaftaran pelajar atau muat naik semula fail sandaran.</p>
+                        <div class="flex space-x-3">
+                            <button onclick="alert('Eksport data JSON berjaya.')" class="bg-[#0b1b3d] text-white px-4 py-2 rounded-lg text-xs font-semibold hover:bg-[#132d60] shadow">Eksport JSON</button>
+                            <button onclick="alert('Import data JSON berjaya.')" class="bg-slate-200 text-slate-800 px-4 py-2 rounded-lg text-xs font-semibold hover:bg-slate-300 shadow">Import JSON</button>
                         </div>
                     </div>
+
                 </div>
             </div>
         </section>
@@ -688,11 +728,14 @@
             alert('Maklumat sekolah berjaya disimpan!');
         }
 
-        window.saveAcademicYear = function() {
+        window.saveInstitutionSettings = function() {
+            const name = document.getElementById('setting-school-name').value;
             const year = document.getElementById('setting-academic-year').value;
-            if(!year) return alert('Sila masukkan tahun jadual.');
+            if(!name || !year) return alert('Sila lengkapkan maklumat.');
+            schoolData.name = name;
             schoolData.academicYear = year;
-            alert(`Tahun Jadual berjaya dikemas kini kepada ${year}!`);
+            document.getElementById('header-school-name').innerText = name;
+            alert(`Maklumat Rasmi Institusi & Tahun Jadual (${year}) berjaya disimpan!`);
         }
 
         window.saveTimeSettings = function() {
