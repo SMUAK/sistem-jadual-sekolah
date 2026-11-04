@@ -74,7 +74,7 @@
             </div>
         </section>
 
-        <!-- Tab Data Asas & Konfigurasi Tersusun Cantik -->
+        <!-- Tab Data Asas & Konfigurasi -->
         <section id="tab-data" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
                 <div class="border-b pb-3">
@@ -135,13 +135,17 @@
                         <button onclick="addClass()" class="w-full bg-blue-900 text-white py-2 rounded-lg text-xs font-semibold hover:bg-blue-800 mt-3">Simpan Kelas</button>
                     </div>
 
-                    <!-- 5. Maklumat Masa & Rehat + Hari Pertama -->
+                    <!-- 5. Maklumat Masa & Hari (Dilengkapi Butang Tambah Masa Dinamik) -->
                     <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3 flex flex-col justify-between">
                         <div class="space-y-3">
-                            <h4 class="font-bold text-slate-800 text-sm flex items-center space-x-2">
-                                <span class="bg-blue-900 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">5</span>
-                                <span>Maklumat Masa & Hari</span>
-                            </h4>
+                            <div class="flex justify-between items-center">
+                                <h4 class="font-bold text-slate-800 text-sm flex items-center space-x-2">
+                                    <span class="bg-blue-900 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">5</span>
+                                    <span>Maklumat Masa & Hari</span>
+                                </h4>
+                                <button onclick="addTimeSlot()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-2 py-1 rounded text-[10px] font-bold shadow">+ Tambah Masa</button>
+                            </div>
+                            
                             <div class="grid grid-cols-2 gap-2">
                                 <div>
                                     <label class="text-[10px] text-slate-500 font-semibold">Hari Mula Seminggu</label>
@@ -155,14 +159,19 @@
                                     <input type="text" id="input-rehat-time" value="09:30 - 09:50" class="w-full px-2 py-1.5 border rounded text-xs bg-white">
                                 </div>
                             </div>
-                            <!-- Tambahan Spesifik Masa 1 (Tempoh Dari... hingga...) -->
-                            <div class="p-2 bg-white rounded border border-slate-200 space-y-1">
-                                <label class="text-[10px] font-bold text-blue-900">Masa 1 (Tempoh Rasmi)</label>
-                                <div class="flex items-center space-x-1 text-xs">
-                                    <span class="text-slate-500">Dari:</span>
-                                    <input type="time" id="input-time-from" value="07:30" class="px-1.5 py-1 border rounded bg-slate-50 text-xs">
-                                    <span class="text-slate-500">Hingga:</span>
-                                    <input type="time" id="input-time-to" value="08:00" class="px-1.5 py-1 border rounded bg-slate-50 text-xs">
+
+                            <!-- Kontena Senarai Kotak Masa Dinamik -->
+                            <div id="time-slots-container" class="space-y-2 max-h-36 overflow-y-auto pr-1">
+                                <div class="time-slot-item p-2 bg-white rounded border border-slate-200 space-y-1">
+                                    <div class="flex justify-between items-center text-[10px] font-bold text-blue-900">
+                                        <span>Masa 1</span>
+                                    </div>
+                                    <div class="flex items-center space-x-1 text-xs">
+                                        <span class="text-slate-500">Dari:</span>
+                                        <input type="time" value="07:30" class="slot-from px-1.5 py-1 border rounded bg-slate-50 text-xs w-full">
+                                        <span class="text-slate-500">Hingga:</span>
+                                        <input type="time" value="08:00" class="slot-to px-1.5 py-1 border rounded bg-slate-50 text-xs w-full">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -254,7 +263,7 @@
         </section>
 
         <!-- Tab 8. Jadual Induk & Penjanaan -->
-        <section id="tab-jadual" class="space-y-6">
+        <section id="tab-jadual" class="hidden space-y-6">
             <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-wrap justify-between items-center gap-4">
                 <div class="flex items-center space-x-3">
                     <button onclick="generateAutoTimetable()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-xs font-bold shadow flex items-center space-x-1">
@@ -413,6 +422,28 @@
             }
         }
 
+        // Fungsi Tambah Kotak Masa Dinamik untuk No. 5
+        window.addTimeSlot = function() {
+            const container = document.getElementById('time-slots-container');
+            const count = container.getElementsByClassName('time-slot-item').length + 1;
+            
+            const div = document.createElement('div');
+            div.className = 'time-slot-item p-2 bg-white rounded border border-slate-200 space-y-1';
+            div.innerHTML = `
+                <div class="flex justify-between items-center text-[10px] font-bold text-blue-900">
+                    <span>Masa ${count}</span>
+                    <button onclick="this.parentElement.parentElement.remove()" class="text-red-500 hover:text-red-700 font-bold">X</button>
+                </div>
+                <div class="flex items-center space-x-1 text-xs">
+                    <span class="text-slate-500">Dari:</span>
+                    <input type="time" class="slot-from px-1.5 py-1 border rounded bg-slate-50 text-xs w-full">
+                    <span class="text-slate-500">Hingga:</span>
+                    <input type="time" class="slot-to px-1.5 py-1 border rounded bg-slate-50 text-xs w-full">
+                </div>
+            `;
+            container.appendChild(div);
+        }
+
         async function loadAllData() {
             if(!db) return;
             try {
@@ -465,7 +496,7 @@
                     if(assignSubjectSelect) assignSubjectSelect.innerHTML += `<option value="${data.name}">${data.name}</option>`;
                 });
 
-                // Opsyen Mengajar (No. 7 - assignments)
+                // Opsyen Mengajar (No. 7)
                 const assignSnapshot = await getDocs(collection(db, "assignments"));
                 cachedAssignments = [];
                 const assignListEl = document.getElementById('list-assignments');
@@ -507,9 +538,7 @@
 
         window.saveTimeSettings = function() {
             schoolData.startDay = document.getElementById('select-start-day').value;
-            const timeFrom = document.getElementById('input-time-from').value;
-            const timeTo = document.getElementById('input-time-to').value;
-            alert(`Tetapan Masa & Hari Berjaya Disimpan!\nHari Mula: ${schoolData.startDay}\nMasa 1: ${timeFrom} hingga ${timeTo}`);
+            alert(`Tetapan Masa & Hari Berjaya Disimpan!\nHari Mula Seminggu: ${schoolData.startDay}`);
         }
 
         window.saveBlockSettings = function() {
