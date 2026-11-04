@@ -134,7 +134,7 @@
                         <button onclick="addClass()" class="w-full bg-[#0b1b3d] text-white py-2 rounded-lg text-xs font-semibold hover:bg-[#132d60] mt-3 shadow">Simpan Kelas</button>
                     </div>
 
-                    <!-- 5. Maklumat Masa & Hari (Dilengkapi Pilihan Bilangan Hari & Butang Tambah Masa) -->
+                    <!-- 5. Maklumat Masa & Hari -->
                     <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3 flex flex-col justify-between">
                         <div class="space-y-3">
                             <div class="flex justify-between items-center">
@@ -201,12 +201,34 @@
                         <button onclick="saveBlockSettings()" class="w-full bg-[#0b1b3d] text-white py-2 rounded-lg text-xs font-semibold hover:bg-[#132d60] mt-3 shadow">Simpan Blok Waktu</button>
                     </div>
 
+                    <!-- 7. Had Masa Guru (Baharu) -->
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3 flex flex-col justify-between">
+                        <div class="space-y-3">
+                            <h4 class="font-bold text-slate-800 text-sm flex items-center space-x-2">
+                                <span class="bg-[#0b1b3d] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">7</span>
+                                <span>Had Masa Guru</span>
+                            </h4>
+                            <p class="text-[11px] text-slate-500">Tetapkan had maksimum waktu mengajar bagi setiap guru.</p>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="text-[10px] text-slate-500 font-semibold">Max Waktu Sehari</label>
+                                    <input type="number" id="input-max-day" value="5" class="w-full px-2 py-1.5 border rounded text-xs bg-white">
+                                </div>
+                                <div>
+                                    <label class="text-[10px] text-slate-500 font-semibold">Max Waktu Seminggu</label>
+                                    <input type="number" id="input-max-week" value="25" class="w-full px-2 py-1.5 border rounded text-xs bg-white">
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="saveTeacherLimitSettings()" class="w-full bg-[#0b1b3d] text-white py-2 rounded-lg text-xs font-semibold hover:bg-[#132d60] mt-3 shadow">Simpan Had Masa</button>
+                    </div>
+
                 </div>
 
-                <!-- 7. Penetapan Guru & Mata Pelajaran (Opsyen Mengajar) -->
+                <!-- 8. Penetapan Guru & Mata Pelajaran (Opsyen Mengajar) -->
                 <div class="p-5 bg-blue-50/70 border border-blue-200 rounded-xl space-y-3">
                     <h4 class="font-bold text-[#0b1b3d] text-sm flex items-center space-x-2">
-                        <span class="bg-[#0b1b3d] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">7</span>
+                        <span class="bg-[#0b1b3d] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">8</span>
                         <span>Penetapan Opsyen Guru & Mata Pelajaran (Disimpan ke Firebase Firestore)</span>
                     </h4>
                     <p class="text-xs text-slate-600">Pilih guru dan tentukan subjek yang diampu. Data ini disimpan dalam koleksi <code class="bg-white px-1 py-0.5 rounded border text-[#0b1b3d] font-bold">assignments</code> di Firebase.</p>
@@ -223,7 +245,7 @@
 
             </div>
 
-            <!-- Senarai Paparan Semasa & Data No. 7 yang Disimpan -->
+            <!-- Senarai Paparan Semasa & Data Disimpan -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
                     <h4 class="font-bold text-slate-800 mb-2 text-xs flex justify-between items-center">
@@ -254,7 +276,7 @@
                 </div>
                 <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
                     <h4 class="font-bold text-slate-800 mb-2 text-xs flex justify-between items-center">
-                        <span>Opsyen Mengajar (No. 7)</span>
+                        <span>Opsyen Mengajar</span>
                         <span id="count-assignments" class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded-full">0</span>
                     </h4>
                     <div id="list-assignments" class="space-y-1 max-h-40 overflow-y-auto text-xs text-slate-600">
@@ -264,12 +286,12 @@
             </div>
         </section>
 
-        <!-- Tab 8. Jadual Induk & Penjanaan -->
+        <!-- Tab 9. Jadual Induk & Penjanaan -->
         <section id="tab-jadual" class="hidden space-y-6">
             <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-wrap justify-between items-center gap-4">
                 <div class="flex items-center space-x-3">
                     <button onclick="generateAutoTimetable()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-xs font-bold shadow flex items-center space-x-1">
-                        <span>⚡</span><span>8. Jana Jadual Automatik</span>
+                        <span>⚡</span><span>9. Jana Jadual Automatik</span>
                     </button>
                 </div>
                 <div class="flex items-center space-x-3">
@@ -290,7 +312,7 @@
 
             <div class="bg-blue-50 border border-blue-200 text-[#0b1b3d] p-3 rounded-lg text-xs flex items-center space-x-2">
                 <span>💡</span>
-                <span>Selepas melengkapkan tetapan di tab <strong>Data Asas</strong>, klik butang <strong>"8. Jana Jadual Automatik"</strong>[cite: 8].</span>
+                <span>Selepas melengkapkan tetapan di tab <strong>Data Asas</strong>, klik butang <strong>"9. Jana Jadual Automatik"</strong>[cite: 8].</span>
             </div>
 
             <!-- Kawasan Cetak Grid Utama -->
@@ -325,7 +347,7 @@
                             </thead>
                             <tbody id="grid-table-body" class="font-medium">
                                 <tr>
-                                    <td colspan="11" class="p-8 text-slate-400 italic">Sila klik "8. Jana Jadual Automatik" di atas.</td>
+                                    <td colspan="11" class="p-8 text-slate-400 italic">Sila klik "9. Jana Jadual Automatik" di atas.</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -405,7 +427,9 @@
             name: "SMU(A) Khairiah Banggol Setol", 
             code: "DBA1122", 
             startDay: "Ahad", 
-            totalDays: 5 
+            totalDays: 5,
+            maxDay: 5,
+            maxWeek: 25
         };
 
         try {
@@ -503,7 +527,7 @@
                     if(assignSubjectSelect) assignSubjectSelect.innerHTML += `<option value="${data.name}">${data.name}</option>`;
                 });
 
-                // Opsyen Mengajar (No. 7)
+                // Opsyen Mengajar
                 const assignSnapshot = await getDocs(collection(db, "assignments"));
                 cachedAssignments = [];
                 const assignListEl = document.getElementById('list-assignments');
@@ -551,6 +575,12 @@
 
         window.saveBlockSettings = function() {
             alert('Tetapan blok waktu mengajar berjaya disimpan!');
+        }
+
+        window.saveTeacherLimitSettings = function() {
+            schoolData.maxDay = document.getElementById('input-max-day').value;
+            schoolData.maxWeek = document.getElementById('input-max-week').value;
+            alert(`Had Masa Guru Berjaya Disimpan!\nMax Sehari: ${schoolData.maxDay} waktu\nMax Seminggu: ${schoolData.maxWeek} waktu`);
         }
 
         window.addTeacher = async function() {
