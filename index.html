@@ -441,7 +441,7 @@
             </div>
         </section>
 
-        <!-- Tab Tetapan (Diselaraskan Mengikut Sistem Jadual Waktu) -->
+        <!-- Tab Tetapan (Diselaraskan Menikut Sistem Jadual Waktu) -->
         <section id="tab-tetapan" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
                 <div class="border-b pb-3">
@@ -502,9 +502,9 @@
                         <div class="p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
                             <h4 class="font-bold text-slate-800 text-sm flex items-center space-x-2">
                                 <span class="bg-[#0b1b3d] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">3</span>
-                                <span>Hapus Rekod Jadual (Pilih Kaedah)</span>
+                                <span>Hapus Rekod Jadual (Mengikut Kelas)</span>
                             </h4>
-                            <p class="text-[11px] text-slate-500">Pilih sama ada mahu memadam jadual mengikut kelas tertentu atau set semula semua jadual sekolah.</p>
+                            <p class="text-[11px] text-slate-500">Pilih kaedah pemadaman jadual waktu sekolah.</p>
                             <div class="flex space-x-4 text-xs font-medium text-slate-700">
                                 <label class="flex items-center space-x-1.5"><input type="radio" name="delete-method" checked><span>Hapus Mengikut Kelas</span></label>
                                 <label class="flex items-center space-x-1.5"><input type="radio" name="delete-method"><span>Hapus Semua Jadual</span></label>
@@ -746,9 +746,9 @@
 
         window.deleteTimetableRecord = function() {
             const target = document.getElementById('delete-class-input').value;
-            if(!target) return alert('Sila masukkan nama kelas atau pilih tetapan.');
-            if(confirm(`Adakah anda pasti ingin memadam rekod bagi "${target}"?`)) {
-                alert('Rekod jadual berjaya dipadam.');
+            if(!target) return alert('Sila masukkan nama kelas.');
+            if(confirm(`Adakah anda pasti ingin memadam rekod jadual bagi kelas "${target}"?`)) {
+                alert('Rekod jadual kelas berjaya dipadam.');
                 document.getElementById('delete-class-input').value = '';
             }
         }
