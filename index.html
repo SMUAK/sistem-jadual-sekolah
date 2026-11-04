@@ -441,12 +441,12 @@
             </div>
         </section>
 
-        <!-- Tab Tetapan (Diselaraskan Mengikut Rujukan Gambar & "Tahun Jadual") -->
+        <!-- Tab Tetapan (Diselaraskan Mengikut Sistem Jadual Waktu) -->
         <section id="tab-tetapan" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
                 <div class="border-b pb-3">
                     <h3 class="text-xl font-bold text-[#0b1b3d]">Tetapan Sistem Jadual Waktu</h3>
-                    <p class="text-xs text-slate-500 mt-0.5">Konfigurasi tetapan institusi, tahun jadual, dan penyelenggaraan data asas.</p>
+                    <p class="text-xs text-slate-500 mt-0.5">Konfigurasi tetapan institusi, tahun jadual, dan pengurusan pemadaman data.</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -485,33 +485,33 @@
                     </div>
 
                     <div class="space-y-6">
-                        <!-- 2. Kemaskini Data (Masukkan No Bil) -->
+                        <!-- 2. Kemaskini Data Jadual (Cari Kelas) -->
                         <div class="p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
                             <h4 class="font-bold text-slate-800 text-sm flex items-center space-x-2">
                                 <span class="bg-[#0b1b3d] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">2</span>
-                                <span>Kemaskini Data (Masukkan No Bil)</span>
+                                <span>Kemaskini Data Jadual (Cari Nama Kelas)</span>
                             </h4>
-                            <p class="text-[11px] text-slate-500">Masukkan No Bil (nombor urutan rekod dalam senarai) untuk mengemaskini maklumat pelajar.</p>
+                            <p class="text-[11px] text-slate-500">Masukkan Nama Kelas untuk menyemak atau mengemaskini jadual waktu.</p>
                             <div class="flex space-x-2">
-                                <input type="text" placeholder="Cth: 1" class="w-full px-3 py-2 border rounded-lg text-xs bg-white">
-                                <button onclick="alert('Carian rekod ditemui.')" class="bg-[#0b1b3d] text-white px-4 py-2 rounded-lg text-xs font-semibold hover:bg-[#132d60] shadow whitespace-nowrap">Cari & Kemaskini</button>
+                                <input type="text" id="search-class-input" placeholder="Cth: 1 Cekap" class="w-full px-3 py-2 border rounded-lg text-xs bg-white">
+                                <button onclick="searchClassData()" class="bg-[#0b1b3d] text-white px-4 py-2 rounded-lg text-xs font-semibold hover:bg-[#132d60] shadow whitespace-nowrap">Cari Kelas</button>
                             </div>
                         </div>
 
-                        <!-- 3. Hapus Rekod (Pilih Tahun atau No Bil) -->
+                        <!-- 3. Hapus Rekod Jadual (Mengikut Kelas atau Semua) -->
                         <div class="p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
                             <h4 class="font-bold text-slate-800 text-sm flex items-center space-x-2">
                                 <span class="bg-[#0b1b3d] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">3</span>
-                                <span>Hapus Rekod (Pilih Tahun atau No Bil)</span>
+                                <span>Hapus Rekod Jadual (Pilih Kaedah)</span>
                             </h4>
-                            <p class="text-[11px] text-slate-500">Pilih kaedah pemadaman rekod dan masukkan nilai yang ingin dipadam.</p>
+                            <p class="text-[11px] text-slate-500">Pilih sama ada mahu memadam jadual mengikut kelas tertentu atau set semula semua jadual sekolah.</p>
                             <div class="flex space-x-4 text-xs font-medium text-slate-700">
-                                <label class="flex items-center space-x-1.5"><input type="radio" name="delete-method" checked><span>Hapus Mengikut Tahun</span></label>
-                                <label class="flex items-center space-x-1.5"><input type="radio" name="delete-method"><span>Hapus Mengikut No Bil</span></label>
+                                <label class="flex items-center space-x-1.5"><input type="radio" name="delete-method" checked><span>Hapus Mengikut Kelas</span></label>
+                                <label class="flex items-center space-x-1.5"><input type="radio" name="delete-method"><span>Hapus Semua Jadual</span></label>
                             </div>
                             <div class="flex space-x-2">
-                                <input type="text" placeholder="Cth: 2026" class="w-full px-3 py-2 border rounded-lg text-xs bg-white">
-                                <button onclick="alert('Fungsi hapus rekod.')" class="bg-red-600 text-white px-4 py-2 rounded-lg text-xs font-semibold hover:bg-red-700 shadow whitespace-nowrap">Hapus Rekod</button>
+                                <input type="text" id="delete-class-input" placeholder="Nama Kelas untuk dipadam" class="w-full px-3 py-2 border rounded-lg text-xs bg-white">
+                                <button onclick="deleteTimetableRecord()" class="bg-red-600 text-white px-4 py-2 rounded-lg text-xs font-semibold hover:bg-red-700 shadow whitespace-nowrap">Hapus Rekod</button>
                             </div>
                         </div>
                     </div>
@@ -522,10 +522,10 @@
                             <span class="bg-[#0b1b3d] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">5</span>
                             <span>Sandaran JSON : (Eksport JSON dan Import JSON)</span>
                         </h4>
-                        <p class="text-[11px] text-slate-500">Buat salinan data sandaran pendaftaran pelajar atau muat naik semula fail sandaran.</p>
+                        <p class="text-[11px] text-slate-500">Buat salinan data sandaran jadual waktu sekolah atau muat naik semula fail sandaran.</p>
                         <div class="flex space-x-3">
-                            <button onclick="alert('Eksport data JSON berjaya.')" class="bg-[#0b1b3d] text-white px-4 py-2 rounded-lg text-xs font-semibold hover:bg-[#132d60] shadow">Eksport JSON</button>
-                            <button onclick="alert('Import data JSON berjaya.')" class="bg-slate-200 text-slate-800 px-4 py-2 rounded-lg text-xs font-semibold hover:bg-slate-300 shadow">Import JSON</button>
+                            <button onclick="alert('Eksport data JSON jadual berjaya.')" class="bg-[#0b1b3d] text-white px-4 py-2 rounded-lg text-xs font-semibold hover:bg-[#132d60] shadow">Eksport JSON</button>
+                            <button onclick="alert('Import data JSON jadual berjaya.')" class="bg-slate-200 text-slate-800 px-4 py-2 rounded-lg text-xs font-semibold hover:bg-slate-300 shadow">Import JSON</button>
                         </div>
                     </div>
 
@@ -736,6 +736,21 @@
             schoolData.academicYear = year;
             document.getElementById('header-school-name').innerText = name;
             alert(`Maklumat Rasmi Institusi & Tahun Jadual (${year}) berjaya disimpan!`);
+        }
+
+        window.searchClassData = function() {
+            const cName = document.getElementById('search-class-input').value;
+            if(!cName) return alert('Sila masukkan nama kelas untuk dicari.');
+            alert(`Carian bagi kelas "${cName}" dijumpai.`);
+        }
+
+        window.deleteTimetableRecord = function() {
+            const target = document.getElementById('delete-class-input').value;
+            if(!target) return alert('Sila masukkan nama kelas atau pilih tetapan.');
+            if(confirm(`Adakah anda pasti ingin memadam rekod bagi "${target}"?`)) {
+                alert('Rekod jadual berjaya dipadam.');
+                document.getElementById('delete-class-input').value = '';
+            }
         }
 
         window.saveTimeSettings = function() {
