@@ -34,6 +34,7 @@
             <nav class="flex space-x-1 sm:space-x-2 mt-2 sm:mt-0 overflow-x-auto items-center">
                 <button onclick="switchTab('utama')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Utama</button>
                 <button onclick="switchTab('data')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Data Asas & Konfigurasi</button>
+                <button onclick="switchTab('opsyen')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Penetapan Opsyen Guru</button>
                 <button onclick="switchTab('jadual')" class="px-3 py-1.5 rounded-lg text-sm font-medium bg-[#132d60] transition">Jadual Induk</button>
                 <button onclick="switchTab('guru')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Jadual Guru</button>
                 <button onclick="switchTab('relief')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Relief Harian</button>
@@ -228,28 +229,10 @@
 
                 </div>
 
-                <!-- 8. Penetapan Guru & Mata Pelajaran (Opsyen Mengajar) -->
-                <div class="p-5 bg-blue-50/70 border border-blue-200 rounded-xl space-y-3">
-                    <h4 class="font-bold text-[#0b1b3d] text-sm flex items-center space-x-2">
-                        <span class="bg-[#0b1b3d] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">8</span>
-                        <span>Penetapan Opsyen Guru & Mata Pelajaran (Disimpan ke Firebase Firestore)</span>
-                    </h4>
-                    <p class="text-xs text-slate-600">Pilih guru dan tentukan subjek yang diampu. Data ini disimpan dalam koleksi <code class="bg-white px-1 py-0.5 rounded border text-[#0b1b3d] font-bold">assignments</code> di Firebase.</p>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                        <select id="select-assign-teacher" class="px-3 py-2 border rounded-lg text-sm bg-white font-medium">
-                            <option value="">-- Pilih Guru --</option>
-                        </select>
-                        <select id="select-assign-subject" class="px-3 py-2 border rounded-lg text-sm bg-white font-medium">
-                            <option value="">-- Pilih Mata Pelajaran --</option>
-                        </select>
-                        <button onclick="assignTeacherSubject()" class="bg-[#0b1b3d] text-white px-4 py-2 rounded-lg text-xs font-semibold hover:bg-[#132d60] shadow">Simpan Opsyen Mengajar</button>
-                    </div>
-                </div>
-
             </div>
 
-            <!-- Senarai Paparan Semasa & Data Disimpan -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <!-- Senarai Paparan Semasa Data Asas -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
                     <h4 class="font-bold text-slate-800 mb-2 text-xs flex justify-between items-center">
                         <span>Senarai Guru</span>
@@ -277,24 +260,61 @@
                         <p class="text-slate-400 italic">Tiada rekod.</p>
                     </div>
                 </div>
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
-                    <h4 class="font-bold text-slate-800 mb-2 text-xs flex justify-between items-center">
-                        <span>Opsyen Mengajar</span>
+            </div>
+        </section>
+
+        <!-- Tab Baharu: Penetapan Opsyen Guru & Jana Jadual -->
+        <section id="tab-opsyen" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
+                <div class="border-b pb-3 flex justify-between items-center flex-wrap gap-4">
+                    <div>
+                        <h3 class="text-xl font-bold text-[#0b1b3d]">Penetapan Opsyen Guru & Jana Jadual Automatik</h3>
+                        <p class="text-xs text-slate-500 mt-0.5">Tentukan opsyen subjek mengajar guru dan mulakan proses penjanaan jadual sekolah.</p>
+                    </div>
+                    <div>
+                        <button onclick="startAutoGenerationProcess()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-lg text-xs font-bold shadow flex items-center space-x-1.5">
+                            <span>⚡</span><span>Jana Jadual Automatik</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Kotak Pilihan Opsyen Mengajar -->
+                <div class="p-5 bg-blue-50/70 border border-blue-200 rounded-xl space-y-3">
+                    <h4 class="font-bold text-[#0b1b3d] text-sm flex items-center space-x-2">
+                        <span class="bg-[#0b1b3d] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">⭐</span>
+                        <span>Tetapan Opsyen Guru & Mata Pelajaran (Disimpan ke Firebase Firestore)</span>
+                    </h4>
+                    <p class="text-xs text-slate-600">Pilih guru dan tentukan subjek yang diampu. Data ini disimpan dalam koleksi <code class="bg-white px-1 py-0.5 rounded border text-[#0b1b3d] font-bold">assignments</code> di Firebase[cite: 8].</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <select id="select-assign-teacher" class="px-3 py-2 border rounded-lg text-sm bg-white font-medium">
+                            <option value="">-- Pilih Guru --</option>
+                        </select>
+                        <select id="select-assign-subject" class="px-3 py-2 border rounded-lg text-sm bg-white font-medium">
+                            <option value="">-- Pilih Mata Pelajaran --</option>
+                        </select>
+                        <button onclick="assignTeacherSubject()" class="bg-[#0b1b3d] text-white px-4 py-2 rounded-lg text-xs font-semibold hover:bg-[#132d60] shadow">Simpan Opsyen Mengajar</button>
+                    </div>
+                </div>
+
+                <!-- Senarai Opsyen Disimpan -->
+                <div class="space-y-2">
+                    <h4 class="font-bold text-slate-800 text-xs flex justify-between items-center">
+                        <span>Senarai Opsyen Mengajar Disimpan</span>
                         <span id="count-assignments" class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded-full">0</span>
                     </h4>
-                    <div id="list-assignments" class="space-y-1 max-h-40 overflow-y-auto text-xs text-slate-600">
+                    <div id="list-assignments" class="grid grid-cols-1 md:grid-cols-3 gap-2 max-h-48 overflow-y-auto text-xs text-slate-600">
                         <p class="text-slate-400 italic">Tiada opsyen disimpan.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Tab 9. Jadual Induk & Penjanaan -->
+        <!-- Tab Jadual Induk & Penjanaan -->
         <section id="tab-jadual" class="space-y-6">
             <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-wrap justify-between items-center gap-4">
                 <div class="flex items-center space-x-3">
-                    <button onclick="generateAutoTimetable()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-xs font-bold shadow flex items-center space-x-1">
-                        <span>⚡</span><span>9. Jana Jadual Automatik</span>
+                    <button onclick="startAutoGenerationProcess()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-xs font-bold shadow flex items-center space-x-1">
+                        <span>⚡</span><span>Jana Semula Jadual Automatik</span>
                     </button>
                 </div>
                 <div class="flex items-center space-x-3">
@@ -311,11 +331,6 @@
                         <span>📚</span><span>Cetak Semua Kelas</span>
                     </button>
                 </div>
-            </div>
-
-            <div class="bg-blue-50 border border-blue-200 text-[#0b1b3d] p-3 rounded-lg text-xs flex items-center space-x-2">
-                <span>💡</span>
-                <span>Selepas melengkapkan tetapan di tab <strong>Data Asas</strong>, klik butang <strong>"9. Jana Jadual Automatik"</strong>[cite: 8].</span>
             </div>
 
             <!-- Kawasan Cetak Grid Utama -->
@@ -350,7 +365,7 @@
                             </thead>
                             <tbody id="grid-table-body" class="font-medium">
                                 <tr>
-                                    <td colspan="11" class="p-8 text-slate-400 italic">Sila klik "9. Jana Jadual Automatik" di atas.</td>
+                                    <td colspan="11" class="p-8 text-slate-400 italic">Sila klik "Jana Jadual Automatik" di menu Penetapan Opsyen Guru.</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -372,7 +387,7 @@
             </div>
         </section>
 
-        <!-- Tab Jadual Guru Perseorangan (Baharu) -->
+        <!-- Tab Jadual Guru Perseorangan -->
         <section id="tab-guru" class="hidden space-y-6">
             <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-wrap justify-between items-center gap-4">
                 <div class="flex items-center space-x-3">
@@ -441,6 +456,28 @@
 
     </main>
 
+    <!-- Modal Kotak Dialog Kemajuan (Progress Dialog) semasa Jana Jadual -->
+    <div id="generation-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center z-50">
+        <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-2xl border border-slate-200 space-y-4 animate-in fade-in zoom-in duration-200">
+            <div class="flex justify-between items-center">
+                <h3 class="text-base font-bold text-[#0b1b3d]">Menjana jadual</h3>
+                <button id="modal-close-btn" onclick="closeGenModal()" class="text-slate-400 hover:text-slate-600 hidden font-bold text-sm">✕</button>
+            </div>
+            <div class="space-y-2">
+                <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden border border-slate-200">
+                    <div id="modal-progress-bar" class="bg-emerald-600 h-full w-0 transition-all duration-150"></div>
+                </div>
+                <div class="flex justify-between items-center text-xs text-slate-600 font-medium">
+                    <span id="modal-progress-text">Memulakan proses...</span>
+                    <span id="modal-progress-count">0/98</span>
+                </div>
+            </div>
+            <div class="flex justify-end pt-2">
+                <button id="modal-cancel-btn" onclick="closeGenModal()" class="px-4 py-1.5 border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 transition">Batal</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Skrip Firebase & Logik Aplikasi -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -479,13 +516,13 @@
         }
 
         window.switchTab = function(tabId) {
-            ['utama', 'data', 'jadual', 'guru', 'relief', 'laporan', 'tetapan'].forEach(t => {
+            ['utama', 'data', 'opsyen', 'jadual', 'guru', 'relief', 'laporan', 'tetapan'].forEach(t => {
                 const el = document.getElementById(`tab-${t}`);
                 if(el) el.classList.add('hidden');
             });
             const targetEl = document.getElementById(`tab-${tabId}`);
             if(targetEl) targetEl.classList.remove('hidden');
-            if(tabId === 'data' || tabId === 'jadual' || tabId === 'guru') {
+            if(tabId === 'data' || tabId === 'opsyen' || tabId === 'jadual' || tabId === 'guru') {
                 loadAllData();
             }
         }
@@ -577,7 +614,7 @@
                 assignSnapshot.forEach((doc) => {
                     const data = doc.data();
                     cachedAssignments.push(data);
-                    if(assignListEl) assignListEl.innerHTML += `<div class="p-1.5 bg-blue-50/50 rounded border text-[#0b1b3d]"><strong>${data.teacher}</strong> ➔ ${data.subject}</div>`;
+                    if(assignListEl) assignListEl.innerHTML += `<div class="p-2 bg-blue-50/50 rounded border text-[#0b1b3d]"><strong>${data.teacher}</strong> ➔ ${data.subject}</div>`;
                 });
 
                 updateDropdownFilters(classSnapshot);
@@ -666,18 +703,60 @@
                 if(db) {
                     await addDoc(collection(db, "assignments"), { teacher, subject, createdAt: new Date() });
                 }
-                alert(`Opsyen mengajar (${teacher} ➔ ${subject}) berjaya disimpan ke koleksi 'assignments' Firebase!`);
+                alert(`Opsyen mengajar (${teacher} ➔ ${subject}) berjaya disimpan ke koleksi 'assignments' Firebase![cite: 8]`);
                 loadAllData();
             } catch (err) { alert('Ralat: ' + err.message); }
         }
 
-        window.generateAutoTimetable = function() {
+        // Fungsi Simulasi Proses Jana Jadual dengan Kotak Kemajuan (Progress Dialog)
+        window.startAutoGenerationProcess = function() {
             if(cachedClasses.length === 0) {
-                return alert('Sila daftar Kelas di tab Data Asas terlebih dahulu.');
+                return alert('Sila daftar sekurang-kurangnya satu Kelas di tab Data Asas terlebih dahulu.');
             }
-            alert('⚡ Jadual Waktu Berjaya Dijana Secara Automatik!');
-            loadGridTimetable(cachedClasses[0]);
-            document.getElementById('select-target-filter').value = cachedClasses[0];
+
+            const modal = document.getElementById('generation-modal');
+            const progressBar = document.getElementById('modal-progress-bar');
+            const progressText = document.getElementById('modal-progress-text');
+            const progressCount = document.getElementById('modal-progress-count');
+            const closeBtn = document.getElementById('modal-close-btn');
+            const cancelBtn = document.getElementById('modal-cancel-btn');
+
+            modal.classList.remove('hidden');
+            closeBtn.classList.add('hidden');
+            cancelBtn.classList.remove('hidden');
+
+            let currentStep = 0;
+            const totalSteps = 98;
+
+            const interval = setInterval(() => {
+                currentStep += Math.floor(Math.random() * 6) + 4;
+                if(currentStep >= totalSteps) {
+                    currentStep = totalSteps;
+                    clearInterval(interval);
+                    progressBar.style.width = '100%';
+                    progressText.innerText = 'Jadual berjaya dijana!';
+                    progressCount.innerText = `${totalSteps}/${totalSteps}`;
+                    
+                    cancelBtn.classList.add('hidden');
+                    closeBtn.classList.remove('hidden');
+
+                    setTimeout(() => {
+                        modal.classList.add('hidden');
+                        switchTab('jadual');
+                        loadGridTimetable(cachedClasses[0]);
+                        document.getElementById('select-target-filter').value = cachedClasses[0];
+                    }, 800);
+                } else {
+                    const percent = (currentStep / totalSteps) * 100;
+                    progressBar.style.width = `${percent}%`;
+                    progressText.innerText = `Meletakkan waktu...`;
+                    progressCount.innerText = `${currentStep}/${totalSteps}`;
+                }
+            }, 80);
+        }
+
+        window.closeGenModal = function() {
+            document.getElementById('generation-modal').classList.add('hidden');
         }
 
         window.loadGridTimetable = function(preselectedName = null) {
@@ -783,16 +862,16 @@
                 tbodyHtml += `
                     <tr>
                         <td class="border border-slate-300 p-2 font-bold bg-slate-100 text-slate-800">${day}</td>
-                        <td class="border border-slate-300 p-2 ${colorClass}"><strong>${subName}</strong><br><span class="text-[10px] text-blue-900 font-bold">${cName}</span></td>
-                        <td class="border border-slate-300 p-2 ${colorClass}"><strong>${subName}</strong><br><span class="text-[10px] text-blue-900 font-bold">${cName}</span></td>
-                        <td class="border border-slate-300 p-2 ${colorClass}"><strong>${subName}</strong><br><span class="text-[10px] text-blue-900 font-bold">${cName}</span></td>
-                        <td class="border border-slate-300 p-2 ${colorClass}"><strong>${subName}</strong><br><span class="text-[10px] text-blue-900 font-bold">${cName}</span></td>
+                        <td class="border border-slate-300 p-2 ${colorClass}"><strong>${subName}</strong><br><span class="text-[10px] text-[#0b1b3d] font-bold">${cName}</span></td>
+                        <td class="border border-slate-300 p-2 ${colorClass}"><strong>${subName}</strong><br><span class="text-[10px] text-[#0b1b3d] font-bold">${cName}</span></td>
+                        <td class="border border-slate-300 p-2 ${colorClass}"><strong>${subName}</strong><br><span class="text-[10px] text-[#0b1b3d] font-bold">${cName}</span></td>
+                        <td class="border border-slate-300 p-2 ${colorClass}"><strong>${subName}</strong><br><span class="text-[10px] text-[#0b1b3d] font-bold">${cName}</span></td>
                         <td class="border border-slate-300 p-2 bg-slate-200 font-bold text-slate-600">REHAT</td>
-                        <td class="border border-slate-300 p-2 ${colorClass}"><strong>${subName}</strong><br><span class="text-[10px] text-blue-900 font-bold">${cName}</span></td>
-                        <td class="border border-slate-300 p-2 ${colorClass}"><strong>${subName}</strong><br><span class="text-[10px] text-blue-900 font-bold">${cName}</span></td>
-                        <td class="border border-slate-300 p-2 ${colorClass}"><strong>${subName}</strong><br><span class="text-[10px] text-blue-900 font-bold">${cName}</span></td>
-                        <td class="border border-slate-300 p-2 ${colorClass}"><strong>${subName}</strong><br><span class="text-[10px] text-blue-900 font-bold">${cName}</span></td>
-                        <td class="border border-slate-300 p-2 ${colorClass}"><strong>${subName}</strong><br><span class="text-[10px] text-blue-900 font-bold">${cName}</span></td>
+                        <td class="border border-slate-300 p-2 ${colorClass}"><strong>${subName}</strong><br><span class="text-[10px] text-[#0b1b3d] font-bold">${cName}</span></td>
+                        <td class="border border-slate-300 p-2 ${colorClass}"><strong>${subName}</strong><br><span class="text-[10px] text-[#0b1b3d] font-bold">${cName}</span></td>
+                        <td class="border border-slate-300 p-2 ${colorClass}"><strong>${subName}</strong><br><span class="text-[10px] text-[#0b1b3d] font-bold">${cName}</span></td>
+                        <td class="border border-slate-300 p-2 ${colorClass}"><strong>${subName}</strong><br><span class="text-[10px] text-[#0b1b3d] font-bold">${cName}</span></td>
+                        <td class="border border-slate-300 p-2 ${colorClass}"><strong>${subName}</strong><br><span class="text-[10px] text-[#0b1b3d] font-bold">${cName}</span></td>
                     </tr>
                 `;
             });
