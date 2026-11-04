@@ -13,6 +13,8 @@
             body * { visibility: hidden; }
             #printable-area, #printable-area * { visibility: visible; }
             #printable-area { position: absolute; left: 0; top: 0; width: 100%; }
+            .printable-teacher-area, .printable-teacher-area * { visibility: visible; }
+            .printable-teacher-area { position: absolute; left: 0; top: 0; width: 100%; }
             .page-break { page-break-after: always; }
         }
     </style>
@@ -33,6 +35,7 @@
                 <button onclick="switchTab('utama')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Utama</button>
                 <button onclick="switchTab('data')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Data Asas & Konfigurasi</button>
                 <button onclick="switchTab('jadual')" class="px-3 py-1.5 rounded-lg text-sm font-medium bg-[#132d60] transition">Jadual Induk</button>
+                <button onclick="switchTab('guru')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Jadual Guru</button>
                 <button onclick="switchTab('relief')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Relief Harian</button>
                 <button onclick="switchTab('laporan')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition flex items-center space-x-1">
                     <span>📊</span><span>Laporan</span>
@@ -201,7 +204,7 @@
                         <button onclick="saveBlockSettings()" class="w-full bg-[#0b1b3d] text-white py-2 rounded-lg text-xs font-semibold hover:bg-[#132d60] mt-3 shadow">Simpan Blok Waktu</button>
                     </div>
 
-                    <!-- 7. Had Masa Guru (Baharu) -->
+                    <!-- 7. Had Masa Guru -->
                     <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3 flex flex-col justify-between">
                         <div class="space-y-3">
                             <h4 class="font-bold text-slate-800 text-sm flex items-center space-x-2">
@@ -287,7 +290,7 @@
         </section>
 
         <!-- Tab 9. Jadual Induk & Penjanaan -->
-        <section id="tab-jadual" class="hidden space-y-6">
+        <section id="tab-jadual" class="space-y-6">
             <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-wrap justify-between items-center gap-4">
                 <div class="flex items-center space-x-3">
                     <button onclick="generateAutoTimetable()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-xs font-bold shadow flex items-center space-x-1">
@@ -369,6 +372,40 @@
             </div>
         </section>
 
+        <!-- Tab Jadual Guru Perseorangan (Baharu) -->
+        <section id="tab-guru" class="hidden space-y-6">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-wrap justify-between items-center gap-4">
+                <div class="flex items-center space-x-3">
+                    <div class="text-sm font-semibold text-slate-700">Pilih Guru:</div>
+                    <select id="select-target-teacher" onchange="loadTeacherTimetable()" class="px-3 py-2 border rounded-lg text-sm bg-slate-50 font-medium text-[#0b1b3d] focus:ring-2 focus:ring-[#0b1b3d]">
+                        <option value="">-- Pilih Nama Guru --</option>
+                    </select>
+                </div>
+                <div>
+                    <button onclick="window.print()" class="bg-[#0b1b3d] hover:bg-[#132d60] text-white px-4 py-2 rounded-lg text-xs font-medium shadow flex items-center space-x-1">
+                        <span>🖨️</span><span>Cetak Jadual Guru</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Kawasan Cetak Jadual Perseorangan Guru -->
+            <div class="printable-teacher-area bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
+                <div class="flex justify-between items-center border-b pb-3">
+                    <div>
+                        <h3 class="text-lg font-bold text-[#0b1b3d]">Jadual Waktu Perseorangan Guru</h3>
+                        <p class="text-xs text-slate-500">Paparan Beban Waktu Mengajar Guru</p>
+                    </div>
+                    <div class="text-right">
+                        <span id="teacher-current-tag" class="bg-blue-100 text-[#0b1b3d] text-xs px-3 py-1 rounded-full font-bold">Sila Pilih Guru</span>
+                    </div>
+                </div>
+
+                <div id="teacher-timetable-wrapper" class="space-y-4">
+                    <div class="p-8 text-center text-slate-400 italic text-xs">Sila pilih nama guru di atas untuk memaparkan jadual perseorangan.</div>
+                </div>
+            </div>
+        </section>
+
         <!-- Tab Relief -->
         <section id="tab-relief" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
@@ -442,18 +479,17 @@
         }
 
         window.switchTab = function(tabId) {
-            ['utama', 'data', 'jadual', 'relief', 'laporan', 'tetapan'].forEach(t => {
+            ['utama', 'data', 'jadual', 'guru', 'relief', 'laporan', 'tetapan'].forEach(t => {
                 const el = document.getElementById(`tab-${t}`);
                 if(el) el.classList.add('hidden');
             });
             const targetEl = document.getElementById(`tab-${tabId}`);
             if(targetEl) targetEl.classList.remove('hidden');
-            if(tabId === 'data' || tabId === 'jadual') {
+            if(tabId === 'data' || tabId === 'jadual' || tabId === 'guru') {
                 loadAllData();
             }
         }
 
-        // Fungsi Tambah Kotak Masa Dinamik untuk No. 5
         window.addTimeSlot = function() {
             const container = document.getElementById('time-slots-container');
             const count = container.getElementsByClassName('time-slot-item').length + 1;
@@ -482,7 +518,10 @@
                 const teacherSnapshot = await getDocs(collection(db, "teachers"));
                 cachedTeachers = [];
                 const assignTeacherSelect = document.getElementById('select-assign-teacher');
+                const teacherFilterSelect = document.getElementById('select-target-teacher');
+                
                 if(assignTeacherSelect) assignTeacherSelect.innerHTML = '<option value="">-- Pilih Guru --</option>';
+                if(teacherFilterSelect) teacherFilterSelect.innerHTML = '<option value="">-- Pilih Nama Guru --</option>';
                 
                 const teacherListEl = document.getElementById('list-teachers');
                 document.getElementById('stat-teachers').innerText = teacherSnapshot.size;
@@ -494,6 +533,7 @@
                     cachedTeachers.push(data);
                     if(teacherListEl) teacherListEl.innerHTML += `<div class="p-1.5 bg-slate-50 rounded border"><strong>${data.name}</strong></div>`;
                     if(assignTeacherSelect) assignTeacherSelect.innerHTML += `<option value="${data.name}">${data.name}</option>`;
+                    if(teacherFilterSelect) teacherFilterSelect.innerHTML += `<option value="${data.name}">${data.name}</option>`;
                 });
 
                 // Kelas
@@ -648,6 +688,14 @@
             document.getElementById('timetable-master-wrapper').innerHTML = generateGridHtml(className);
         }
 
+        window.loadTeacherTimetable = function() {
+            const teacherName = document.getElementById('select-target-teacher').value;
+            if(!teacherName) return;
+
+            document.getElementById('teacher-current-tag').innerText = `Guru: ${teacherName}`;
+            document.getElementById('teacher-timetable-wrapper').innerHTML = generateTeacherGridHtml(teacherName);
+        }
+
         function generateGridHtml(className) {
             const startDay = schoolData.startDay || 'Ahad';
             const totalDays = schoolData.totalDays || 5;
@@ -704,6 +752,69 @@
                                     <th class="border border-[#132d60] p-2">10:50<br>11:20<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 7</span>[cite: 7]</th>
                                     <th class="border border-[#132d60] p-2">11:20<br>11:50<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 8</span>[cite: 7]</th>
                                     <th class="border border-[#132d60] p-2">11:50<br>12:20<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 9</span>[cite: 7]</th>
+                                </tr>
+                            </thead>
+                            <tbody class="font-medium">
+                                ${tbodyHtml}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateTeacherGridHtml(teacherName) {
+            const startDay = schoolData.startDay || 'Ahad';
+            const totalDays = schoolData.totalDays || 5;
+
+            const masterDaysAhad = ['AHAD', 'ISNIN', 'SELASA', 'RABU', 'KHAMIS', 'JUMAAT'];
+            const masterDaysIsnin = ['ISNIN', 'SELASA', 'RABU', 'KHAMIS', 'JUMAAT', 'SABTU'];
+
+            let masterList = startDay === 'Ahad' ? masterDaysAhad : masterDaysIsnin;
+            let days = masterList.slice(0, totalDays);
+            const colors = ['bg-sky-50 text-sky-900 border-sky-200', 'bg-amber-50 text-amber-900 border-amber-200', 'bg-emerald-50 text-emerald-900 border-emerald-200', 'bg-rose-50 text-rose-900 border-rose-200', 'bg-indigo-50 text-indigo-900 border-indigo-200'];
+
+            let tbodyHtml = '';
+            days.forEach((day, index) => {
+                const colorClass = colors[index % colors.length];
+                const cName = cachedClasses.length > 0 ? cachedClasses[index % cachedClasses.length] : '1 Cekap';
+                const subName = cachedSubjects.length > 0 ? cachedSubjects[index % cachedSubjects.length] : 'Pelajaran';
+
+                tbodyHtml += `
+                    <tr>
+                        <td class="border border-slate-300 p-2 font-bold bg-slate-100 text-slate-800">${day}</td>
+                        <td class="border border-slate-300 p-2 ${colorClass}"><strong>${subName}</strong><br><span class="text-[10px] text-blue-900 font-bold">${cName}</span></td>
+                        <td class="border border-slate-300 p-2 ${colorClass}"><strong>${subName}</strong><br><span class="text-[10px] text-blue-900 font-bold">${cName}</span></td>
+                        <td class="border border-slate-300 p-2 ${colorClass}"><strong>${subName}</strong><br><span class="text-[10px] text-blue-900 font-bold">${cName}</span></td>
+                        <td class="border border-slate-300 p-2 ${colorClass}"><strong>${subName}</strong><br><span class="text-[10px] text-blue-900 font-bold">${cName}</span></td>
+                        <td class="border border-slate-300 p-2 bg-slate-200 font-bold text-slate-600">REHAT</td>
+                        <td class="border border-slate-300 p-2 ${colorClass}"><strong>${subName}</strong><br><span class="text-[10px] text-blue-900 font-bold">${cName}</span></td>
+                        <td class="border border-slate-300 p-2 ${colorClass}"><strong>${subName}</strong><br><span class="text-[10px] text-blue-900 font-bold">${cName}</span></td>
+                        <td class="border border-slate-300 p-2 ${colorClass}"><strong>${subName}</strong><br><span class="text-[10px] text-blue-900 font-bold">${cName}</span></td>
+                        <td class="border border-slate-300 p-2 ${colorClass}"><strong>${subName}</strong><br><span class="text-[10px] text-blue-900 font-bold">${cName}</span></td>
+                        <td class="border border-slate-300 p-2 ${colorClass}"><strong>${subName}</strong><br><span class="text-[10px] text-blue-900 font-bold">${cName}</span></td>
+                    </tr>
+                `;
+            });
+
+            return `
+                <div class="space-y-4 page-break">
+                    <div class="text-sm font-bold text-[#0b1b3d] border-b pb-1">Jadual Waktu Mengajar Guru: ${teacherName}</div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full border-collapse border border-slate-200 text-xs text-center">
+                            <thead>
+                                <tr class="bg-[#0b1b3d] text-white">
+                                    <th class="border border-[#132d60] p-2.5 w-24">HARI</th>
+                                    <th class="border border-[#132d60] p-2">07:30<br>08:00<br><span class="text-[10px] text-yellow-300">Waktu 1</span></th>
+                                    <th class="border border-[#132d60] p-2">08:00<br>08:30<br><span class="text-[10px] text-yellow-300">Waktu 2</span></th>
+                                    <th class="border border-[#132d60] p-2">08:30<br>09:00<br><span class="text-[10px] text-yellow-300">Waktu 3</span></th>
+                                    <th class="border border-[#132d60] p-2">09:00<br>09:30<br><span class="text-[10px] text-yellow-300">Waktu 4</span></th>
+                                    <th class="border border-[#132d60] p-2 bg-[#132d60] text-amber-400 font-bold">REHAT</th>
+                                    <th class="border border-[#132d60] p-2">09:50<br>10:20<br><span class="text-[10px] text-yellow-300">Waktu 5</span></th>
+                                    <th class="border border-[#132d60] p-2">10:20<br>10:50<br><span class="text-[10px] text-yellow-300">Waktu 6</span></th>
+                                    <th class="border border-[#132d60] p-2">10:50<br>11:20<br><span class="text-[10px] text-yellow-300">Waktu 7</span></th>
+                                    <th class="border border-[#132d60] p-2">11:20<br>11:50<br><span class="text-[10px] text-yellow-300">Waktu 8</span></th>
+                                    <th class="border border-[#132d60] p-2">11:50<br>12:20<br><span class="text-[10px] text-yellow-300">Waktu 9</span></th>
                                 </tr>
                             </thead>
                             <tbody class="font-medium">
