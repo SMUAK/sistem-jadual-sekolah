@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ms">
 <head>
@@ -18,27 +17,27 @@
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+<body class="bg-slate-100 text-slate-900 min-h-screen flex flex-col">
 
-    <!-- Header / Navigasi Utama -->
-    <header class="bg-blue-900 text-white shadow-md">
+    <!-- Header / Navigasi Utama (Biru Tua Pekat) -->
+    <header class="bg-[#0b1b3d] text-white shadow-md">
         <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
             <div class="flex items-center space-x-3">
-                <div class="bg-blue-800 p-2 rounded-lg text-xl font-bold">🏫</div>
+                <div class="bg-[#132d60] p-2 rounded-lg text-xl font-bold">🏫</div>
                 <div>
                     <h1 id="header-school-name" class="text-lg font-bold">SMU(A) Khairiah Banggol Setol</h1>
                     <p class="text-xs text-blue-200">Sistem Pengurusan Jadual Waktu & Relief Pintar</p>
                 </div>
             </div>
             <nav class="flex space-x-1 sm:space-x-2 mt-2 sm:mt-0 overflow-x-auto items-center">
-                <button onclick="switchTab('utama')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-blue-800 transition">Utama</button>
-                <button onclick="switchTab('data')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-blue-800 transition">Data Asas & Konfigurasi</button>
-                <button onclick="switchTab('jadual')" class="px-3 py-1.5 rounded-lg text-sm font-medium bg-blue-800 transition">Jadual Induk</button>
-                <button onclick="switchTab('relief')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-blue-800 transition">Relief Harian</button>
-                <button onclick="switchTab('laporan')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-blue-800 transition flex items-center space-x-1">
+                <button onclick="switchTab('utama')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Utama</button>
+                <button onclick="switchTab('data')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Data Asas & Konfigurasi</button>
+                <button onclick="switchTab('jadual')" class="px-3 py-1.5 rounded-lg text-sm font-medium bg-[#132d60] transition">Jadual Induk</button>
+                <button onclick="switchTab('relief')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Relief Harian</button>
+                <button onclick="switchTab('laporan')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition flex items-center space-x-1">
                     <span>📊</span><span>Laporan</span>
                 </button>
-                <button onclick="switchTab('tetapan')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-blue-800 transition">Tetapan</button>
+                <button onclick="switchTab('tetapan')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Tetapan</button>
             </nav>
         </div>
     </header>
@@ -54,18 +53,18 @@
                     <p class="text-slate-600 mt-1">Urus jadual kelas, guru, dan agihan guru ganti harian dengan pangkalan data awan Firebase.</p>
                 </div>
                 <div class="mt-4 md:mt-0">
-                    <button onclick="switchTab('relief')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium text-sm transition shadow">Semak Relief Hari Ini</button>
+                    <button onclick="switchTab('relief')" class="bg-[#0b1b3d] hover:bg-[#132d60] text-white px-4 py-2 rounded-lg font-medium text-sm transition shadow">Semak Relief Hari Ini</button>
                 </div>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
                     <div class="text-slate-500 text-sm font-medium">Jumlah Guru Berdaftar</div>
-                    <div id="stat-teachers" class="text-3xl font-bold text-blue-900 mt-2">0</div>
+                    <div id="stat-teachers" class="text-3xl font-bold text-[#0b1b3d] mt-2">0</div>
                 </div>
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
                     <div class="text-slate-500 text-sm font-medium">Jumlah Kelas Aktif</div>
-                    <div id="stat-classes" class="text-3xl font-bold text-blue-900 mt-2">0</div>
+                    <div id="stat-classes" class="text-3xl font-bold text-[#0b1b3d] mt-2">0</div>
                 </div>
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
                     <div class="text-slate-500 text-sm font-medium">Guru Cuti / Perlu Relief</div>
@@ -78,7 +77,7 @@
         <section id="tab-data" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
                 <div class="border-b pb-3">
-                    <h3 class="text-xl font-bold text-blue-900">Konfigurasi & Pendaftaran Data Asas Sekolah</h3>
+                    <h3 class="text-xl font-bold text-[#0b1b3d]">Konfigurasi & Pendaftaran Data Asas Sekolah</h3>
                     <p class="text-xs text-slate-500 mt-0.5">Sila lengkapkan maklumat di bawah mengikut urutan bernombor.</p>
                 </div>
                 
@@ -89,58 +88,58 @@
                     <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3 flex flex-col justify-between">
                         <div class="space-y-3">
                             <h4 class="font-bold text-slate-800 text-sm flex items-center space-x-2">
-                                <span class="bg-blue-900 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">1</span>
+                                <span class="bg-[#0b1b3d] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">1</span>
                                 <span>Maklumat Sekolah</span>
                             </h4>
                             <input type="text" id="input-school-name" placeholder="Nama Penuh Sekolah" class="w-full px-3 py-2 border rounded-lg text-sm bg-white">
                             <input type="text" id="input-school-code" placeholder="Kod Sekolah (Cth: DBA1122)" class="w-full px-3 py-2 border rounded-lg text-sm bg-white">
                         </div>
-                        <button onclick="saveSchoolInfo()" class="w-full bg-blue-900 text-white py-2 rounded-lg text-xs font-semibold hover:bg-blue-800 mt-3">Simpan Info Sekolah</button>
+                        <button onclick="saveSchoolInfo()" class="w-full bg-[#0b1b3d] text-white py-2 rounded-lg text-xs font-semibold hover:bg-[#132d60] mt-3 shadow">Simpan Info Sekolah</button>
                     </div>
 
                     <!-- 2. Tambah Guru -->
                     <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3 flex flex-col justify-between">
                         <div class="space-y-3">
                             <h4 class="font-bold text-slate-800 text-sm flex items-center space-x-2">
-                                <span class="bg-blue-900 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">2</span>
+                                <span class="bg-[#0b1b3d] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">2</span>
                                 <span>Tambah Guru</span>
                             </h4>
                             <input type="text" id="input-teacher-name" placeholder="Nama Penuh & Gelaran" class="w-full px-3 py-2 border rounded-lg text-sm bg-white">
                             <input type="text" id="input-teacher-code" placeholder="Singkatan (Cth: ASR)" class="w-full px-3 py-2 border rounded-lg text-sm bg-white">
                         </div>
-                        <button onclick="addTeacher()" class="w-full bg-blue-900 text-white py-2 rounded-lg text-xs font-semibold hover:bg-blue-800 mt-3">Simpan Guru</button>
+                        <button onclick="addTeacher()" class="w-full bg-[#0b1b3d] text-white py-2 rounded-lg text-xs font-semibold hover:bg-[#132d60] mt-3 shadow">Simpan Guru</button>
                     </div>
 
                     <!-- 3. Tambah Mata Pelajaran -->
                     <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3 flex flex-col justify-between">
                         <div class="space-y-3">
                             <h4 class="font-bold text-slate-800 text-sm flex items-center space-x-2">
-                                <span class="bg-blue-900 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">3</span>
+                                <span class="bg-[#0b1b3d] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">3</span>
                                 <span>Tambah Mata Pelajaran</span>
                             </h4>
                             <input type="text" id="input-subject-name" placeholder="Nama Subjek (Cth: Sains)" class="w-full px-3 py-2 border rounded-lg text-sm bg-white">
                         </div>
-                        <button onclick="addSubject()" class="w-full bg-blue-900 text-white py-2 rounded-lg text-xs font-semibold hover:bg-blue-800 mt-3">Simpan Subjek</button>
+                        <button onclick="addSubject()" class="w-full bg-[#0b1b3d] text-white py-2 rounded-lg text-xs font-semibold hover:bg-[#132d60] mt-3 shadow">Simpan Subjek</button>
                     </div>
 
                     <!-- 4. Tambah Kelas -->
                     <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3 flex flex-col justify-between">
                         <div class="space-y-3">
                             <h4 class="font-bold text-slate-800 text-sm flex items-center space-x-2">
-                                <span class="bg-blue-900 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">4</span>
+                                <span class="bg-[#0b1b3d] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">4</span>
                                 <span>Tambah Kelas</span>
                             </h4>
                             <input type="text" id="input-class-name" placeholder="Nama Kelas (Cth: 1 Cekap)" class="w-full px-3 py-2 border rounded-lg text-sm bg-white">
                         </div>
-                        <button onclick="addClass()" class="w-full bg-blue-900 text-white py-2 rounded-lg text-xs font-semibold hover:bg-blue-800 mt-3">Simpan Kelas</button>
+                        <button onclick="addClass()" class="w-full bg-[#0b1b3d] text-white py-2 rounded-lg text-xs font-semibold hover:bg-[#132d60] mt-3 shadow">Simpan Kelas</button>
                     </div>
 
-                    <!-- 5. Maklumat Masa & Hari (Dilengkapi Butang Tambah Masa Dinamik) -->
+                    <!-- 5. Maklumat Masa & Hari (Dilengkapi Pilihan Bilangan Hari & Butang Tambah Masa) -->
                     <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3 flex flex-col justify-between">
                         <div class="space-y-3">
                             <div class="flex justify-between items-center">
                                 <h4 class="font-bold text-slate-800 text-sm flex items-center space-x-2">
-                                    <span class="bg-blue-900 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">5</span>
+                                    <span class="bg-[#0b1b3d] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">5</span>
                                     <span>Maklumat Masa & Hari</span>
                                 </h4>
                                 <button onclick="addTimeSlot()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-2 py-1 rounded text-[10px] font-bold shadow">+ Tambah Masa</button>
@@ -155,15 +154,18 @@
                                     </select>
                                 </div>
                                 <div>
-                                    <label class="text-[10px] text-slate-500 font-semibold">Masa Rehat</label>
-                                    <input type="text" id="input-rehat-time" value="09:30 - 09:50" class="w-full px-2 py-1.5 border rounded text-xs bg-white">
+                                    <label class="text-[10px] text-slate-500 font-semibold">Bilangan Hari</label>
+                                    <select id="select-total-days" class="w-full px-2 py-1.5 border rounded text-xs bg-white font-bold text-[#0b1b3d]">
+                                        <option value="5">5 Hari</option>
+                                        <option value="6">6 Hari</option>
+                                    </select>
                                 </div>
                             </div>
 
                             <!-- Kontena Senarai Kotak Masa Dinamik -->
-                            <div id="time-slots-container" class="space-y-2 max-h-36 overflow-y-auto pr-1">
+                            <div id="time-slots-container" class="space-y-2 max-h-32 overflow-y-auto pr-1">
                                 <div class="time-slot-item p-2 bg-white rounded border border-slate-200 space-y-1">
-                                    <div class="flex justify-between items-center text-[10px] font-bold text-blue-900">
+                                    <div class="flex justify-between items-center text-[10px] font-bold text-[#0b1b3d]">
                                         <span>Masa 1</span>
                                     </div>
                                     <div class="flex items-center space-x-1 text-xs">
@@ -175,14 +177,14 @@
                                 </div>
                             </div>
                         </div>
-                        <button onclick="saveTimeSettings()" class="w-full bg-blue-900 text-white py-2 rounded-lg text-xs font-semibold hover:bg-blue-800 mt-3">Simpan Tetapan Masa</button>
+                        <button onclick="saveTimeSettings()" class="w-full bg-[#0b1b3d] text-white py-2 rounded-lg text-xs font-semibold hover:bg-[#132d60] mt-3 shadow">Simpan Tetapan Masa</button>
                     </div>
 
                     <!-- 6. Blok Waktu Mengajar -->
                     <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3 flex flex-col justify-between">
                         <div class="space-y-3">
                             <h4 class="font-bold text-slate-800 text-sm flex items-center space-x-2">
-                                <span class="bg-blue-900 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">6</span>
+                                <span class="bg-[#0b1b3d] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">6</span>
                                 <span>Blok Waktu Mengajar</span>
                             </h4>
                             <div class="grid grid-cols-2 gap-2">
@@ -196,18 +198,18 @@
                                 </div>
                             </div>
                         </div>
-                        <button onclick="saveBlockSettings()" class="w-full bg-blue-900 text-white py-2 rounded-lg text-xs font-semibold hover:bg-blue-800 mt-3">Simpan Blok Waktu</button>
+                        <button onclick="saveBlockSettings()" class="w-full bg-[#0b1b3d] text-white py-2 rounded-lg text-xs font-semibold hover:bg-[#132d60] mt-3 shadow">Simpan Blok Waktu</button>
                     </div>
 
                 </div>
 
                 <!-- 7. Penetapan Guru & Mata Pelajaran (Opsyen Mengajar) -->
                 <div class="p-5 bg-blue-50/70 border border-blue-200 rounded-xl space-y-3">
-                    <h4 class="font-bold text-blue-900 text-sm flex items-center space-x-2">
-                        <span class="bg-blue-900 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">7</span>
+                    <h4 class="font-bold text-[#0b1b3d] text-sm flex items-center space-x-2">
+                        <span class="bg-[#0b1b3d] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">7</span>
                         <span>Penetapan Opsyen Guru & Mata Pelajaran (Disimpan ke Firebase Firestore)</span>
                     </h4>
-                    <p class="text-xs text-slate-600">Pilih guru dan tentukan subjek yang diampu. Data ini disimpan dalam koleksi <code class="bg-white px-1 py-0.5 rounded border text-blue-800 font-bold">assignments</code> di Firebase.</p>
+                    <p class="text-xs text-slate-600">Pilih guru dan tentukan subjek yang diampu. Data ini disimpan dalam koleksi <code class="bg-white px-1 py-0.5 rounded border text-[#0b1b3d] font-bold">assignments</code> di Firebase.</p>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                         <select id="select-assign-teacher" class="px-3 py-2 border rounded-lg text-sm bg-white font-medium">
                             <option value="">-- Pilih Guru --</option>
@@ -215,7 +217,7 @@
                         <select id="select-assign-subject" class="px-3 py-2 border rounded-lg text-sm bg-white font-medium">
                             <option value="">-- Pilih Mata Pelajaran --</option>
                         </select>
-                        <button onclick="assignTeacherSubject()" class="bg-blue-900 text-white px-4 py-2 rounded-lg text-xs font-semibold hover:bg-blue-800 shadow">Simpan Opsyen Mengajar</button>
+                        <button onclick="assignTeacherSubject()" class="bg-[#0b1b3d] text-white px-4 py-2 rounded-lg text-xs font-semibold hover:bg-[#132d60] shadow">Simpan Opsyen Mengajar</button>
                     </div>
                 </div>
 
@@ -226,7 +228,7 @@
                 <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
                     <h4 class="font-bold text-slate-800 mb-2 text-xs flex justify-between items-center">
                         <span>Senarai Guru</span>
-                        <span id="count-teachers" class="bg-blue-100 text-blue-800 text-[10px] px-2 py-0.5 rounded-full">0</span>
+                        <span id="count-teachers" class="bg-blue-100 text-[#0b1b3d] text-[10px] px-2 py-0.5 rounded-full">0</span>
                     </h4>
                     <div id="list-teachers" class="space-y-1 max-h-40 overflow-y-auto text-xs text-slate-600">
                         <p class="text-slate-400 italic">Tiada rekod.</p>
@@ -235,7 +237,7 @@
                 <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
                     <h4 class="font-bold text-slate-800 mb-2 text-xs flex justify-between items-center">
                         <span>Senarai Kelas</span>
-                        <span id="count-classes" class="bg-blue-100 text-blue-800 text-[10px] px-2 py-0.5 rounded-full">0</span>
+                        <span id="count-classes" class="bg-blue-100 text-[#0b1b3d] text-[10px] px-2 py-0.5 rounded-full">0</span>
                     </h4>
                     <div id="list-classes" class="space-y-1 max-h-40 overflow-y-auto text-xs text-slate-600">
                         <p class="text-slate-400 italic">Tiada rekod.</p>
@@ -244,7 +246,7 @@
                 <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
                     <h4 class="font-bold text-slate-800 mb-2 text-xs flex justify-between items-center">
                         <span>Senarai Subjek</span>
-                        <span id="count-subjects" class="bg-blue-100 text-blue-800 text-[10px] px-2 py-0.5 rounded-full">0</span>
+                        <span id="count-subjects" class="bg-blue-100 text-[#0b1b3d] text-[10px] px-2 py-0.5 rounded-full">0</span>
                     </h4>
                     <div id="list-subjects" class="space-y-1 max-h-40 overflow-y-auto text-xs text-slate-600">
                         <p class="text-slate-400 italic">Tiada rekod.</p>
@@ -272,12 +274,12 @@
                 </div>
                 <div class="flex items-center space-x-3">
                     <div class="text-sm font-semibold text-slate-700">Pilih Kelas:</div>
-                    <select id="select-target-filter" onchange="loadGridTimetable()" class="px-3 py-2 border rounded-lg text-sm bg-slate-50 font-medium text-blue-900 focus:ring-2 focus:ring-blue-500">
+                    <select id="select-target-filter" onchange="loadGridTimetable()" class="px-3 py-2 border rounded-lg text-sm bg-slate-50 font-medium text-[#0b1b3d] focus:ring-2 focus:ring-[#0b1b3d]">
                         <option value="">-- Pilih Kelas --</option>
                     </select>
                 </div>
                 <div class="flex space-x-2">
-                    <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-xs font-medium shadow flex items-center space-x-1">
+                    <button onclick="window.print()" class="bg-[#0b1b3d] hover:bg-[#132d60] text-white px-3 py-2 rounded-lg text-xs font-medium shadow flex items-center space-x-1">
                         <span>🖨️</span><span>Cetak Semasa</span>
                     </button>
                     <button onclick="printAllClasses()" class="bg-slate-800 hover:bg-slate-900 text-white px-3 py-2 rounded-lg text-xs font-medium shadow flex items-center space-x-1">
@@ -286,7 +288,7 @@
                 </div>
             </div>
 
-            <div class="bg-purple-50 border border-purple-100 text-purple-900 p-3 rounded-lg text-xs flex items-center space-x-2">
+            <div class="bg-blue-50 border border-blue-200 text-[#0b1b3d] p-3 rounded-lg text-xs flex items-center space-x-2">
                 <span>💡</span>
                 <span>Selepas melengkapkan tetapan di tab <strong>Data Asas</strong>, klik butang <strong>"8. Jana Jadual Automatik"</strong>[cite: 8].</span>
             </div>
@@ -295,11 +297,11 @@
             <div id="printable-area" class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
                 <div class="flex justify-between items-center border-b pb-3">
                     <div>
-                        <h3 id="grid-title-school" class="text-lg font-bold text-blue-900">Jadual Induk (Grid View)</h3>
+                        <h3 id="grid-title-school" class="text-lg font-bold text-[#0b1b3d]">Jadual Induk (Grid View)</h3>
                         <p class="text-xs text-slate-500">Sesi Persekolahan Rasmi</p>
                     </div>
                     <div class="text-right">
-                        <span id="grid-current-class-tag" class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full font-bold">Sila Pilih Kelas / Jana Automatik</span>
+                        <span id="grid-current-class-tag" class="bg-blue-100 text-[#0b1b3d] text-xs px-3 py-1 rounded-full font-bold">Sila Pilih Kelas / Jana Automatik</span>
                     </div>
                 </div>
 
@@ -307,18 +309,18 @@
                     <div class="overflow-x-auto">
                         <table class="w-full border-collapse border border-slate-200 text-xs text-center">
                             <thead>
-                                <tr class="bg-slate-800 text-white">
-                                    <th class="border border-slate-700 p-2.5 w-24">HARI</th>
-                                    <th class="border border-slate-700 p-2">07:30<br>08:00<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 1</span>[cite: 7]</th>
-                                    <th class="border border-slate-700 p-2">08:00<br>08:30<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 2</span>[cite: 7]</th>
-                                    <th class="border border-slate-700 p-2">08:30<br>09:00<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 3</span>[cite: 7]</th>
-                                    <th class="border border-slate-700 p-2">09:00<br>09:30<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 4</span>[cite: 7]</th>
-                                    <th class="border border-slate-700 p-2 bg-slate-900 text-amber-400 font-bold">09:30<br>09:50<br>REHAT[cite: 7]</th>
-                                    <th class="border border-slate-700 p-2">09:50<br>10:20<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 5</span>[cite: 7]</th>
-                                    <th class="border border-slate-700 p-2">10:20<br>10:50<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 6</span>[cite: 7]</th>
-                                    <th class="border border-slate-700 p-2">10:50<br>11:20<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 7</span>[cite: 7]</th>
-                                    <th class="border border-slate-700 p-2">11:20<br>11:50<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 8</span>[cite: 7]</th>
-                                    <th class="border border-slate-700 p-2">11:50<br>12:20<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 9</span>[cite: 7]</th>
+                                <tr class="bg-[#0b1b3d] text-white">
+                                    <th class="border border-[#132d60] p-2.5 w-24">HARI</th>
+                                    <th class="border border-[#132d60] p-2">07:30<br>08:00<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 1</span>[cite: 7]</th>
+                                    <th class="border border-[#132d60] p-2">08:00<br>08:30<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 2</span>[cite: 7]</th>
+                                    <th class="border border-[#132d60] p-2">08:30<br>09:00<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 3</span>[cite: 7]</th>
+                                    <th class="border border-[#132d60] p-2">09:00<br>09:30<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 4</span>[cite: 7]</th>
+                                    <th class="border border-[#132d60] p-2 bg-[#132d60] text-amber-400 font-bold">REHAT[cite: 7]</th>
+                                    <th class="border border-[#132d60] p-2">09:50<br>10:20<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 5</span>[cite: 7]</th>
+                                    <th class="border border-[#132d60] p-2">10:20<br>10:50<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 6</span>[cite: 7]</th>
+                                    <th class="border border-[#132d60] p-2">10:50<br>11:20<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 7</span>[cite: 7]</th>
+                                    <th class="border border-[#132d60] p-2">11:20<br>11:50<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 8</span>[cite: 7]</th>
+                                    <th class="border border-[#132d60] p-2">11:50<br>12:20<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 9</span>[cite: 7]</th>
                                 </tr>
                             </thead>
                             <tbody id="grid-table-body" class="font-medium">
@@ -336,9 +338,9 @@
                         <span>📋</span><span>Ringkasan Baki Waktu (Sila penuhkan slot kosong)[cite: 7]</span>
                     </div>
                     <div id="summary-baki-container" class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                        <div class="p-3 bg-cyan-50 border rounded-lg flex justify-between items-center text-xs">
+                        <div class="p-3 bg-blue-50 border rounded-lg flex justify-between items-center text-xs">
                             <div><strong>Jumlah Subjek</strong><br><span class="text-[10px] text-slate-500">Status Semasa</span></div>
-                            <span class="bg-cyan-600 text-white font-bold px-2 py-0.5 rounded text-[10px]">AKTIF</span>
+                            <span class="bg-[#0b1b3d] text-white font-bold px-2 py-0.5 rounded text-[10px]">AKTIF</span>
                         </div>
                     </div>
                 </div>
@@ -371,7 +373,7 @@
         <section id="tab-tetapan" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
                 <h3 class="text-lg font-bold text-slate-900 mb-2">Status Sambungan Firebase</h3>
-                <p class="text-sm text-slate-600 mb-4">Pangkalan data awan projek <span class="font-semibold text-blue-900">sistem-jadual-sekolah</span> aktif.</p>
+                <p class="text-sm text-slate-600 mb-4">Pangkalan data awan projek <span class="font-semibold text-[#0b1b3d]">sistem-jadual-sekolah</span> aktif.</p>
                 <div class="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg text-sm">
                     Status: <strong>Sambungan Berjaya (Cloud Firestore Ready)</strong>
                 </div>
@@ -399,7 +401,12 @@
         let cachedTeachers = [];
         let cachedSubjects = [];
         let cachedAssignments = [];
-        let schoolData = { name: "SMU(A) Khairiah Banggol Setol", code: "DBA1122", startDay: "Ahad" };
+        let schoolData = { 
+            name: "SMU(A) Khairiah Banggol Setol", 
+            code: "DBA1122", 
+            startDay: "Ahad", 
+            totalDays: 5 
+        };
 
         try {
             const app = initializeApp(firebaseConfig);
@@ -430,7 +437,7 @@
             const div = document.createElement('div');
             div.className = 'time-slot-item p-2 bg-white rounded border border-slate-200 space-y-1';
             div.innerHTML = `
-                <div class="flex justify-between items-center text-[10px] font-bold text-blue-900">
+                <div class="flex justify-between items-center text-[10px] font-bold text-[#0b1b3d]">
                     <span>Masa ${count}</span>
                     <button onclick="this.parentElement.parentElement.remove()" class="text-red-500 hover:text-red-700 font-bold">X</button>
                 </div>
@@ -506,7 +513,7 @@
                 assignSnapshot.forEach((doc) => {
                     const data = doc.data();
                     cachedAssignments.push(data);
-                    if(assignListEl) assignListEl.innerHTML += `<div class="p-1.5 bg-blue-50/50 rounded border text-blue-900"><strong>${data.teacher}</strong> ➔ ${data.subject}</div>`;
+                    if(assignListEl) assignListEl.innerHTML += `<div class="p-1.5 bg-blue-50/50 rounded border text-[#0b1b3d]"><strong>${data.teacher}</strong> ➔ ${data.subject}</div>`;
                 });
 
                 updateDropdownFilters(classSnapshot);
@@ -538,7 +545,8 @@
 
         window.saveTimeSettings = function() {
             schoolData.startDay = document.getElementById('select-start-day').value;
-            alert(`Tetapan Masa & Hari Berjaya Disimpan!\nHari Mula Seminggu: ${schoolData.startDay}`);
+            schoolData.totalDays = parseInt(document.getElementById('select-total-days').value);
+            alert(`Tetapan Masa & Hari Berjaya Disimpan!\nHari Mula: ${schoolData.startDay}\nBilangan Hari: ${schoolData.totalDays} Hari`);
         }
 
         window.saveBlockSettings = function() {
@@ -612,8 +620,15 @@
 
         function generateGridHtml(className) {
             const startDay = schoolData.startDay || 'Ahad';
-            const days = startDay === 'Ahad' ? ['AHAD', 'ISNIN', 'SELASA', 'RABU', 'KHAMIS'] : ['ISNIN', 'SELASA', 'RABU', 'KHAMIS', 'JUMAAT'];
-            const colors = ['bg-sky-50 text-sky-900 border-sky-200', 'bg-amber-50 text-amber-900 border-amber-200', 'bg-emerald-50 text-emerald-900 border-emerald-200', 'bg-rose-50 text-rose-900 border-rose-200', 'bg-indigo-50 text-indigo-900 border-indigo-200'];
+            const totalDays = schoolData.totalDays || 5;
+
+            const masterDaysAhad = ['AHAD', 'ISNIN', 'SELASA', 'RABU', 'KHAMIS', 'JUMAAT'];
+            const masterDaysIsnin = ['ISNIN', 'SELASA', 'RABU', 'KHAMIS', 'JUMAAT', 'SABTU'];
+
+            let masterList = startDay === 'Ahad' ? masterDaysAhad : masterDaysIsnin;
+            let days = masterList.slice(0, totalDays);
+
+            const colors = ['bg-sky-50 text-sky-900 border-sky-200', 'bg-amber-50 text-amber-900 border-amber-200', 'bg-emerald-50 text-emerald-900 border-emerald-200', 'bg-rose-50 text-rose-900 border-rose-200', 'bg-indigo-50 text-indigo-900 border-indigo-200', 'bg-purple-50 text-purple-900 border-purple-200'];
 
             let tbodyHtml = '';
             days.forEach((day, index) => {
@@ -643,22 +658,22 @@
 
             return `
                 <div class="space-y-4 page-break">
-                    <div class="text-sm font-bold text-blue-900 border-b pb-1">Jadual Waktu: ${className} (Mula Hari: ${startDay})</div>
+                    <div class="text-sm font-bold text-[#0b1b3d] border-b pb-1">Jadual Waktu: ${className} (Mula Hari: ${startDay}, Tempoh: ${totalDays} Hari)</div>
                     <div class="overflow-x-auto">
                         <table class="w-full border-collapse border border-slate-200 text-xs text-center">
                             <thead>
-                                <tr class="bg-slate-800 text-white">
-                                    <th class="border border-slate-700 p-2.5 w-24">HARI</th>
-                                    <th class="border border-slate-700 p-2">07:30<br>08:00<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 1</span>[cite: 7]</th>
-                                    <th class="border border-slate-700 p-2">08:00<br>08:30<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 2</span>[cite: 7]</th>
-                                    <th class="border border-slate-700 p-2">08:30<br>09:00<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 3</span>[cite: 7]</th>
-                                    <th class="border border-slate-700 p-2">09:00<br>09:30<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 4</span>[cite: 7]</th>
-                                    <th class="border border-slate-700 p-2 bg-slate-900 text-amber-400 font-bold">09:30<br>09:50<br>REHAT[cite: 7]</th>
-                                    <th class="border border-slate-700 p-2">09:50<br>10:20<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 5</span>[cite: 7]</th>
-                                    <th class="border border-slate-700 p-2">10:20<br>10:50<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 6</span>[cite: 7]</th>
-                                    <th class="border border-slate-700 p-2">10:50<br>11:20<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 7</span>[cite: 7]</th>
-                                    <th class="border border-slate-700 p-2">11:20<br>11:50<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 8</span>[cite: 7]</th>
-                                    <th class="border border-slate-700 p-2">11:50<br>12:20<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 9</span>[cite: 7]</th>
+                                <tr class="bg-[#0b1b3d] text-white">
+                                    <th class="border border-[#132d60] p-2.5 w-24">HARI</th>
+                                    <th class="border border-[#132d60] p-2">07:30<br>08:00<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 1</span>[cite: 7]</th>
+                                    <th class="border border-[#132d60] p-2">08:00<br>08:30<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 2</span>[cite: 7]</th>
+                                    <th class="border border-[#132d60] p-2">08:30<br>09:00<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 3</span>[cite: 7]</th>
+                                    <th class="border border-[#132d60] p-2">09:00<br>09:30<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 4</span>[cite: 7]</th>
+                                    <th class="border border-[#132d60] p-2 bg-[#132d60] text-amber-400 font-bold">REHAT[cite: 7]</th>
+                                    <th class="border border-[#132d60] p-2">09:50<br>10:20<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 5</span>[cite: 7]</th>
+                                    <th class="border border-[#132d60] p-2">10:20<br>10:50<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 6</span>[cite: 7]</th>
+                                    <th class="border border-[#132d60] p-2">10:50<br>11:20<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 7</span>[cite: 7]</th>
+                                    <th class="border border-[#132d60] p-2">11:20<br>11:50<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 8</span>[cite: 7]</th>
+                                    <th class="border border-[#132d60] p-2">11:50<br>12:20<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 9</span>[cite: 7]</th>
                                 </tr>
                             </thead>
                             <tbody class="font-medium">
