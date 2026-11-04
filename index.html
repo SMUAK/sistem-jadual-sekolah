@@ -269,7 +269,7 @@
                 <div class="border-b pb-3 flex justify-between items-center flex-wrap gap-4">
                     <div>
                         <h3 class="text-xl font-bold text-[#0b1b3d]">Penetapan Opsyen Guru & Jana Jadual Automatik</h3>
-                        <p class="text-xs text-slate-500 mt-0.5">Tentukan opsyen subjek mengajar guru dan mulakan proses penjanaan jadual sekolah.</p>
+                        <p class="text-xs text-slate-500 mt-0.5">Tentukan opsyen subjek dan kelas/tingkatan mengajar guru serta mulakan proses penjanaan jadual sekolah.</p>
                     </div>
                     <div>
                         <button onclick="startAutoGenerationProcess()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-lg text-xs font-bold shadow flex items-center space-x-1.5">
@@ -278,19 +278,22 @@
                     </div>
                 </div>
 
-                <!-- Kotak Pilihan Opsyen Mengajar -->
+                <!-- Kotak Pilihan Opsyen Mengajar (Kini dengan Pilihan Tingkatan/Kelas) -->
                 <div class="p-5 bg-blue-50/70 border border-blue-200 rounded-xl space-y-3">
                     <h4 class="font-bold text-[#0b1b3d] text-sm flex items-center space-x-2">
                         <span class="bg-[#0b1b3d] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">⭐</span>
-                        <span>Tetapan Opsyen Guru & Mata Pelajaran (Disimpan ke Firebase Firestore)</span>
+                        <span>Tetapan Opsyen Guru, Mata Pelajaran & Tingkatan (Disimpan ke Firebase Firestore)</span>
                     </h4>
-                    <p class="text-xs text-slate-600">Pilih guru dan tentukan subjek yang diampu. Data ini disimpan dalam koleksi <code class="bg-white px-1 py-0.5 rounded border text-[#0b1b3d] font-bold">assignments</code> di Firebase[cite: 8].</p>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <p class="text-xs text-slate-600">Pilih guru, mata pelajaran, dan tingkatan/kelas yang diajar. Data ini disimpan dalam koleksi <code class="bg-white px-1 py-0.5 rounded border text-[#0b1b3d] font-bold">assignments</code> di Firebase[cite: 8].</p>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
                         <select id="select-assign-teacher" class="px-3 py-2 border rounded-lg text-sm bg-white font-medium">
                             <option value="">-- Pilih Guru --</option>
                         </select>
                         <select id="select-assign-subject" class="px-3 py-2 border rounded-lg text-sm bg-white font-medium">
                             <option value="">-- Pilih Mata Pelajaran --</option>
+                        </select>
+                        <select id="select-assign-class" class="px-3 py-2 border rounded-lg text-sm bg-white font-medium">
+                            <option value="">-- Pilih Tingkatan/Kelas --</option>
                         </select>
                         <button onclick="assignTeacherSubject()" class="bg-[#0b1b3d] text-white px-4 py-2 rounded-lg text-xs font-semibold hover:bg-[#132d60] shadow">Simpan Opsyen Mengajar</button>
                     </div>
@@ -309,14 +312,9 @@
             </div>
         </section>
 
-        <!-- Tab Jadual Induk & Penjanaan -->
+        <!-- Tab Jadual Induk & Penjanaan (Butang Jana Dibuang Dari Sini) -->
         <section id="tab-jadual" class="space-y-6">
             <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-wrap justify-between items-center gap-4">
-                <div class="flex items-center space-x-3">
-                    <button onclick="startAutoGenerationProcess()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-xs font-bold shadow flex items-center space-x-1">
-                        <span>⚡</span><span>Jana Semula Jadual Automatik</span>
-                    </button>
-                </div>
                 <div class="flex items-center space-x-3">
                     <div class="text-sm font-semibold text-slate-700">Pilih Kelas:</div>
                     <select id="select-target-filter" onchange="loadGridTimetable()" class="px-3 py-2 border rounded-lg text-sm bg-slate-50 font-medium text-[#0b1b3d] focus:ring-2 focus:ring-[#0b1b3d]">
@@ -365,7 +363,7 @@
                             </thead>
                             <tbody id="grid-table-body" class="font-medium">
                                 <tr>
-                                    <td colspan="11" class="p-8 text-slate-400 italic">Sila klik "Jana Jadual Automatik" di menu Penetapan Opsyen Guru.</td>
+                                    <td colspan="11" class="p-8 text-slate-400 italic">Sila jana jadual melalui menu "Penetapan Opsyen Guru".</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -573,9 +571,12 @@
                     if(teacherFilterSelect) teacherFilterSelect.innerHTML += `<option value="${data.name}">${data.name}</option>`;
                 });
 
-                // Kelas
+                // Kelas & Tingkatan
                 const classSnapshot = await getDocs(collection(db, "classes"));
                 cachedClasses = [];
+                const assignClassSelect = document.getElementById('select-assign-class');
+                if(assignClassSelect) assignClassSelect.innerHTML = '<option value="">-- Pilih Tingkatan/Kelas --</option>';
+
                 const classListEl = document.getElementById('list-classes');
                 document.getElementById('stat-classes').innerText = classSnapshot.size;
                 document.getElementById('count-classes').innerText = classSnapshot.size;
@@ -585,6 +586,7 @@
                     const data = doc.data();
                     cachedClasses.push(data.name);
                     if(classListEl) classListEl.innerHTML += `<div class="p-1.5 bg-slate-50 rounded border"><strong>${data.name}</strong></div>`;
+                    if(assignClassSelect) assignClassSelect.innerHTML += `<option value="${data.name}">${data.name}</option>`;
                 });
 
                 // Subjek
@@ -614,7 +616,7 @@
                 assignSnapshot.forEach((doc) => {
                     const data = doc.data();
                     cachedAssignments.push(data);
-                    if(assignListEl) assignListEl.innerHTML += `<div class="p-2 bg-blue-50/50 rounded border text-[#0b1b3d]"><strong>${data.teacher}</strong> ➔ ${data.subject}</div>`;
+                    if(assignListEl) assignListEl.innerHTML += `<div class="p-2 bg-blue-50/50 rounded border text-[#0b1b3d]"><strong>${data.teacher}</strong> ➔ ${data.subject} (${data.className || 'Semua Kelas'})</div>`;
                 });
 
                 updateDropdownFilters(classSnapshot);
@@ -698,12 +700,13 @@
         window.assignTeacherSubject = async function() {
             const teacher = document.getElementById('select-assign-teacher').value;
             const subject = document.getElementById('select-assign-subject').value;
-            if(!teacher || !subject) return alert('Sila pilih guru dan mata pelajaran.');
+            const className = document.getElementById('select-assign-class').value;
+            if(!teacher || !subject || !className) return alert('Sila pilih guru, mata pelajaran, dan tingkatan/kelas.');
             try {
                 if(db) {
-                    await addDoc(collection(db, "assignments"), { teacher, subject, createdAt: new Date() });
+                    await addDoc(collection(db, "assignments"), { teacher, subject, className, createdAt: new Date() });
                 }
-                alert(`Opsyen mengajar (${teacher} ➔ ${subject}) berjaya disimpan ke koleksi 'assignments' Firebase![cite: 8]`);
+                alert(`Opsyen mengajar (${teacher} ➔ ${subject} ➔ ${className}) berjaya disimpan ke koleksi 'assignments' Firebase[cite: 8]!`);
                 loadAllData();
             } catch (err) { alert('Ralat: ' + err.message); }
         }
