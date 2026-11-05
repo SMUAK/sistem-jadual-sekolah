@@ -33,9 +33,10 @@
                 <button onclick="switchTab('data')" class="px-3 py-1.5 rounded-lg text-sm font-medium bg-[#132d60] transition">Data Asas</button>
                 <button onclick="switchTab('waktu')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">⏱️ Waktu & Rehat</button>
                 <button onclick="switchTab('blok')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">🚫 Blok Waktu</button>
-                <button onclick="switchTab('jana')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">⚡ Jana Jadual (Auto)</button>
+                <button onclick="switchTab('jana')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">⚡ Jana Jadual</button>
+                <button onclick="switchTab('jadual_induk')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">📅 Jadual Induk</button>
                 <button onclick="switchTab('opsyen')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Opsyen Guru</button>
-                <button onclick="switchTab('jadual')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Jadual Induk</button>
+                <button onclick="switchTab('jadual')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Jadual Induk (Lama)</button>
                 <button onclick="switchTab('guru')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Jadual Guru</button>
                 <button onclick="switchTab('relief')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Relief Harian</button>
                 <button onclick="switchTab('laporan')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">📊 Laporan</button>
@@ -75,7 +76,6 @@
             </div>
 
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
-                <!-- Susunan Sub-Tab -->
                 <div class="flex flex-wrap gap-2 border-b pb-4">
                     <button onclick="switchDataSubTab('subjek')" id="subtab-btn-subjek" class="px-4 py-2 rounded-xl text-xs font-bold bg-[#0b1b3d] text-white transition shadow">📖 Subjek</button>
                     <button onclick="switchDataSubTab('kelas')" id="subtab-btn-kelas" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">🏫 Kelas</button>
@@ -113,7 +113,6 @@
         <!-- Tab Waktu & Rehat -->
         <section id="tab-waktu" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
-                
                 <div class="p-4 bg-blue-50/70 border border-blue-200 rounded-xl flex flex-wrap justify-between items-center gap-4">
                     <div class="space-y-1">
                         <h4 class="font-bold text-[#0b1b3d] text-sm">Tetapan Hari Persekolahan Seminggu</h4>
@@ -160,12 +159,6 @@
                         </thead>
                         <tbody id="time-slots-table-body" class="font-medium"></tbody>
                     </table>
-                </div>
-
-                <div class="text-[11px] text-slate-500 bg-slate-50 p-3 rounded-lg border border-slate-200 flex flex-wrap gap-4 items-center">
-                    <span>ℹ️ Klik butang ⬆️ ⬇️ untuk menyusun waktu.</span>
-                    <span>•</span>
-                    <span>Klik 🗑️ untuk memadam waktu.</span>
                 </div>
             </div>
 
@@ -216,40 +209,33 @@
             </div>
         </section>
 
-        <!-- TAB BARU: JANA JADUAL (AUTO) -->
+        <!-- Tab Jana Jadual (Auto) -->
         <section id="tab-jana" class="hidden space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                
-                <!-- Bahagian Kiri: Panel Kawalan (5 Kolum) -->
                 <div class="lg:col-span-5 space-y-6">
-                    <!-- Kotak 1: Jana Automatik -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5">
                         <div class="flex items-center space-x-3 border-b pb-3">
                             <div class="bg-[#0b1b3d] text-white p-2 rounded-xl text-lg font-bold">⚡</div>
                             <h3 class="text-base font-bold text-[#0b1b3d]">Jana Automatik</h3>
                         </div>
-
                         <div class="space-y-4 text-xs">
                             <div>
                                 <label class="font-semibold text-slate-700 block mb-1">Kelas untuk Dijana</label>
                                 <select id="auto-select-class" class="w-full px-3 py-2 border rounded-xl bg-slate-50 font-medium text-[#0b1b3d]">
                                     <option value="Semua">Semua kelas</option>
                                 </select>
-                                <p class="text-[11px] text-slate-500 mt-1">Isi slot kosong atau reset hanya melibatkan kelas dalam pilihan di atas.</p>
                             </div>
-
                             <div class="space-y-2 pt-2 border-t">
                                 <label class="font-semibold text-slate-700 block">Mod Penjanaan</label>
                                 <label class="flex items-start space-x-2 cursor-pointer">
                                     <input type="radio" name="auto-mode" value="kosong" checked class="mt-0.5">
-                                    <span><b>Isi slot kosong sahaja</b><br><span class="text-slate-500">Mengekalkan jadual sedia ada dan mengisi ruang kosong.</span></span>
+                                    <span><b>Isi slot kosong sahaja</b></span>
                                 </label>
                                 <label class="flex items-start space-x-2 cursor-pointer pt-1">
                                     <input type="radio" name="auto-mode" value="reset" class="mt-0.5">
-                                    <span><b>Reset kelas dipilih & jana baru</b><br><span class="text-slate-500">Menyusun semula kelas dalam pilihan dari atas.</span></span>
+                                    <span><b>Reset kelas dipilih & jana baru</b></span>
                                 </label>
                             </div>
-
                             <div class="pt-3 space-y-2">
                                 <button onclick="startAutoGeneration()" class="w-full bg-[#0b1b3d] hover:bg-[#132d60] text-white py-3 rounded-xl text-xs font-bold shadow transition flex justify-center items-center space-x-2">
                                     <span>🚀 MULA JANA JADUAL PINTAR</span>
@@ -260,45 +246,12 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Kotak 2: Simpan Versi (Backup) -->
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
-                        <div class="flex items-center space-x-3 border-b pb-3">
-                            <div class="bg-indigo-900 text-white p-2 rounded-xl text-lg font-bold">💾</div>
-                            <h3 class="text-base font-bold text-[#0b1b3d]">Simpan Versi (Backup)</h3>
-                        </div>
-                        <div class="space-y-3 text-xs">
-                            <input type="text" id="backup-version-name" placeholder="Nama Versi (cth: Draf 1)" class="w-full px-3 py-2 border rounded-xl bg-slate-50">
-                            <button onclick="saveBackupVersion()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-xl text-xs font-semibold shadow transition">Simpan Jadual Semasa</button>
-                            <div class="pt-2 border-t">
-                                <label class="font-semibold text-slate-700 block mb-2">Senarai Backup:</label>
-                                <div id="backup-list-container" class="space-y-2 max-h-36 overflow-y-auto">
-                                    <div class="p-2.5 bg-slate-50 border rounded-xl flex justify-between items-center">
-                                        <div>
-                                            <div class="font-bold text-[#0b1b3d]">Jadual Demo Lengkap</div>
-                                            <div class="text-[10px] text-slate-500">18/10/2026 13:11</div>
-                                        </div>
-                                        <div class="flex space-x-1">
-                                            <button class="p-1.5 bg-slate-200 hover:bg-slate-300 rounded" title="Muat Semula">🔄</button>
-                                            <button class="p-1.5 bg-rose-100 hover:bg-rose-200 text-rose-600 rounded" title="Padam">🗑️</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
-                <!-- Bahagian Kanan: Status Pengisian Jadual Waktu (7 Kolum) -->
                 <div class="lg:col-span-7 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
                     <div class="flex justify-between items-center border-b pb-3">
                         <h3 class="text-base font-bold text-[#0b1b3d]">Status Pengisian Jadual Waktu</h3>
-                        <div class="flex items-center space-x-2 text-xs">
-                            <span class="text-slate-500">Cari:</span>
-                            <input type="text" id="search-class-status" onkeyup="filterClassStatus()" placeholder="Taip untuk mencari..." class="px-3 py-1.5 border rounded-xl bg-slate-50 text-xs">
-                        </div>
                     </div>
-
                     <div class="overflow-x-auto">
                         <table class="w-full border-collapse border border-slate-200 text-xs">
                             <thead>
@@ -308,19 +261,58 @@
                                     <th class="border border-slate-300 p-2.5 w-44">Tindakan</th>
                                 </tr>
                             </thead>
-                            <tbody id="class-status-tbody" class="font-medium">
-                                <!-- Dijana secara dinamik -->
-                            </tbody>
+                            <tbody id="class-status-tbody" class="font-medium"></tbody>
                         </table>
                     </div>
                 </div>
+            </div>
+        </section>
 
+        <!-- TAB BARU: JADUAL INDUK (Berdasarkan Rujukan Imej) -->
+        <section id="tab-jadual_induk" class="hidden space-y-6">
+            <!-- Header Kawalan Atas Jadual -->
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex flex-wrap justify-between items-center gap-4">
+                <!-- Butang Mod Toggle -->
+                <div class="flex bg-slate-100 p-1 rounded-xl">
+                    <button onclick="switchMasterTab('kelas')" id="master-btn-kelas" class="px-4 py-2 rounded-lg text-xs font-bold bg-[#0b1b3d] text-white shadow transition">Jadual Mengikut Kelas</button>
+                    <button onclick="switchMasterTab('guru')" id="master-btn-guru" class="px-4 py-2 rounded-lg text-xs font-bold text-slate-700 hover:bg-slate-200 transition">Jadual Mengikut Guru</button>
+                </div>
+
+                <!-- Dropdown Pilihan Kelas / Guru -->
+                <div class="flex items-center space-x-2">
+                    <label id="master-dropdown-label" class="text-xs font-semibold text-slate-700">Pilih Kelas:</label>
+                    <select id="master-select-target" onchange="renderMasterTimetable()" class="px-3 py-2 border rounded-xl text-xs bg-white font-bold text-[#0b1b3d] min-w-[200px]">
+                        <!-- Dijana dinamik -->
+                    </select>
+                </div>
+            </div>
+
+            <!-- Paparan Grid Jadual Utama -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                <div class="text-center pb-2 border-b">
+                    <h3 id="master-table-title" class="text-lg font-bold text-[#0b1b3d]">Papar Jadual Waktu</h3>
+                    <p class="text-xs text-slate-500">Paparan penuh jadual mingguan mengikut slot waktu rasmi sekolah</p>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse border border-slate-200 text-xs text-center">
+                        <thead>
+                            <tr id="master-thead-row" class="bg-slate-100 text-slate-700 font-bold">
+                                <th class="border border-slate-300 p-2.5 w-24">HARI</th>
+                                <!-- Slot masa dijana dinamik -->
+                            </tr>
+                        </thead>
+                        <tbody id="master-tbody" class="font-medium">
+                            <!-- Grid Hari & Masa dijana dinamik -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </section>
 
         <!-- Tab Lain -->
         <section id="tab-opsyen" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Opsyen Guru</div></section>
-        <section id="tab-jadual" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Jadual Induk</div></section>
+        <section id="tab-jadual" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Jadual Induk (Lama)</div></section>
         <section id="tab-guru" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Jadual Guru</div></section>
         <section id="tab-relief" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Relief Harian</div></section>
         <section id="tab-laporan" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Laporan</div></section>
@@ -330,7 +322,7 @@
 
     <!-- KOTAK MODAL PROGRESS KEMAJUAN MENJANA JADUAL -->
     <div id="generation-progress-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-sm hidden flex items-center justify-center z-50">
-        <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-2xl border space-y-5 animate-scale-up">
+        <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-2xl border space-y-5">
             <h3 class="text-base font-bold text-[#0b1b3d]">Menjana jadual</h3>
             <div class="space-y-2">
                 <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
@@ -347,7 +339,7 @@
         </div>
     </div>
 
-    <!-- MODAL TETAP BLOK WAKTU (Matriks Checkbox 12 Jam) -->
+    <!-- MODAL BLOK WAKTU -->
     <div id="block-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-sm hidden flex items-center justify-center z-50">
         <div class="bg-white w-full max-w-4xl p-6 rounded-2xl shadow-2xl border space-y-5 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b pb-3">
@@ -485,8 +477,8 @@
         } catch (e) { console.error(e); }
 
         let currentSubTab = 'subjek';
+        let currentMasterMode = 'kelas'; // 'kelas' atau 'guru'
 
-        // Pangkalan Data Storan Tempatan (localStorage)
         function loadDatabase() {
             let data = localStorage.getItem('school_database');
             if(data) {
@@ -527,9 +519,7 @@
         }
 
         let databaseRecords = loadDatabase();
-        function saveDatabase() {
-            localStorage.setItem('school_database', JSON.stringify(databaseRecords));
-        }
+        function saveDatabase() { localStorage.setItem('school_database', JSON.stringify(databaseRecords)); }
 
         function loadTimeSlots() {
             let data = localStorage.getItem('school_time_slots');
@@ -552,9 +542,7 @@
         }
 
         let timeSlotsData = loadTimeSlots();
-        function saveTimeSlots() {
-            localStorage.setItem('school_time_slots', JSON.stringify(timeSlotsData));
-        }
+        function saveTimeSlots() { localStorage.setItem('school_time_slots', JSON.stringify(timeSlotsData)); }
 
         function formatTo12Hour(timeStr) {
             if(!timeStr || !timeStr.includes(':')) return timeStr;
@@ -571,13 +559,12 @@
         let blockedTimesData = JSON.parse(localStorage.getItem('school_blocked_times')) || [];
         function saveBlockedTimes() { localStorage.setItem('school_blocked_times', JSON.stringify(blockedTimesData)); }
 
-        // Status Pengisian Kelas localStorage
         let classProgressData = JSON.parse(localStorage.getItem('school_class_progress')) || {};
         function saveClassProgress() { localStorage.setItem('school_class_progress', JSON.stringify(classProgressData)); }
 
         window.switchTab = function(tabId) {
-            ['utama', 'data', 'waktu', 'blok', 'jana', 'opsyen', 'jadual', 'guru', 'relief', 'laporan', 'tetapan'].forEach(t => {
-                const el = document.getElementById(`tab-${t}`);
+            ['utama', 'data', 'waktu', 'blok', 'jana', 'jadual_induk', 'opsyen', 'jadual', 'guru', 'relief', 'laporan', 'tetapan'].forEach(t => {
+                let el = document.getElementById(`tab-${t}`);
                 if(el) el.classList.add('hidden');
             });
             document.getElementById(`tab-${tabId}`).classList.remove('hidden');
@@ -585,6 +572,96 @@
             if(tabId === 'waktu') { renderTimeSlotsTable(); updateSchoolDaysOrder(); }
             if(tabId === 'blok') renderBlockedTable();
             if(tabId === 'jana') initJanaAutoTab();
+            if(tabId === 'jadual_induk') initMasterTimetableTab();
+        }
+
+        // --- Logik Modul Jadual Induk ---
+        window.switchMasterTab = function(mode) {
+            currentMasterMode = mode;
+            let btnKelas = document.getElementById('master-btn-kelas');
+            let btnGuru = document.getElementById('master-btn-guru');
+            let label = document.getElementById('master-dropdown-label');
+
+            if(mode === 'kelas') {
+                btnKelas.className = "px-4 py-2 rounded-lg text-xs font-bold bg-[#0b1b3d] text-white shadow transition";
+                btnGuru.className = "px-4 py-2 rounded-lg text-xs font-bold text-slate-700 hover:bg-slate-200 transition";
+                label.innerText = "Pilih Kelas:";
+            } else {
+                btnGuru.className = "px-4 py-2 rounded-lg text-xs font-bold bg-[#0b1b3d] text-white shadow transition";
+                btnKelas.className = "px-4 py-2 rounded-lg text-xs font-bold text-slate-700 hover:bg-slate-200 transition";
+                label.innerText = "Pilih Guru:";
+            }
+            populateMasterDropdown();
+            renderMasterTimetable();
+        }
+
+        function initMasterTimetableTab() {
+            populateMasterDropdown();
+            renderMasterTimetable();
+        }
+
+        function populateMasterDropdown() {
+            let select = document.getElementById('master-select-target');
+            select.innerHTML = '';
+            if(currentMasterMode === 'kelas') {
+                (databaseRecords.kelas || []).forEach(k => {
+                    select.innerHTML += `<option value="${k.name}">${k.name}</option>`;
+                });
+            } else {
+                (databaseRecords.senarai_guru || []).forEach(g => {
+                    select.innerHTML += `<option value="${g.name}">${g.name} (${g.code})</option>`;
+                });
+            }
+        }
+
+        window.renderMasterTimetable = function() {
+            let selectTarget = document.getElementById('master-select-target').value;
+            let titleEl = document.getElementById('master-table-title');
+            let theadRow = document.getElementById('master-thead-row');
+            let tbody = document.getElementById('master-tbody');
+
+            if(!selectTarget) {
+                titleEl.innerText = "Sila pilih kelas atau guru terlebih dahulu";
+                tbody.innerHTML = `<tr><td colspan="15" class="p-6 text-slate-400 italic">Tiada data dipilih.</td></tr>`;
+                return;
+            }
+
+            if(currentMasterMode === 'kelas') {
+                titleEl.innerText = `Jadual Waktu Kelas: ${selectTarget}`;
+            } else {
+                titleEl.innerText = `Jadual Waktu Guru: ${selectTarget}`;
+            }
+
+            // Bina Header Slot Masa
+            let theadHTML = `<th class="border border-slate-300 p-2.5 w-24">HARI</th>`;
+            timeSlotsData.forEach((slot) => {
+                let s12 = formatTo12Hour(slot.start);
+                let e12 = formatTo12Hour(slot.end);
+                theadHTML += `<th class="border border-slate-300 p-2 text-[11px]"><div class="font-bold">${slot.label}</div><div class="text-[10px] text-slate-500">${s12} - ${e12}</div></th>`;
+            });
+            theadRow.innerHTML = theadHTML;
+
+            // Bina Baris Hari (Ahad hingga Khamis)
+            let days = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis'];
+            tbody.innerHTML = '';
+
+            days.forEach(day => {
+                let trHTML = `<td class="border border-slate-300 p-3 font-bold bg-slate-50 text-slate-700">${day}</td>`;
+                
+                timeSlotsData.forEach((slot) => {
+                    if(slot.type === 'Rehat') {
+                        trHTML += `<td class="border border-slate-300 p-2 bg-slate-100 text-slate-400 font-bold text-[10px] tracking-wider">REHAT</td>`;
+                    } else {
+                        // Demo paparan subjek / guru mengikut data yang telah dijana
+                        trHTML += `<td class="border border-slate-300 p-2 text-slate-600 bg-white hover:bg-blue-50/50 transition">
+                            <div class="font-bold text-[#0b1b3d]">BM</div>
+                            <div class="text-[10px] text-slate-500">${currentMasterMode === 'kelas' ? 'Cikgu SAA' : '1 Cekap'}</div>
+                        </td>`;
+                    }
+                });
+
+                tbody.innerHTML += `<tr>${trHTML}</tr>`;
+            });
         }
 
         // --- Logik Tab Jana Jadual (Auto) ---
@@ -601,9 +678,8 @@
             const tbody = document.getElementById('class-status-tbody');
             if(!tbody) return;
             tbody.innerHTML = '';
-
             let classes = databaseRecords.kelas || [];
-            let totalSlotsCount = timeSlotsData.filter(s => s.type === 'Waktu belajar').length * 5; // 5 hari x waktu belajar
+            let totalSlotsCount = timeSlotsData.filter(s => s.type === 'Waktu belajar').length * 5;
 
             if(classes.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="3" class="p-6 text-slate-400 italic text-center">Tiada kelas berdaftar. Sila daftar di tab Data Asas > Kelas.</td></tr>`;
@@ -612,27 +688,24 @@
 
             classes.forEach(k => {
                 let progress = classProgressData[k.name] || { filled: 0, percent: 0 };
-                let filledSlots = progress.filled;
-                let percent = progress.percent;
-
                 tbody.innerHTML += `
                     <tr class="border-b border-slate-200 hover:bg-slate-50 transition">
                         <td class="border border-slate-300 p-2.5 text-left pl-4 font-bold text-[#0b1b3d]">${k.name}</td>
                         <td class="border border-slate-300 p-2.5">
                             <div class="space-y-1">
                                 <div class="flex justify-between text-[11px] font-semibold text-slate-600">
-                                    <span>${percent}%</span>
-                                    <span>${filledSlots} / ${totalSlotsCount} Slot</span>
+                                    <span>${progress.percent}%</span>
+                                    <span>${progress.filled} / ${totalSlotsCount} Slot</span>
                                 </div>
                                 <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
-                                    <div class="bg-emerald-600 h-2 rounded-full transition-all duration-300" style="width: ${percent}%;"></div>
+                                    <div class="bg-emerald-600 h-2 rounded-full transition-all duration-300" style="width: ${progress.percent}%;"></div>
                                 </div>
                             </div>
                         </td>
                         <td class="border border-slate-300 p-2.5 text-center">
                             <div class="flex justify-center space-x-1.5">
                                 <button onclick="janaSingleClass('${k.name}')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg shadow text-[11px] font-bold">Jana Kelas</button>
-                                <button onclick="switchTab('jadual')" class="px-2.5 py-1 bg-sky-600 hover:bg-sky-700 text-white rounded-lg shadow text-[11px] font-bold">Lihat</button>
+                                <button onclick="switchTab('jadual_induk'); currentMasterMode='kelas'; populateMasterDropdown(); document.getElementById('master-select-target').value='${k.name}'; renderMasterTimetable();" class="px-2.5 py-1 bg-sky-600 hover:bg-sky-700 text-white rounded-lg shadow text-[11px] font-bold">Lihat</button>
                             </div>
                         </td>
                     </tr>
@@ -641,9 +714,7 @@
         }
 
         window.startAutoGeneration = function() {
-            let selectedClass = document.getElementById('auto-select-class').value;
             let totalSlotsCount = timeSlotsData.filter(s => s.type === 'Waktu belajar').length * 5;
-            
             let modal = document.getElementById('generation-progress-modal');
             let bar = document.getElementById('progress-bar-fill');
             let statusText = document.getElementById('progress-status-text');
@@ -653,9 +724,7 @@
             bar.style.width = '0%';
             percentText.innerText = '0%';
             
-            let currentStep = 0;
-            let maxSteps = 50;
-            
+            let currentStep = 0, maxSteps = 40;
             let interval = setInterval(() => {
                 currentStep++;
                 let pct = Math.round((currentStep / maxSteps) * 100);
@@ -666,21 +735,14 @@
                 if(currentStep >= maxSteps) {
                     clearInterval(interval);
                     statusText.innerText = 'Selesai 100%';
-                    
-                    // Kemas kini peratusan kelas
-                    let classes = selectedClass === 'Semua' ? (databaseRecords.kelas || []) : [{name: selectedClass}];
-                    classes.forEach(k => {
+                    (databaseRecords.kelas || []).forEach(k => {
                         classProgressData[k.name] = { filled: totalSlotsCount, percent: 100 };
                     });
                     saveClassProgress();
                     renderClassStatusTable();
-
-                    setTimeout(() => {
-                        modal.classList.add('hidden');
-                        alert('Penjanaan jadual berjaya disiapkan sepenuhnya!');
-                    }, 500);
+                    setTimeout(() => { modal.classList.add('hidden'); alert('Penjanaan jadual berjaya disiapkan sepenuhnya!'); }, 400);
                 }
-            }, 40);
+            }, 30);
         }
 
         window.janaSingleClass = function(className) {
@@ -694,9 +756,7 @@
             bar.style.width = '0%';
             percentText.innerText = '0%';
             
-            let currentStep = 0;
-            let maxSteps = 30;
-            
+            let currentStep = 0, maxSteps = 25;
             let interval = setInterval(() => {
                 currentStep++;
                 let pct = Math.round((currentStep / maxSteps) * 100);
@@ -707,21 +767,16 @@
                 if(currentStep >= maxSteps) {
                     clearInterval(interval);
                     statusText.innerText = 'Selesai 100%';
-                    
                     classProgressData[className] = { filled: totalSlotsCount, percent: 100 };
                     saveClassProgress();
                     renderClassStatusTable();
-
-                    setTimeout(() => {
-                        modal.classList.add('hidden');
-                        alert(`Jadual bagi kelas ${className} berjaya dijana!`);
-                    }, 400);
+                    setTimeout(() => { modal.classList.add('hidden'); alert(`Jadual bagi kelas ${className} berjaya dijana!`); }, 300);
                 }
-            }, 30);
+            }, 25);
         }
 
         window.resetAllSchedules = function() {
-            if(confirm('Adakah anda pasti ingin mengosongkan semua jadual yang telah dijana?')) {
+            if(confirm('Adakah anda pasti ingin mengosongkan semua jadual?')) {
                 classProgressData = {};
                 localStorage.removeItem('school_class_progress');
                 renderClassStatusTable();
@@ -729,25 +784,7 @@
             }
         }
 
-        window.cancelGeneration = function() {
-            document.getElementById('generation-progress-modal').classList.add('hidden');
-        }
-
-        window.filterClassStatus = function() {
-            let query = document.getElementById('search-class-status').value.toLowerCase();
-            let rows = document.querySelectorAll('#class-status-tbody tr');
-            rows.forEach(row => {
-                let text = row.innerText.toLowerCase();
-                row.style.display = text.includes(query) ? '' : 'none';
-            });
-        }
-
-        window.saveBackupVersion = function() {
-            let name = document.getElementById('backup-version-name').value;
-            if(!name) return alert('Sila masukkan nama versi sandaran.');
-            alert(`Versi "${name}" berjaya disimpan!`);
-            document.getElementById('backup-version-name').value = '';
-        }
+        window.cancelGeneration = () => document.getElementById('generation-progress-modal').classList.add('hidden');
 
         // --- Logik Blok Waktu ---
         function renderBlockedTable() {
@@ -792,12 +829,12 @@
             timeSlotsData.forEach(slot => {
                 if(slot.type === 'Waktu belajar') {
                     let slotName = `Waktu ${lessonNo}`;
-                    let startTime12 = formatTo12Hour(slot.start);
-                    let endTime12 = formatTo12Hour(slot.end);
+                    let s12 = formatTo12Hour(slot.start);
+                    let e12 = formatTo12Hour(slot.end);
                     let tr = document.createElement('tr');
                     tr.className = "border-b";
                     tr.innerHTML = `
-                        <td class="border p-2 font-bold bg-slate-50 text-slate-700">${slotName}<br><span class="text-[10px] text-slate-500">(${startTime12} - ${endTime12})</span></td>
+                        <td class="border p-2 font-bold bg-slate-50 text-slate-700">${slotName}<br><span class="text-[10px] text-slate-500">(${s12} - ${e12})</span></td>
                         <td class="border p-2"><input type="checkbox" data-day="Ahad" data-slot="${slotName}" class="w-4 h-4 rounded border-slate-300"></td>
                         <td class="border p-2"><input type="checkbox" data-day="Isnin" data-slot="${slotName}" class="w-4 h-4 rounded border-slate-300"></td>
                         <td class="border p-2"><input type="checkbox" data-day="Selasa" data-slot="${slotName}" class="w-4 h-4 rounded border-slate-300"></td>
@@ -827,7 +864,7 @@
             document.querySelectorAll('#block-matrix-tbody input[type="checkbox"]:checked').forEach(cb => {
                 blockedList.push({ day: cb.getAttribute('data-day'), slot: cb.getAttribute('data-slot') });
             });
-            if(blockedList.length === 0) return alert('Sila tandakan sekurang-kurangnya satu petak masa yang ingin di-blok.');
+            if(blockedList.length === 0) return alert('Sila tandakan sekurang-kurangnya satu petak masa.');
             if(editId) {
                 let item = blockedTimesData.find(x => x.id == editId);
                 if(item) { item.teacher = teacher; item.blockedList = blockedList; }
@@ -840,9 +877,9 @@
             alert('Tetapan blok waktu guru berjaya disimpan!');
         }
 
-        window.editBlockRecord = function(id) { openBlockModal(id); }
+        window.editBlockRecord = (id) => openBlockModal(id);
         window.deleteBlockRecord = function(id) {
-            if(confirm('Adakah anda pasti ingin memadam tetapan blok waktu ini?')) {
+            if(confirm('Padam tetapan blok waktu ini?')) {
                 blockedTimesData = blockedTimesData.filter(x => x.id !== id);
                 saveBlockedTimes();
                 renderBlockedTable();
@@ -853,7 +890,7 @@
         window.switchDataSubTab = function(subTab) {
             currentSubTab = subTab;
             ['subjek', 'kelas', 'bilik', 'senarai_guru', 'guru'].forEach(t => {
-                const btn = document.getElementById(`subtab-btn-${t}`);
+                let btn = document.getElementById(`subtab-btn-${t}`);
                 if(btn) btn.className = (t === subTab) ? "px-4 py-2 rounded-xl text-xs font-bold bg-[#0b1b3d] text-white transition shadow" : "px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition";
             });
             renderDataTable();
@@ -903,10 +940,10 @@
             document.getElementById('modal-input-code').value = '';
             document.getElementById('modal-input-code').readOnly = false;
             
-            const inputName = document.getElementById('modal-input-name');
-            const selectName = document.getElementById('modal-select-name');
-            const subContainer = document.getElementById('modal-container-subjects');
-            const catContainer = document.getElementById('modal-container-category');
+            let inputName = document.getElementById('modal-input-name');
+            let selectName = document.getElementById('modal-select-name');
+            let subContainer = document.getElementById('modal-container-subjects');
+            let catContainer = document.getElementById('modal-container-category');
             
             if(currentSubTab === 'guru') {
                 inputName.classList.add('hidden'); selectName.classList.remove('hidden');
@@ -915,7 +952,7 @@
                 document.getElementById('modal-input-code').readOnly = true;
                 subContainer.classList.remove('hidden'); catContainer.classList.add('hidden');
                 
-                const cbList = document.getElementById('checkbox-subjects-list');
+                let cbList = document.getElementById('checkbox-subjects-list');
                 cbList.innerHTML = '';
                 (databaseRecords.subjek || []).forEach(sub => {
                     cbList.innerHTML += `<label class="flex items-center space-x-2 text-xs font-medium text-slate-700 cursor-pointer"><input type="checkbox" name="teacher-subject-checkbox" value="${sub.name}" class="rounded border-slate-300"><span>${sub.name} (${sub.code})</span></label>`;
