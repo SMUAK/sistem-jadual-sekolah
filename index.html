@@ -13,13 +13,11 @@
             body * { visibility: hidden; }
             #printable-area, #printable-area * { visibility: visible; }
             #printable-area { position: absolute; left: 0; top: 0; width: 100%; }
-            .printable-teacher-area, .printable-teacher-area * { visibility: visible; }
-            .printable-teacher-area { position: absolute; left: 0; top: 0; width: 100%; }
-            .page-break { page-break-after: always; }
         }
     </style>
 </head>
 <body class="bg-slate-100 text-slate-900 min-h-screen flex flex-col">
+
     <!-- Header / Navigasi Utama -->
     <header class="bg-[#0b1b3d] text-white shadow-md">
         <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
@@ -49,29 +47,13 @@
         
         <!-- Tab Utama -->
         <section id="tab-utama" class="hidden space-y-6">
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-center">
-                <div>
-                    <h2 class="text-2xl font-bold text-slate-900">Selamat Datang, Pentadbir</h2>
-                    <p class="text-slate-600 mt-1">Urus jadual kelas, guru, dan agihan guru ganti harian dengan pangkalan data storan tempatan yang selamat.</p>
-                </div>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                    <div class="text-slate-500 text-sm font-medium">Jumlah Guru Berdaftar</div>
-                    <div id="stat-teachers" class="text-3xl font-bold text-[#0b1b3d] mt-2">0</div>
-                </div>
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                    <div class="text-slate-500 text-sm font-medium">Jumlah Kelas Aktif</div>
-                    <div id="stat-classes" class="text-3xl font-bold text-[#0b1b3d] mt-2">0</div>
-                </div>
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                    <div class="text-slate-500 text-sm font-medium">Guru Cuti / Perlu Relief</div>
-                    <div id="stat-relief" class="text-3xl font-bold text-red-600 mt-2">0</div>
-                </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-2xl font-bold text-slate-900">Selamat Datang, Pentadbir</h2>
+                <p class="text-slate-600 mt-1">Urus jadual kelas, guru, dan agihan guru ganti harian dengan pangkalan data storan tempatan yang selamat.</p>
             </div>
         </section>
 
-        <!-- Tab Data Asas (Moden dengan Sub-Tab Tersusun & Storan Kekal) -->
+        <!-- TAB DATA ASAS -->
         <section id="tab-data" class="space-y-6">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-wrap justify-between items-center gap-4">
                 <div class="flex items-center space-x-4">
@@ -91,15 +73,15 @@
             </div>
 
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
-                <!-- Susunan Sub-Tab: Subjek, Kelas, Bilik Khas, Guru (Guru di akhir sekali) -->
+                <!-- Susunan Sub-Tab: Subjek, Kelas, Bilik Khas, Senarai Guru, Guru & Subjek -->
                 <div class="flex flex-wrap gap-2 border-b pb-4">
                     <button onclick="switchDataSubTab('subjek')" id="subtab-btn-subjek" class="px-4 py-2 rounded-xl text-xs font-bold bg-[#0b1b3d] text-white transition shadow">📖 Subjek</button>
                     <button onclick="switchDataSubTab('kelas')" id="subtab-btn-kelas" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">🏫 Kelas</button>
                     <button onclick="switchDataSubTab('bilik')" id="subtab-btn-bilik" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">🚪 Bilik Khas</button>
-                    <button onclick="switchDataSubTab('guru')" id="subtab-btn-guru" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">👨‍🏫 Guru</button>
+                    <button onclick="switchDataSubTab('senarai_guru')" id="subtab-btn-senarai_guru" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">📋 Senarai Guru</button>
+                    <button onclick="switchDataSubTab('guru')" id="subtab-btn-guru" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">👨‍🏫 Guru & Subjek</button>
                 </div>
 
-                <!-- Tindakan & Carian Atas Jadual -->
                 <div class="flex flex-wrap justify-between items-center gap-4">
                     <button onclick="openAddModal()" class="bg-[#0b1b3d] hover:bg-[#132d60] text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow flex items-center space-x-2 transition">
                         <span>+ Tambah Rekod Baharu</span>
@@ -109,7 +91,6 @@
                     </div>
                 </div>
 
-                <!-- Jadual Paparan Rekod -->
                 <div class="overflow-x-auto">
                     <table class="w-full border-collapse border border-slate-200 text-xs">
                         <thead>
@@ -121,19 +102,15 @@
                                 <th class="border border-slate-300 p-2.5 w-32">Tindakan</th>
                             </tr>
                         </thead>
-                        <tbody id="data-table-body" class="font-medium text-center">
-                            <!-- Dijana Secara Dinamik -->
-                        </tbody>
+                        <tbody id="data-table-body" class="font-medium text-center"></tbody>
                     </table>
                 </div>
             </div>
         </section>
 
-        <!-- TAB KHUSUS: Waktu & Rehat (Disesuaikan Hari Ahad - Khamis) -->
+        <!-- Tab Waktu & Rehat -->
         <section id="tab-waktu" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
-                
-                <!-- Tetapan Hari Mula Seminggu -->
                 <div class="p-4 bg-blue-50/70 border border-blue-200 rounded-xl flex flex-wrap justify-between items-center gap-4">
                     <div class="space-y-1">
                         <h4 class="font-bold text-[#0b1b3d] text-sm">Tetapan Hari Persekolahan Seminggu</h4>
@@ -148,7 +125,6 @@
                     </div>
                 </div>
 
-                <!-- Tajuk & Butang Jana Pantas -->
                 <div class="flex flex-wrap justify-between items-center border-b pb-4 gap-4">
                     <div class="flex items-center space-x-3">
                         <div class="bg-[#0b1b3d] text-white p-2.5 rounded-xl text-lg font-bold">⏱️</div>
@@ -167,7 +143,6 @@
                     </div>
                 </div>
 
-                <!-- Jadual Senarai Waktu & Rehat -->
                 <div class="overflow-x-auto">
                     <table class="w-full border-collapse border border-slate-200 text-xs">
                         <thead>
@@ -180,20 +155,11 @@
                                 <th class="border border-slate-300 p-2.5 w-32">Tindakan</th>
                             </tr>
                         </thead>
-                        <tbody id="time-slots-table-body" class="font-medium">
-                            <!-- Dijana Dinamik -->
-                        </tbody>
+                        <tbody id="time-slots-table-body" class="font-medium"></tbody>
                     </table>
-                </div>
-
-                <div class="text-[11px] text-slate-500 bg-slate-50 p-3 rounded-lg border border-slate-200 flex flex-wrap gap-4 items-center">
-                    <span>ℹ️ Klik butang ⬆️ ⬇️ untuk menyusun waktu.</span>
-                    <span>•</span>
-                    <span>Klik 🗑️ untuk memadam waktu.</span>
                 </div>
             </div>
 
-            <!-- Bahagian Bawah: Bilangan Waktu Setiap Hari -->
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
                 <div class="flex items-center space-x-3 border-b pb-3">
                     <div class="bg-[#0b1b3d] text-white p-2 rounded-lg text-sm font-bold">📅</div>
@@ -202,67 +168,24 @@
                         <p class="text-xs text-slate-500">Tetapkan jumlah waktu pengajaran bagi setiap hari persekolahan mengikut zon anda.</p>
                     </div>
                 </div>
-                
-                <div id="daily-slots-container" class="grid grid-cols-2 sm:grid-cols-5 gap-4">
-                    <!-- Dijana secara dinamik -->
-                </div>
-
+                <div id="daily-slots-container" class="grid grid-cols-2 sm:grid-cols-5 gap-4"></div>
                 <div class="flex justify-end pt-2">
                     <button onclick="saveDailySlotsConfig()" class="bg-[#0b1b3d] hover:bg-[#132d60] text-white px-5 py-2.5 rounded-xl text-xs font-semibold shadow transition">Simpan Tetapan Harian</button>
                 </div>
             </div>
         </section>
 
-        <!-- Tab Opsyen Guru -->
-        <section id="tab-opsyen" class="hidden space-y-6">
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
-                <div class="border-b pb-3 flex justify-between items-center flex-wrap gap-4">
-                    <div>
-                        <h3 class="text-xl font-bold text-[#0b1b3d]">Penetapan Opsyen Guru & Jana Jadual Automatik</h3>
-                        <p class="text-xs text-slate-500 mt-0.5">Tentukan opsyen subjek dan kelas mengajar guru serta mulakan penjanaan jadual.</p>
-                    </div>
-                    <div>
-                        <button onclick="startAutoGenerationProcess()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-lg text-xs font-bold shadow">⚡ Jana Jadual Automatik</button>
-                    </div>
-                </div>
-                <div class="p-5 bg-blue-50/70 border rounded-xl space-y-3">
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
-                        <select id="select-assign-teacher" class="px-3 py-2 border rounded-lg text-sm bg-white"><option value="">-- Pilih Guru --</option></select>
-                        <select id="select-assign-subject" class="px-3 py-2 border rounded-lg text-sm bg-white"><option value="">-- Pilih Subjek --</option></select>
-                        <select id="select-assign-class" class="px-3 py-2 border rounded-lg text-sm bg-white"><option value="">-- Pilih Kelas --</option></select>
-                        <button onclick="assignTeacherSubject()" class="bg-[#0b1b3d] text-white px-4 py-2 rounded-lg text-xs font-semibold">Simpan Opsyen</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Tab Jadual Induk -->
-        <section id="tab-jadual" class="hidden space-y-6">
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex justify-between items-center">
-                <div class="flex items-center space-x-3">
-                    <span class="text-sm font-semibold text-slate-700">Pilih Kelas:</span>
-                    <select id="select-target-filter" onchange="loadGridTimetable()" class="px-3 py-2 border rounded-lg text-sm bg-slate-50 font-medium text-[#0b1b3d]">
-                        <option value="">-- Pilih Kelas --</option>
-                    </select>
-                </div>
-                <button onclick="window.print()" class="bg-[#0b1b3d] text-white px-3 py-2 rounded-lg text-xs font-medium">🖨️ Cetak Jadual</button>
-            </div>
-            <div id="printable-area" class="bg-white p-6 rounded-xl shadow-sm border space-y-6">
-                <h3 id="grid-title-school" class="text-lg font-bold text-[#0b1b3d]">Jadual Induk Kelas</h3>
-                <div id="timetable-master-wrapper" class="overflow-x-auto text-xs text-center">
-                    <p class="text-slate-400 italic p-6">Sila jana jadual melalui menu Opsyen Guru.</p>
-                </div>
-            </div>
-        </section>
-
         <!-- Tab Lain -->
+        <section id="tab-opsyen" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Opsyen Guru</div></section>
+        <section id="tab-jadual" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Jadual Induk</div></section>
         <section id="tab-guru" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Jadual Guru</div></section>
         <section id="tab-relief" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Relief Harian</div></section>
-        <section id="tab-laporan" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Laporan Keseluruhan</div></section>
-        <section id="tab-tetapan" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Tetapan Sistem</div></section>
+        <section id="tab-laporan" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Laporan</div></section>
+        <section id="tab-tetapan" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Tetapan</div></section>
+
     </main>
 
-    <!-- MODAL TAMBAH / EDIT REKOD DATA ASAS -->
+    <!-- MODAL TAMBAH / EDIT REKOD -->
     <div id="data-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-sm hidden flex items-center justify-center z-50">
         <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-2xl border space-y-5">
             <div class="flex justify-between items-center border-b pb-3">
@@ -273,22 +196,28 @@
             <input type="hidden" id="modal-edit-id" value="">
 
             <div class="space-y-4 text-xs">
+                <!-- Nama Utama: Input biasa untuk Subjek/Kelas/Bilik/Senarai Guru, Dropdown untuk Guru & Subjek -->
                 <div>
                     <label id="label-input-name" class="font-semibold text-slate-700 block mb-1">Nama / Maklumat Utama</label>
                     <input type="text" id="modal-input-name" placeholder="Masukkan nama..." class="w-full px-3 py-2 border rounded-lg bg-slate-50">
+                    <select id="modal-select-name" onchange="onTeacherDropdownChange()" class="w-full px-3 py-2 border rounded-lg bg-slate-50 hidden font-medium">
+                        <option value="">-- Pilih Guru --</option>
+                    </select>
                 </div>
+
+                <!-- Kod / Singkatan (Auto-fill jika pilih guru) -->
                 <div>
                     <label id="label-input-code" class="font-semibold text-slate-700 block mb-1">Kod / Singkatan</label>
                     <input type="text" id="modal-input-code" placeholder="Masukkan kod singkatan..." class="w-full px-3 py-2 border rounded-lg bg-slate-50">
                 </div>
                 
-                <!-- Checkboxes Subjek khusus untuk Guru -->
+                <!-- Checkboxes Subjek khusus untuk Guru & Subjek -->
                 <div id="modal-container-subjects" class="hidden space-y-2">
                     <label class="font-semibold text-slate-700 block">Subjek yang diajar (Sila pilih):</label>
                     <div id="checkbox-subjects-list" class="max-h-40 overflow-y-auto p-3 border rounded-lg bg-slate-50 space-y-2"></div>
                 </div>
 
-                <!-- Kategori Biasa untuk Subjek/Kelas/Bilik -->
+                <!-- Kategori Biasa untuk Subjek/Kelas/Bilik/Senarai Guru -->
                 <div id="modal-container-category">
                     <label id="label-input-category" class="font-semibold text-slate-700 block mb-1">Kategori / Butiran Lanjut</label>
                     <input type="text" id="modal-input-category" placeholder="Masukkan butiran..." class="w-full px-3 py-2 border rounded-lg bg-slate-50">
@@ -338,26 +267,10 @@
         </div>
     </div>
 
-    <!-- MODAL KEMAJUAN -->
-    <div id="generation-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center z-50">
-        <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-2xl border space-y-4">
-            <h3 class="text-base font-bold text-[#0b1b3d]">Menjana jadual</h3>
-            <div class="space-y-2">
-                <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden border">
-                    <div id="modal-progress-bar" class="bg-emerald-600 h-full w-0 transition-all duration-150"></div>
-                </div>
-                <div class="flex justify-between items-center text-xs text-slate-600 font-medium">
-                    <span id="modal-progress-text">Memproses...</span>
-                    <span id="modal-progress-count">0/98</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Skrip Aplikasi (Storan Kekal localStorage + Fungsi Waktu & Rehat Lengkap) -->
+    <!-- Skrip Aplikasi (Storan Kekal localStorage + Logik Baru Pemilihan Guru) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         let db = null;
         try {
@@ -374,11 +287,19 @@
 
         let currentSubTab = 'subjek';
 
-        // Pengurusan Storan Tempatan (localStorage) yang Kekal
+        // Muat data dari localStorage atau guna data default
         function loadDatabase() {
             let data = localStorage.getItem('school_database');
             if(data) {
-                return JSON.parse(data);
+                let parsed = JSON.parse(data);
+                // Pastikan struktur ada 'senarai_guru' jika guna versi lama
+                if(!parsed.senarai_guru) {
+                    parsed.senarai_guru = [
+                        { id: 1, name: "Pn. Siti Aisyah Bt Ahmad", code: "SAA", category: "Guru Penolong Kanan" },
+                        { id: 2, name: "En. Ahmad Hafiz Bin Salleh", code: "AHS", category: "Guru Akademik" }
+                    ];
+                }
+                return parsed;
             } else {
                 let initial = {
                     subjek: [
@@ -391,6 +312,10 @@
                     ],
                     bilik: [
                         { id: 1, name: "Makmal Komputer 1", code: "MK1", category: "Khas" }
+                    ],
+                    senarai_guru: [
+                        { id: 1, name: "Pn. Siti Aisyah Bt Ahmad", code: "SAA", category: "Guru Penolong Kanan" },
+                        { id: 2, name: "En. Ahmad Hafiz Bin Salleh", code: "AHS", category: "Guru Akademik" }
                     ],
                     guru: [
                         { id: 1, name: "Pn. Siti Aisyah Bt Ahmad", code: "SAA", category: "Bahasa Melayu, Matematik" },
@@ -437,7 +362,7 @@
 
         window.switchDataSubTab = function(subTab) {
             currentSubTab = subTab;
-            ['subjek', 'kelas', 'bilik', 'guru'].forEach(t => {
+            ['subjek', 'kelas', 'bilik', 'senarai_guru', 'guru'].forEach(t => {
                 const btn = document.getElementById(`subtab-btn-${t}`);
                 if(btn) {
                     btn.className = (t === subTab) 
@@ -459,6 +384,9 @@
             if(currentSubTab === 'guru') {
                 thName.innerText = "Nama Guru";
                 thCategory.innerText = "Subjek yang diajar";
+            } else if(currentSubTab === 'senarai_guru') {
+                thName.innerText = "Nama Guru";
+                thCategory.innerText = "Jawatan / Butiran";
             } else if(currentSubTab === 'subjek') {
                 thName.innerText = "Nama Subjek";
                 thCategory.innerText = "Kategori Subjek";
@@ -500,12 +428,27 @@
             document.getElementById('modal-title').innerText = `Tambah Rekod ${currentSubTab.toUpperCase()}`;
             document.getElementById('modal-edit-id').value = '';
             document.getElementById('modal-input-name').value = '';
+            document.getElementById('modal-select-name').value = '';
             document.getElementById('modal-input-code').value = '';
+            document.getElementById('modal-input-code').readOnly = false;
 
+            const inputName = document.getElementById('modal-input-name');
+            const selectName = document.getElementById('modal-select-name');
             const subSubjectsContainer = document.getElementById('modal-container-subjects');
             const categoryContainer = document.getElementById('modal-container-category');
             
             if(currentSubTab === 'guru') {
+                // Tab Guru & Subjek: Guna Dropdown daripada 'senarai_guru'
+                inputName.classList.add('hidden');
+                selectName.classList.remove('hidden');
+                
+                // Isi pilihan dropdown daripada senarai_guru
+                selectName.innerHTML = '<option value="">-- Pilih Guru --</option>';
+                (databaseRecords.senarai_guru || []).forEach(g => {
+                    selectName.innerHTML += `<option value="${g.name}" data-code="${g.code}">${g.name} (${g.code})</option>`;
+                });
+
+                document.getElementById('modal-input-code').readOnly = true; // Kod jadi automatik
                 subSubjectsContainer.classList.remove('hidden');
                 categoryContainer.classList.add('hidden');
                 
@@ -526,22 +469,46 @@
                     });
                 }
             } else {
+                inputName.classList.remove('hidden');
+                selectName.classList.add('hidden');
                 subSubjectsContainer.classList.add('hidden');
                 categoryContainer.classList.remove('hidden');
-                document.getElementById('label-input-category').innerText = currentSubTab === 'subjek' ? 'Kategori Subjek (Cth: Teras)' : 'Butiran Lanjut / Kategori';
+                
+                if(currentSubTab === 'senarai_guru') {
+                    document.getElementById('label-input-category').innerText = 'Jawatan / Butiran Guru';
+                } else if(currentSubTab === 'subjek') {
+                    document.getElementById('label-input-category').innerText = 'Kategori Subjek (Cth: Teras)';
+                } else {
+                    document.getElementById('label-input-category').innerText = 'Butiran Lanjut / Kategori';
+                }
                 document.getElementById('modal-input-category').value = '';
             }
 
             document.getElementById('data-modal').classList.remove('hidden');
         }
 
+        // Fungsi Auto-fill Kod apabila pilih nama guru dalam tab Guru & Subjek
+        window.onTeacherDropdownChange = function() {
+            const select = document.getElementById('modal-select-name');
+            const selectedOption = select.options[select.selectedIndex];
+            const code = selectedOption.getAttribute('data-code') || '';
+            document.getElementById('modal-input-code').value = code;
+        }
+
         window.closeDataModal = () => document.getElementById('data-modal').classList.add('hidden');
 
         window.saveModalData = function() {
             const editId = document.getElementById('modal-edit-id').value;
-            const name = document.getElementById('modal-input-name').value;
+            let name = '';
+            
+            if(currentSubTab === 'guru') {
+                name = document.getElementById('modal-select-name').value;
+            } else {
+                name = document.getElementById('modal-input-name').value;
+            }
+
             const code = document.getElementById('modal-input-code').value;
-            if(!name) return alert('Sila masukkan nama/maklumat.');
+            if(!name) return alert('Sila masukkan atau pilih nama/maklumat.');
 
             let categoryValue = '';
             if(currentSubTab === 'guru') {
@@ -576,13 +543,24 @@
 
             document.getElementById('modal-title').innerText = `Kemaskini Rekod ${currentSubTab.toUpperCase()}`;
             document.getElementById('modal-edit-id').value = item.id;
-            document.getElementById('modal-input-name').value = item.name;
             document.getElementById('modal-input-code').value = item.code;
 
+            const inputName = document.getElementById('modal-input-name');
+            const selectName = document.getElementById('modal-select-name');
             const subSubjectsContainer = document.getElementById('modal-container-subjects');
             const categoryContainer = document.getElementById('modal-container-category');
 
             if(currentSubTab === 'guru') {
+                inputName.classList.add('hidden');
+                selectName.classList.remove('hidden');
+                
+                selectName.innerHTML = '<option value="">-- Pilih Guru --</option>';
+                (databaseRecords.senarai_guru || []).forEach(g => {
+                    let sel = (g.name === item.name) ? 'selected' : '';
+                    selectName.innerHTML += `<option value="${g.name}" data-code="${g.code}" ${sel}>${g.name} (${g.code})</option>`;
+                });
+
+                document.getElementById('modal-input-code').readOnly = true;
                 subSubjectsContainer.classList.remove('hidden');
                 categoryContainer.classList.add('hidden');
                 
@@ -600,6 +578,10 @@
                     `;
                 });
             } else {
+                inputName.classList.remove('hidden');
+                selectName.classList.add('hidden');
+                inputName.value = item.name;
+                document.getElementById('modal-input-code').readOnly = false;
                 subSubjectsContainer.classList.add('hidden');
                 categoryContainer.classList.remove('hidden');
                 document.getElementById('modal-input-category').value = item.category;
@@ -737,7 +719,6 @@
             setTimeout(() => { document.getElementById('generation-modal').classList.add('hidden'); switchTab('jadual'); }, 800);
         }
 
-        // Panggilan awal semasa muat turun halaman
         window.onload = () => { switchTab('data'); };
     </script>
 </body>
