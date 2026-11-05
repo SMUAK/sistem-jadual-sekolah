@@ -73,7 +73,7 @@
             </div>
 
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
-                <!-- Susunan Sub-Tab: Subjek, Kelas, Bilik Khas, Senarai Guru, Guru & Subjek -->
+                <!-- Susunan Sub-Tab -->
                 <div class="flex flex-wrap gap-2 border-b pb-4">
                     <button onclick="switchDataSubTab('subjek')" id="subtab-btn-subjek" class="px-4 py-2 rounded-xl text-xs font-bold bg-[#0b1b3d] text-white transition shadow">📖 Subjek</button>
                     <button onclick="switchDataSubTab('kelas')" id="subtab-btn-kelas" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">🏫 Kelas</button>
@@ -196,7 +196,7 @@
             <input type="hidden" id="modal-edit-id" value="">
 
             <div class="space-y-4 text-xs">
-                <!-- Nama Utama: Input biasa untuk Subjek/Kelas/Bilik/Senarai Guru, Dropdown untuk Guru & Subjek -->
+                <!-- Nama Utama -->
                 <div>
                     <label id="label-input-name" class="font-semibold text-slate-700 block mb-1">Nama / Maklumat Utama</label>
                     <input type="text" id="modal-input-name" placeholder="Masukkan nama..." class="w-full px-3 py-2 border rounded-lg bg-slate-50">
@@ -205,7 +205,7 @@
                     </select>
                 </div>
 
-                <!-- Kod / Singkatan (Auto-fill jika pilih guru) -->
+                <!-- Kod / Singkatan -->
                 <div>
                     <label id="label-input-code" class="font-semibold text-slate-700 block mb-1">Kod / Singkatan</label>
                     <input type="text" id="modal-input-code" placeholder="Masukkan kod singkatan..." class="w-full px-3 py-2 border rounded-lg bg-slate-50">
@@ -217,10 +217,16 @@
                     <div id="checkbox-subjects-list" class="max-h-40 overflow-y-auto p-3 border rounded-lg bg-slate-50 space-y-2"></div>
                 </div>
 
-                <!-- Kategori Biasa untuk Subjek/Kelas/Bilik/Senarai Guru -->
+                <!-- Kategori / Butiran Lanjut (Dropdown untuk Senarai Guru, Input teks biasa untuk lain-lain) -->
                 <div id="modal-container-category">
                     <label id="label-input-category" class="font-semibold text-slate-700 block mb-1">Kategori / Butiran Lanjut</label>
                     <input type="text" id="modal-input-category" placeholder="Masukkan butiran..." class="w-full px-3 py-2 border rounded-lg bg-slate-50">
+                    <select id="modal-select-category" class="w-full px-3 py-2 border rounded-lg bg-slate-50 hidden font-medium">
+                        <option value="">-- Pilih Jawatan / Butiran --</option>
+                        <option value="Arab / Agama">Arab / Agama</option>
+                        <option value="Akademik">Akademik</option>
+                        <option value="Tahfiz">Tahfiz</option>
+                    </select>
                 </div>
             </div>
 
@@ -267,7 +273,7 @@
         </div>
     </div>
 
-    <!-- Skrip Aplikasi (Storan Kekal localStorage + Logik Baru Pemilihan Guru) -->
+    <!-- Skrip Aplikasi -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -287,16 +293,14 @@
 
         let currentSubTab = 'subjek';
 
-        // Muat data dari localStorage atau guna data default
         function loadDatabase() {
             let data = localStorage.getItem('school_database');
             if(data) {
                 let parsed = JSON.parse(data);
-                // Pastikan struktur ada 'senarai_guru' jika guna versi lama
                 if(!parsed.senarai_guru) {
                     parsed.senarai_guru = [
-                        { id: 1, name: "Pn. Siti Aisyah Bt Ahmad", code: "SAA", category: "Guru Penolong Kanan" },
-                        { id: 2, name: "En. Ahmad Hafiz Bin Salleh", code: "AHS", category: "Guru Akademik" }
+                        { id: 1, name: "Pn. Siti Aisyah Bt Ahmad", code: "SAA", category: "Akademik" },
+                        { id: 2, name: "En. Ahmad Hafiz Bin Salleh", code: "AHS", category: "Arab / Agama" }
                     ];
                 }
                 return parsed;
@@ -314,8 +318,8 @@
                         { id: 1, name: "Makmal Komputer 1", code: "MK1", category: "Khas" }
                     ],
                     senarai_guru: [
-                        { id: 1, name: "Pn. Siti Aisyah Bt Ahmad", code: "SAA", category: "Guru Penolong Kanan" },
-                        { id: 2, name: "En. Ahmad Hafiz Bin Salleh", code: "AHS", category: "Guru Akademik" }
+                        { id: 1, name: "Pn. Siti Aisyah Bt Ahmad", code: "SAA", category: "Akademik" },
+                        { id: 2, name: "En. Ahmad Hafiz Bin Salleh", code: "AHS", category: "Arab / Agama" }
                     ],
                     guru: [
                         { id: 1, name: "Pn. Siti Aisyah Bt Ahmad", code: "SAA", category: "Bahasa Melayu, Matematik" },
@@ -425,7 +429,9 @@
         }
 
         window.openAddModal = function() {
-            document.getElementById('modal-title').innerText = `Tambah Rekod ${currentSubTab.toUpperCase()}`;
+            // Tajuk tanpa simbol garis bawah (Underscore)
+            let tabDisplayName = currentSubTab.toUpperCase().replace('_', ' ');
+            document.getElementById('modal-title').innerText = `Tambah Rekod ${tabDisplayName}`;
             document.getElementById('modal-edit-id').value = '';
             document.getElementById('modal-input-name').value = '';
             document.getElementById('modal-select-name').value = '';
@@ -436,19 +442,19 @@
             const selectName = document.getElementById('modal-select-name');
             const subSubjectsContainer = document.getElementById('modal-container-subjects');
             const categoryContainer = document.getElementById('modal-container-category');
+            const inputCategory = document.getElementById('modal-input-category');
+            const selectCategory = document.getElementById('modal-select-category');
             
             if(currentSubTab === 'guru') {
-                // Tab Guru & Subjek: Guna Dropdown daripada 'senarai_guru'
                 inputName.classList.add('hidden');
                 selectName.classList.remove('hidden');
                 
-                // Isi pilihan dropdown daripada senarai_guru
                 selectName.innerHTML = '<option value="">-- Pilih Guru --</option>';
                 (databaseRecords.senarai_guru || []).forEach(g => {
                     selectName.innerHTML += `<option value="${g.name}" data-code="${g.code}">${g.name} (${g.code})</option>`;
                 });
 
-                document.getElementById('modal-input-code').readOnly = true; // Kod jadi automatik
+                document.getElementById('modal-input-code').readOnly = true;
                 subSubjectsContainer.classList.remove('hidden');
                 categoryContainer.classList.add('hidden');
                 
@@ -476,18 +482,20 @@
                 
                 if(currentSubTab === 'senarai_guru') {
                     document.getElementById('label-input-category').innerText = 'Jawatan / Butiran Guru';
-                } else if(currentSubTab === 'subjek') {
-                    document.getElementById('label-input-category').innerText = 'Kategori Subjek (Cth: Teras)';
+                    inputCategory.classList.add('hidden');
+                    selectCategory.classList.remove('hidden');
+                    selectCategory.value = '';
                 } else {
-                    document.getElementById('label-input-category').innerText = 'Butiran Lanjut / Kategori';
+                    document.getElementById('label-input-category').innerText = currentSubTab === 'subjek' ? 'Kategori Subjek (Cth: Teras)' : 'Butiran Lanjut / Kategori';
+                    inputCategory.classList.remove('hidden');
+                    selectCategory.classList.add('hidden');
+                    inputCategory.value = '';
                 }
-                document.getElementById('modal-input-category').value = '';
             }
 
             document.getElementById('data-modal').classList.remove('hidden');
         }
 
-        // Fungsi Auto-fill Kod apabila pilih nama guru dalam tab Guru & Subjek
         window.onTeacherDropdownChange = function() {
             const select = document.getElementById('modal-select-name');
             const selectedOption = select.options[select.selectedIndex];
@@ -516,6 +524,8 @@
                 let selectedSubjects = [];
                 checkedBoxes.forEach(cb => selectedSubjects.push(cb.value));
                 categoryValue = selectedSubjects.length > 0 ? selectedSubjects.join(', ') : 'Tiada Subjek';
+            } else if(currentSubTab === 'senarai_guru') {
+                categoryValue = document.getElementById('modal-select-category').value || '-';
             } else {
                 categoryValue = document.getElementById('modal-input-category').value || '-';
             }
@@ -541,7 +551,8 @@
             let item = databaseRecords[currentSubTab].find(x => x.id == id);
             if(!item) return;
 
-            document.getElementById('modal-title').innerText = `Kemaskini Rekod ${currentSubTab.toUpperCase()}`;
+            let tabDisplayName = currentSubTab.toUpperCase().replace('_', ' ');
+            document.getElementById('modal-title').innerText = `Kemaskini Rekod ${tabDisplayName}`;
             document.getElementById('modal-edit-id').value = item.id;
             document.getElementById('modal-input-code').value = item.code;
 
@@ -549,6 +560,8 @@
             const selectName = document.getElementById('modal-select-name');
             const subSubjectsContainer = document.getElementById('modal-container-subjects');
             const categoryContainer = document.getElementById('modal-container-category');
+            const inputCategory = document.getElementById('modal-input-category');
+            const selectCategory = document.getElementById('modal-select-category');
 
             if(currentSubTab === 'guru') {
                 inputName.classList.add('hidden');
@@ -584,7 +597,18 @@
                 document.getElementById('modal-input-code').readOnly = false;
                 subSubjectsContainer.classList.add('hidden');
                 categoryContainer.classList.remove('hidden');
-                document.getElementById('modal-input-category').value = item.category;
+
+                if(currentSubTab === 'senarai_guru') {
+                    document.getElementById('label-input-category').innerText = 'Jawatan / Butiran Guru';
+                    inputCategory.classList.add('hidden');
+                    selectCategory.classList.remove('hidden');
+                    selectCategory.value = item.category;
+                } else {
+                    document.getElementById('label-input-category').innerText = 'Butiran Lanjut / Kategori';
+                    inputCategory.classList.remove('hidden');
+                    selectCategory.classList.add('hidden');
+                    inputCategory.value = item.category;
+                }
             }
 
             document.getElementById('data-modal').classList.remove('hidden');
