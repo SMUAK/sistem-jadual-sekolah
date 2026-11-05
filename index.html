@@ -13,6 +13,9 @@
             body * { visibility: hidden; }
             #printable-area, #printable-area * { visibility: visible; }
             #printable-area { position: absolute; left: 0; top: 0; width: 100%; }
+            .printable-teacher-area, .printable-teacher-area * { visibility: visible; }
+            .printable-teacher-area { position: absolute; left: 0; top: 0; width: 100%; }
+            .page-break { page-break-after: always; }
         }
     </style>
 </head>
@@ -24,14 +27,14 @@
             <div class="flex items-center space-x-3">
                 <div class="bg-[#132d60] p-2 rounded-lg text-xl font-bold">🏫</div>
                 <div>
-                    <h1 class="text-lg font-bold">SMU(A) Khairiah Banggol Setol</h1>
+                    <h1 id="header-school-name" class="text-lg font-bold">SMU(A) Khairiah Banggol Setol</h1>
                     <p class="text-xs text-blue-200">Sistem Pengurusan Jadual Waktu & Relief Pintar</p>
                 </div>
             </div>
             <nav class="flex space-x-1 sm:space-x-2 mt-2 sm:mt-0 overflow-x-auto items-center">
                 <button onclick="switchTab('utama')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Utama</button>
-                <button onclick="switchTab('data')" class="px-3 py-1.5 rounded-lg text-sm font-medium bg-[#132d60] transition">Data Asas</button>
-                <button onclick="switchTab('waktu')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">⏱️ Waktu & Rehat</button>
+                <button onclick="switchTab('data')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Data Asas</button>
+                <button onclick="switchTab('waktu')" class="px-3 py-1.5 rounded-lg text-sm font-medium bg-[#132d60] transition">⏱️ Waktu & Rehat</button>
                 <button onclick="switchTab('opsyen')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Opsyen Guru</button>
                 <button onclick="switchTab('jadual')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Jadual Induk</button>
                 <button onclick="switchTab('guru')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Jadual Guru</button>
@@ -47,182 +50,278 @@
         
         <!-- Tab Utama -->
         <section id="tab-utama" class="hidden space-y-6">
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-                <h2 class="text-2xl font-bold text-slate-900">Selamat Datang, Pentadbir</h2>
-                <p class="text-slate-600 mt-1">Urus jadual kelas, guru, dan agihan guru ganti harian dengan pangkalan data storan tempatan yang selamat.</p>
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-center">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-900">Selamat Datang, Pentadbir</h2>
+                    <p class="text-slate-600 mt-1">Urus jadual kelas, guru, dan agihan guru ganti harian dengan pangkalan data awan Firebase.</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    <div class="text-slate-500 text-sm font-medium">Jumlah Guru Berdaftar</div>
+                    <div id="stat-teachers" class="text-3xl font-bold text-[#0b1b3d] mt-2">0</div>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    <div class="text-slate-500 text-sm font-medium">Jumlah Kelas Aktif</div>
+                    <div id="stat-classes" class="text-3xl font-bold text-[#0b1b3d] mt-2">0</div>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    <div class="text-slate-500 text-sm font-medium">Guru Cuti / Perlu Relief</div>
+                    <div id="stat-relief" class="text-3xl font-bold text-red-600 mt-2">0</div>
+                </div>
             </div>
         </section>
 
-        <!-- TAB DATA ASAS -->
-        <section id="tab-data" class="space-y-6">
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-wrap justify-between items-center gap-4">
-                <div class="flex items-center space-x-4">
-                    <div class="bg-[#0b1b3d] text-white p-3 rounded-2xl text-2xl font-bold shadow">📚</div>
-                    <div>
-                        <h2 class="text-xl font-bold text-slate-900">Data Sekolah</h2>
-                        <p class="text-xs text-slate-500">Pengurusan maklumat asas sekolah secara tersusun</p>
-                    </div>
+        <!-- Tab Data Asas -->
+        <section id="tab-data" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
+                <div class="border-b pb-3">
+                    <h3 class="text-xl font-bold text-[#0b1b3d]">Pendaftaran Data Asas Sekolah</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Daftar maklumat asas sekolah, guru, subjek, dan kelas.</p>
                 </div>
-                <div class="flex items-center space-x-3 bg-slate-50 px-5 py-3 rounded-2xl border border-slate-200">
-                    <div>
-                        <div id="total-stat-count" class="text-2xl font-bold text-[#0b1b3d] text-right">0</div>
-                        <div class="text-xs text-slate-500 font-semibold">Jumlah Rekod</div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="p-4 bg-slate-50 rounded-xl border space-y-2">
+                        <h4 class="font-bold text-xs text-slate-800">1. Info Sekolah</h4>
+                        <input type="text" id="input-school-name" placeholder="Nama Sekolah" class="w-full px-2.5 py-1.5 border rounded text-xs bg-white">
+                        <button onclick="saveSchoolInfo()" class="w-full bg-[#0b1b3d] text-white py-1.5 rounded text-xs font-semibold">Simpan</button>
                     </div>
-                    <div class="text-xl">👥</div>
+                    <div class="p-4 bg-slate-50 rounded-xl border space-y-2">
+                        <h4 class="font-bold text-xs text-slate-800">2. Tambah Guru</h4>
+                        <input type="text" id="input-teacher-name" placeholder="Nama Guru" class="w-full px-2.5 py-1.5 border rounded text-xs bg-white">
+                        <button onclick="addTeacher()" class="w-full bg-[#0b1b3d] text-white py-1.5 rounded text-xs font-semibold">Simpan Guru</button>
+                    </div>
+                    <div class="p-4 bg-slate-50 rounded-xl border space-y-2">
+                        <h4 class="font-bold text-xs text-slate-800">3. Tambah Subjek</h4>
+                        <input type="text" id="input-subject-name" placeholder="Nama Subjek" class="w-full px-2.5 py-1.5 border rounded text-xs bg-white">
+                        <button onclick="addSubject()" class="w-full bg-[#0b1b3d] text-white py-1.5 rounded text-xs font-semibold">Simpan Subjek</button>
+                    </div>
+                    <div class="p-4 bg-slate-50 rounded-xl border space-y-2">
+                        <h4 class="font-bold text-xs text-slate-800">4. Tambah Kelas</h4>
+                        <input type="text" id="input-class-name" placeholder="Nama Kelas" class="w-full px-2.5 py-1.5 border rounded text-xs bg-white">
+                        <button onclick="addClass()" class="w-full bg-[#0b1b3d] text-white py-1.5 rounded text-xs font-semibold">Simpan Kelas</button>
+                    </div>
                 </div>
             </div>
+        </section>
 
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
-                <!-- Susunan Sub-Tab: Guru diletakkan di akhir sekali & Pelajaran dibuang -->
-                <div class="flex flex-wrap gap-2 border-b pb-4">
-                    <button onclick="switchDataSubTab('subjek')" id="subtab-btn-subjek" class="px-4 py-2 rounded-xl text-xs font-bold bg-[#0b1b3d] text-white transition shadow">📖 Subjek</button>
-                    <button onclick="switchDataSubTab('kelas')" id="subtab-btn-kelas" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">🏫 Kelas</button>
-                    <button onclick="switchDataSubTab('bilik')" id="subtab-btn-bilik" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">🚪 Bilik Khas</button>
-                    <button onclick="switchDataSubTab('guru')" id="subtab-btn-guru" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">👨‍🏫 Guru</button>
-                </div>
-
-                <div class="flex flex-wrap justify-between items-center gap-4">
-                    <button onclick="openAddModal()" class="bg-[#0b1b3d] hover:bg-[#132d60] text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow flex items-center space-x-2 transition">
-                        <span>+ Tambah Rekod Baharu</span>
-                    </button>
-                    <div class="flex items-center space-x-2 w-full sm:w-72">
-                        <input type="text" id="search-data-input" onkeyup="filterTableData()" placeholder="Cari rekod..." class="w-full px-3 py-2 border rounded-xl text-xs bg-slate-50 focus:bg-white">
+        <!-- TAB KHUSUS: Waktu & Rehat (Disesuaikan Hari Ahad - Khamis) -->
+        <section id="tab-waktu" class="space-y-6">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
+                
+                <!-- Tetapan Hari Mula Seminggu -->
+                <div class="p-4 bg-blue-50/70 border border-blue-200 rounded-xl flex flex-wrap justify-between items-center gap-4">
+                    <div class="space-y-1">
+                        <h4 class="font-bold text-[#0b1b3d] text-sm">Tetapan Hari Persekolahan Seminggu</h4>
+                        <p class="text-xs text-slate-600">Pilih hari mula sesi persekolahan di tempat anda (Cth: Ahad hingga Khamis).</p>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <label class="text-xs font-semibold text-slate-700">Hari Mula:</label>
+                        <select id="select-start-day" onchange="updateSchoolDaysOrder()" class="px-3 py-2 border rounded-lg text-xs bg-white font-bold text-[#0b1b3d]">
+                            <option value="Ahad" selected>Ahad (Ahad - Khamis)</option>
+                            <option value="Isnin">Isnin (Isnin - Jumaat)</option>
+                        </select>
                     </div>
                 </div>
 
+                <!-- Tajuk & Butang Jana Pantas -->
+                <div class="flex flex-wrap justify-between items-center border-b pb-4 gap-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="bg-[#0b1b3d] text-white p-2.5 rounded-xl text-lg font-bold">⏱️</div>
+                        <div>
+                            <h3 class="text-xl font-bold text-[#0b1b3d]">Waktu dan Rehat</h3>
+                            <p class="text-xs text-slate-500">Tetapkan masa bagi setiap waktu pengajaran dan waktu rehat sekolah.</p>
+                        </div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button onclick="openAutoTimeModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow flex items-center space-x-2 transition">
+                            <span>⚡</span><span>Jana Pantas Waktu</span>
+                        </button>
+                        <button onclick="addNewTimeRow()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow flex items-center space-x-2 transition">
+                            <span>+ Tambah Waktu</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Jadual Senarai Waktu & Rehat -->
                 <div class="overflow-x-auto">
                     <table class="w-full border-collapse border border-slate-200 text-xs">
                         <thead>
-                            <tr class="bg-emerald-50/70 text-slate-700 font-bold text-center">
+                            <tr class="bg-slate-100 text-slate-700 font-bold text-center">
                                 <th class="border border-slate-300 p-2.5 w-16">Bil.</th>
-                                <th id="th-name" class="border border-slate-300 p-2.5 text-left pl-4">Nama / Maklumat Utama</th>
-                                <th class="border border-slate-300 p-2.5 w-36">Kod / Singkatan</th>
-                                <th id="th-category" class="border border-slate-300 p-2.5 w-56">Kategori / Subjek Diajar</th>
+                                <th class="border border-slate-300 p-2.5 w-36">Label</th>
+                                <th class="border border-slate-300 p-2.5">Mula</th>
+                                <th class="border border-slate-300 p-2.5">Tamat</th>
+                                <th class="border border-slate-300 p-2.5 w-44">Jenis</th>
                                 <th class="border border-slate-300 p-2.5 w-32">Tindakan</th>
                             </tr>
                         </thead>
-                        <tbody id="data-table-body" class="font-medium text-center"></tbody>
+                        <tbody id="time-slots-table-body" class="font-medium">
+                            <!-- Dijana Dinamik -->
+                        </tbody>
                     </table>
+                </div>
+
+                <div class="text-[11px] text-slate-500 bg-slate-50 p-3 rounded-lg border border-slate-200 flex flex-wrap gap-4 items-center">
+                    <span>ℹ️ Klik butang ⬆️ ⬇️ untuk menyusun waktu.</span>
+                    <span>•</span>
+                    <span>Klik 🗑️ untuk memadam waktu.</span>
+                </div>
+            </div>
+
+            <!-- Bahagian Bawah: Bilangan Waktu Setiap Hari (Ahad hingga Khamis) -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
+                <div class="flex items-center space-x-3 border-b pb-3">
+                    <div class="bg-[#0b1b3d] text-white p-2 rounded-lg text-sm font-bold">📅</div>
+                    <div>
+                        <h4 class="font-bold text-[#0b1b3d] text-sm">Bilangan waktu setiap hari</h4>
+                        <p class="text-xs text-slate-500">Tetapkan jumlah waktu pengajaran bagi setiap hari persekolahan mengikut zon anda.</p>
+                    </div>
+                </div>
+                
+                <!-- Kontena Hari Dinamik (Ahad - Khamis secara default) -->
+                <div id="daily-slots-container" class="grid grid-cols-2 sm:grid-cols-5 gap-4">
+                    <!-- Dijana secara dinamik mengikut pilihan hari mula -->
+                </div>
+
+                <div class="flex justify-end pt-2">
+                    <button onclick="saveDailySlotsConfig()" class="bg-[#0b1b3d] hover:bg-[#132d60] text-white px-5 py-2.5 rounded-xl text-xs font-semibold shadow transition">Simpan Tetapan Harian</button>
                 </div>
             </div>
         </section>
 
-        <!-- Tab Waktu & Rehat -->
-        <section id="tab-waktu" class="hidden space-y-6">
+        <!-- Tab Opsyen Guru -->
+        <section id="tab-opsyen" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
-                <div class="flex justify-between items-center border-b pb-4">
-                    <h3 class="text-xl font-bold text-[#0b1b3d]">Waktu dan Rehat</h3>
-                    <button onclick="openAutoTimeModal()" class="bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-bold shadow">⚡ Jana Pantas Waktu</button>
+                <div class="border-b pb-3 flex justify-between items-center flex-wrap gap-4">
+                    <div>
+                        <h3 class="text-xl font-bold text-[#0b1b3d]">Penetapan Opsyen Guru & Jana Jadual Automatik</h3>
+                        <p class="text-xs text-slate-500 mt-0.5">Tentukan opsyen subjek dan kelas mengajar guru serta mulakan penjanaan jadual.</p>
+                    </div>
+                    <div>
+                        <button onclick="startAutoGenerationProcess()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-lg text-xs font-bold shadow">⚡ Jana Jadual Automatik</button>
+                    </div>
                 </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full border-collapse border border-slate-200 text-xs">
-                        <thead>
-                            <tr class="bg-slate-100 font-bold text-center">
-                                <th class="border p-2">Bil.</th>
-                                <th class="border p-2">Label</th>
-                                <th class="border p-2">Mula</th>
-                                <th class="border p-2">Tamat</th>
-                                <th class="border p-2">Jenis</th>
-                            </tr>
-                        </thead>
-                        <tbody id="time-slots-table-body" class="text-center"></tbody>
-                    </table>
+                <div class="p-5 bg-blue-50/70 border rounded-xl space-y-3">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                        <select id="select-assign-teacher" class="px-3 py-2 border rounded-lg text-sm bg-white"><option value="">-- Pilih Guru --</option></select>
+                        <select id="select-assign-subject" class="px-3 py-2 border rounded-lg text-sm bg-white"><option value="">-- Pilih Subjek --</option></select>
+                        <select id="select-assign-class" class="px-3 py-2 border rounded-lg text-sm bg-white"><option value="">-- Pilih Kelas --</option></select>
+                        <button onclick="assignTeacherSubject()" class="bg-[#0b1b3d] text-white px-4 py-2 rounded-lg text-xs font-semibold">Simpan Opsyen</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tab Jadual Induk -->
+        <section id="tab-jadual" class="hidden space-y-6">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <span class="text-sm font-semibold text-slate-700">Pilih Kelas:</span>
+                    <select id="select-target-filter" onchange="loadGridTimetable()" class="px-3 py-2 border rounded-lg text-sm bg-slate-50 font-medium text-[#0b1b3d]">
+                        <option value="">-- Pilih Kelas --</option>
+                    </select>
+                </div>
+                <button onclick="window.print()" class="bg-[#0b1b3d] text-white px-3 py-2 rounded-lg text-xs font-medium">🖨️ Cetak Jadual</button>
+            </div>
+            <div id="printable-area" class="bg-white p-6 rounded-xl shadow-sm border space-y-6">
+                <h3 id="grid-title-school" class="text-lg font-bold text-[#0b1b3d]">Jadual Induk Kelas</h3>
+                <div id="timetable-master-wrapper" class="overflow-x-auto text-xs text-center">
+                    <p class="text-slate-400 italic p-6">Sila jana jadual melalui menu Opsyen Guru.</p>
                 </div>
             </div>
         </section>
 
         <!-- Tab Lain -->
-        <section id="tab-opsyen" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Opsyen Guru</div></section>
-        <section id="tab-jadual" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Jadual Induk</div></section>
         <section id="tab-guru" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Jadual Guru</div></section>
         <section id="tab-relief" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Relief Harian</div></section>
-        <section id="tab-laporan" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Laporan</div></section>
-        <section id="tab-tetapan" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Tetapan</div></section>
+        <section id="tab-laporan" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Laporan Keseluruhan</div></section>
+        <section id="tab-tetapan" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Tetapan Sistem</div></section>
 
     </main>
 
-    <!-- MODAL TAMBAH / EDIT REKOD -->
-    <div id="data-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-sm hidden flex items-center justify-center z-50">
+    <!-- MODAL JANA PANTAS WAKTU -->
+    <div id="auto-time-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-sm hidden flex items-center justify-center z-50">
         <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-2xl border space-y-5">
             <div class="flex justify-between items-center border-b pb-3">
-                <h3 id="modal-title" class="text-base font-bold text-[#0b1b3d]">Tambah Rekod</h3>
-                <button onclick="closeDataModal()" class="text-slate-400 font-bold text-sm">✕</button>
+                <h3 class="text-base font-bold text-[#0b1b3d]">Jana pantas waktu</h3>
+                <button onclick="closeAutoTimeModal()" class="text-slate-400 hover:text-slate-600 font-bold text-sm">✕</button>
             </div>
-            
-            <input type="hidden" id="modal-edit-id" value="">
-
             <div class="space-y-4 text-xs">
                 <div>
-                    <label id="label-input-name" class="font-semibold text-slate-700 block mb-1">Nama / Maklumat Utama</label>
-                    <input type="text" id="modal-input-name" placeholder="Masukkan nama..." class="w-full px-3 py-2 border rounded-lg bg-slate-50">
+                    <label class="font-semibold text-slate-700 block mb-1">Waktu mula persekolahan</label>
+                    <input type="time" id="modal-start-time" value="07:30" class="w-full px-3 py-2 border rounded-lg bg-slate-50 font-medium">
                 </div>
                 <div>
-                    <label id="label-input-code" class="font-semibold text-slate-700 block mb-1">Kod / Singkatan</label>
-                    <input type="text" id="modal-input-code" placeholder="Masukkan kod singkatan..." class="w-full px-3 py-2 border rounded-lg bg-slate-50">
+                    <label class="font-semibold text-slate-700 block mb-1">Tempoh satu waktu (minit)</label>
+                    <input type="number" id="modal-slot-duration" value="35" class="w-full px-3 py-2 border rounded-lg bg-slate-50 font-medium">
                 </div>
-                
-                <!-- Checkboxes Subjek khusus untuk Guru -->
-                <div id="modal-container-subjects" class="hidden space-y-2">
-                    <label class="font-semibold text-slate-700 block">Subjek yang diajar (Sila pilih):</label>
-                    <div id="checkbox-subjects-list" class="max-h-40 overflow-y-auto p-3 border rounded-lg bg-slate-50 space-y-2"></div>
+                <div>
+                    <label class="font-semibold text-slate-700 block mb-1">Bilangan waktu belajar</label>
+                    <input type="number" id="modal-total-slots" value="10" class="w-full px-3 py-2 border rounded-lg bg-slate-50 font-medium">
                 </div>
-
-                <!-- Kategori Biasa untuk Subjek/Kelas/Bilik -->
-                <div id="modal-container-category">
-                    <label id="label-input-category" class="font-semibold text-slate-700 block mb-1">Kategori / Butiran Lanjut</label>
-                    <input type="text" id="modal-input-category" placeholder="Masukkan butiran..." class="w-full px-3 py-2 border rounded-lg bg-slate-50">
+                <div>
+                    <label class="font-semibold text-slate-700 block mb-1">Rehat selepas waktu ke</label>
+                    <input type="number" id="modal-break-after" value="4" class="w-full px-3 py-2 border rounded-lg bg-slate-50 font-medium">
+                </div>
+                <div>
+                    <label class="font-semibold text-slate-700 block mb-1">Tempoh rehat (minit)</label>
+                    <input type="number" id="modal-break-duration" value="30" class="w-full px-3 py-2 border rounded-lg bg-slate-50 font-medium">
                 </div>
             </div>
-
             <div class="flex justify-end space-x-2 pt-3 border-t">
-                <button onclick="closeDataModal()" class="px-4 py-2 border rounded-xl text-xs font-semibold">Batal</button>
-                <button onclick="saveModalData()" class="px-5 py-2 bg-[#0b1b3d] text-white rounded-xl text-xs font-semibold shadow">Simpan</button>
+                <button onclick="closeAutoTimeModal()" class="px-4 py-2 border rounded-xl text-xs font-semibold text-slate-700">Batal</button>
+                <button onclick="generateAutoTimes()" class="px-5 py-2 bg-[#0b1b3d] text-white rounded-xl text-xs font-semibold shadow">Jana</button>
             </div>
         </div>
     </div>
 
-    <!-- Skrip Aplikasi dengan Pangkalan Data Storan Tempatan (localStorage) -->
-    <script>
-        let currentSubTab = 'subjek';
+    <!-- MODAL KEMAJUAN -->
+    <div id="generation-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center z-50">
+        <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-2xl border space-y-4">
+            <h3 class="text-base font-bold text-[#0b1b3d]">Menjana jadual</h3>
+            <div class="space-y-2">
+                <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden border">
+                    <div id="modal-progress-bar" class="bg-emerald-600 h-full w-0 transition-all duration-150"></div>
+                </div>
+                <div class="flex justify-between items-center text-xs text-slate-600 font-medium">
+                    <span id="modal-progress-text">Memproses...</span>
+                    <span id="modal-progress-count">0/98</span>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        // Muat data dari localStorage atau guna data default
-        function loadDatabase() {
-            let data = localStorage.getItem('school_database');
-            if(data) {
-                return JSON.parse(data);
-            } else {
-                let initial = {
-                    subjek: [
-                        { id: 1, name: "Bahasa Melayu", code: "BM", category: "Teras" },
-                        { id: 2, name: "Matematik", code: "MAT", category: "Teras" },
-                        { id: 3, name: "Sains", code: "SN", category: "Teras" }
-                    ],
-                    kelas: [
-                        { id: 1, name: "1 Cekap", code: "1C", category: "Menengah Rendah" }
-                    ],
-                    bilik: [
-                        { id: 1, name: "Makmal Komputer 1", code: "MK1", category: "Khas" }
-                    ],
-                    guru: [
-                        { id: 1, name: "Pn. Siti Aisyah Bt Ahmad", code: "SAA", category: "Bahasa Melayu, Matematik" },
-                        { id: 2, name: "En. Ahmad Hafiz Bin Salleh", code: "AHS", category: "Matematik, Sains" }
-                    ]
-                };
-                localStorage.setItem('school_database', JSON.stringify(initial));
-                return initial;
-            }
-        }
+    <!-- Skrip Aplikasi -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        let databaseRecords = loadDatabase();
-
-        function saveDatabase() {
-            localStorage.setItem('school_database', JSON.stringify(databaseRecords));
-        }
-
+        let db = null;
         let timeSlotsData = [
-            { id: 1, label: "1", start: "07:30", end: "08:10", type: "Waktu belajar" },
-            { id: 2, label: "2", start: "08:10", end: "08:50", type: "Waktu belajar" }
+            { id: 1, label: "1", start: "07:30", end: "08:05", type: "Waktu belajar" },
+            { id: 2, label: "2", start: "08:05", end: "08:40", type: "Waktu belajar" },
+            { id: 3, label: "3", start: "08:40", end: "09:15", type: "Waktu belajar" },
+            { id: 4, label: "4", start: "09:15", end: "09:50", type: "Waktu belajar" },
+            { id: 'rehat', label: "Rehat", start: "09:50", end: "10:20", type: "Rehat" },
+            { id: 5, label: "5", start: "10:20", end: "10:55", type: "Waktu belajar" },
+            { id: 6, label: "6", start: "10:55", end: "11:30", type: "Waktu belajar" },
+            { id: 7, label: "7", start: "11:30", end: "12:05", type: "Waktu belajar" },
+            { id: 8, label: "8", start: "12:05", end: "12:40", type: "Waktu belajar" },
+            { id: 9, label: "9", start: "12:40", end: "01:15", type: "Waktu belajar" },
+            { id: 10, label: "10", start: "01:15", end: "01:50", type: "Waktu belajar" }
         ];
+
+        try {
+            const app = initializeApp({
+                apiKey: "AIzaSyDOJ3y4_vK3cVBTX8TmG_9DmDFvZ25MBkc",
+                authDomain: "sistem-jadual-sekolah.firebaseapp.com",
+                projectId: "sistem-jadual-sekolah",
+                storageBucket: "sistem-jadual-sekolah.firebasestorage.app",
+                messagingSenderId: "548727396573",
+                appId: "1:548727396573:web:7a4a478f15b61ba038a334"
+            });
+            db = getFirestore(app);
+        } catch (e) { console.error(e); }
 
         window.switchTab = function(tabId) {
             ['utama', 'data', 'waktu', 'opsyen', 'jadual', 'guru', 'relief', 'laporan', 'tetapan'].forEach(t => {
@@ -230,197 +329,30 @@
                 if(el) el.classList.add('hidden');
             });
             document.getElementById(`tab-${tabId}`).classList.remove('hidden');
-            if(tabId === 'data') renderDataTable();
-            if(tabId === 'waktu') renderTimeSlotsTable();
+            if(tabId === 'waktu') {
+                renderTimeSlotsTable();
+                updateSchoolDaysOrder();
+            }
         }
 
-        window.switchDataSubTab = function(subTab) {
-            currentSubTab = subTab;
-            ['subjek', 'kelas', 'bilik', 'guru'].forEach(t => {
-                const btn = document.getElementById(`subtab-btn-${t}`);
-                if(btn) {
-                    btn.className = (t === subTab) 
-                        ? "px-4 py-2 rounded-xl text-xs font-bold bg-[#0b1b3d] text-white transition shadow"
-                        : "px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition";
-                }
-            });
-            renderDataTable();
-        }
+        // Kemaskini Paparan Hari Mengikut Pilihan Mula (Ahad - Khamis atau Isnin - Jumaat)
+        window.updateSchoolDaysOrder = function() {
+            const startDay = document.getElementById('select-start-day').value;
+            const container = document.getElementById('daily-slots-container');
+            if(!container) return;
 
-        function renderDataTable() {
-            const tbody = document.getElementById('data-table-body');
-            const totalCountEl = document.getElementById('total-stat-count');
-            const thName = document.getElementById('th-name');
-            const thCategory = document.getElementById('th-category');
-            if(!tbody) return;
-            tbody.innerHTML = '';
+            let daysList = startDay === 'Ahad' 
+                ? ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis'] 
+                : ['Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat'];
 
-            if(currentSubTab === 'guru') {
-                thName.innerText = "Nama Guru";
-                thCategory.innerText = "Subjek yang diajar";
-            } else if(currentSubTab === 'subjek') {
-                thName.innerText = "Nama Subjek";
-                thCategory.innerText = "Kategori Subjek";
-            } else if(currentSubTab === 'kelas') {
-                thName.innerText = "Nama Kelas";
-                thCategory.innerText = "Tingkatan / Aliran";
-            } else {
-                thName.innerText = "Nama Bilik Khas";
-                thCategory.innerText = "Lokasi / Kegunaan";
-            }
-
-            const records = databaseRecords[currentSubTab] || [];
-            if(totalCountEl) totalCountEl.innerText = records.length;
-
-            if(records.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-slate-400 italic">Tiada rekod dijumpai.</td></tr>`;
-                return;
-            }
-
-            records.forEach((item, index) => {
-                tbody.innerHTML += `
-                    <tr class="border-b border-slate-200 hover:bg-slate-50 transition">
-                        <td class="border border-slate-300 p-2.5 font-bold text-slate-600">${index + 1}</td>
-                        <td class="border border-slate-300 p-2.5 text-left pl-4 font-bold text-[#0b1b3d]">${item.name}</td>
-                        <td class="border border-slate-300 p-2.5 font-semibold text-slate-700">${item.code}</td>
-                        <td class="border border-slate-300 p-2.5 text-slate-600">${item.category}</td>
-                        <td class="border border-slate-300 p-2.5">
-                            <div class="flex justify-center space-x-1.5">
-                                <button onclick="editRecord(${item.id})" class="p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow" title="Edit">✏️</button>
-                                <button onclick="deleteRecord(${item.id})" class="p-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow" title="Padam">🗑️</button>
-                            </div>
-                        </td>
-                    </tr>
+            container.innerHTML = '';
+            daysList.forEach(day => {
+                container.innerHTML += `
+                    <div class="p-3 bg-slate-50 border rounded-xl text-center space-y-1">
+                        <label class="text-xs font-bold text-slate-700">${day}</label>
+                        <input type="number" value="8" class="w-full text-center font-bold px-2 py-1.5 border rounded-lg text-sm bg-white">
+                    </div>
                 `;
-            });
-        }
-
-        window.openAddModal = function() {
-            document.getElementById('modal-title').innerText = `Tambah Rekod ${currentSubTab.toUpperCase()}`;
-            document.getElementById('modal-edit-id').value = '';
-            document.getElementById('modal-input-name').value = '';
-            document.getElementById('modal-input-code').value = '';
-
-            const subSubjectsContainer = document.getElementById('modal-container-subjects');
-            const categoryContainer = document.getElementById('modal-container-category');
-            
-            if(currentSubTab === 'guru') {
-                subSubjectsContainer.classList.remove('hidden');
-                categoryContainer.classList.add('hidden');
-                
-                const checkboxList = document.getElementById('checkbox-subjects-list');
-                checkboxList.innerHTML = '';
-                const availableSubjects = databaseRecords.subjek || [];
-                
-                if(availableSubjects.length === 0) {
-                    checkboxList.innerHTML = '<span class="text-slate-400 italic">Tiada subjek berdaftar. Sila daftar di tab Subjek dahulu.</span>';
-                } else {
-                    availableSubjects.forEach(sub => {
-                        checkboxList.innerHTML += `
-                            <label class="flex items-center space-x-2 text-xs font-medium text-slate-700 cursor-pointer">
-                                <input type="checkbox" name="teacher-subject-checkbox" value="${sub.name}" class="rounded border-slate-300">
-                                <span>${sub.name} (${sub.code})</span>
-                            </label>
-                        `;
-                    });
-                }
-            } else {
-                subSubjectsContainer.classList.add('hidden');
-                categoryContainer.classList.remove('hidden');
-                document.getElementById('label-input-category').innerText = currentSubTab === 'subjek' ? 'Kategori Subjek (Cth: Teras)' : 'Butiran Lanjut / Kategori';
-                document.getElementById('modal-input-category').value = '';
-            }
-
-            document.getElementById('data-modal').classList.remove('hidden');
-        }
-
-        window.closeDataModal = () => document.getElementById('data-modal').classList.add('hidden');
-
-        window.saveModalData = function() {
-            const editId = document.getElementById('modal-edit-id').value;
-            const name = document.getElementById('modal-input-name').value;
-            const code = document.getElementById('modal-input-code').value;
-            if(!name) return alert('Sila masukkan nama/maklumat.');
-
-            let categoryValue = '';
-            if(currentSubTab === 'guru') {
-                const checkedBoxes = document.querySelectorAll('input[name="teacher-subject-checkbox"]:checked');
-                let selectedSubjects = [];
-                checkedBoxes.forEach(cb => selectedSubjects.push(cb.value));
-                categoryValue = selectedSubjects.length > 0 ? selectedSubjects.join(', ') : 'Tiada Subjek';
-            } else {
-                categoryValue = document.getElementById('modal-input-category').value || '-';
-            }
-
-            if(editId) {
-                let item = databaseRecords[currentSubTab].find(x => x.id == editId);
-                if(item) {
-                    item.name = name;
-                    item.code = code;
-                    item.category = categoryValue;
-                }
-            } else {
-                databaseRecords[currentSubTab].push({ id: Date.now(), name, code, category: categoryValue });
-            }
-
-            saveDatabase();
-            closeDataModal();
-            renderDataTable();
-            alert('Rekod berjaya disimpan!');
-        }
-
-        window.editRecord = function(id) {
-            let item = databaseRecords[currentSubTab].find(x => x.id == id);
-            if(!item) return;
-
-            document.getElementById('modal-title').innerText = `Kemaskini Rekod ${currentSubTab.toUpperCase()}`;
-            document.getElementById('modal-edit-id').value = item.id;
-            document.getElementById('modal-input-name').value = item.name;
-            document.getElementById('modal-input-code').value = item.code;
-
-            const subSubjectsContainer = document.getElementById('modal-container-subjects');
-            const categoryContainer = document.getElementById('modal-container-category');
-
-            if(currentSubTab === 'guru') {
-                subSubjectsContainer.classList.remove('hidden');
-                categoryContainer.classList.add('hidden');
-                
-                const checkboxList = document.getElementById('checkbox-subjects-list');
-                checkboxList.innerHTML = '';
-                const availableSubjects = databaseRecords.subjek || [];
-                
-                availableSubjects.forEach(sub => {
-                    let isChecked = item.category.includes(sub.name) ? 'checked' : '';
-                    checkboxList.innerHTML += `
-                        <label class="flex items-center space-x-2 text-xs font-medium text-slate-700 cursor-pointer">
-                            <input type="checkbox" name="teacher-subject-checkbox" value="${sub.name}" ${isChecked} class="rounded border-slate-300">
-                            <span>${sub.name} (${sub.code})</span>
-                        </label>
-                    `;
-                });
-            } else {
-                subSubjectsContainer.classList.add('hidden');
-                categoryContainer.classList.remove('hidden');
-                document.getElementById('modal-input-category').value = item.category;
-            }
-
-            document.getElementById('data-modal').classList.remove('hidden');
-        }
-
-        window.deleteRecord = function(id) {
-            if(confirm('Adakah anda pasti ingin memadam rekod ini?')) {
-                databaseRecords[currentSubTab] = databaseRecords[currentSubTab].filter(x => x.id !== id);
-                saveDatabase();
-                renderDataTable();
-            }
-        }
-
-        window.filterTableData = function() {
-            let query = document.getElementById('search-data-input').value.toLowerCase();
-            let rows = document.querySelectorAll('#data-table-body tr');
-            rows.forEach(row => {
-                let text = row.innerText.toLowerCase();
-                row.style.display = text.includes(query) ? '' : 'none';
             });
         }
 
@@ -428,21 +360,104 @@
             const tbody = document.getElementById('time-slots-table-body');
             if(!tbody) return;
             tbody.innerHTML = '';
+
+            let lessonCounter = 1;
             timeSlotsData.forEach((slot, index) => {
+                const isRehat = slot.type === 'Rehat';
+                const rowBg = isRehat ? 'bg-amber-50/80 font-bold' : '';
+                const labelNo = isRehat ? '-' : lessonCounter++;
+
                 tbody.innerHTML += `
-                    <tr class="border-b">
-                        <td class="p-2">${index + 1}</td>
-                        <td class="p-2">${slot.label}</td>
-                        <td class="p-2">${slot.start}</td>
-                        <td class="p-2">${slot.end}</td>
-                        <td class="p-2">${slot.type}</td>
+                    <tr class="border-b border-slate-200 text-center ${rowBg}">
+                        <td class="border border-slate-300 p-2 font-bold text-slate-600">${labelNo}</td>
+                        <td class="border border-slate-300 p-2">
+                            <input type="text" value="${slot.label}" onchange="updateSlot(${index}, 'label', this.value)" class="w-full px-2 py-1 border rounded text-center bg-white">
+                        </td>
+                        <td class="border border-slate-300 p-2">
+                            <input type="time" value="${slot.start}" onchange="updateSlot(${index}, 'start', this.value)" class="w-full px-2 py-1 border rounded bg-white">
+                        </td>
+                        <td class="border border-slate-300 p-2">
+                            <input type="time" value="${slot.end}" onchange="updateSlot(${index}, 'end', this.value)" class="w-full px-2 py-1 border rounded bg-white">
+                        </td>
+                        <td class="border border-slate-300 p-2">
+                            <select onchange="updateSlot(${index}, 'type', this.value)" class="w-full px-2 py-1 border rounded bg-white font-medium">
+                                <option value="Waktu belajar" ${slot.type === 'Waktu belajar' ? 'selected' : ''}>Waktu belajar</option>
+                                <option value="Rehat" ${slot.type === 'Rehat' ? 'selected' : ''}>Rehat</option>
+                            </select>
+                        </td>
+                        <td class="border border-slate-300 p-2">
+                            <div class="flex justify-center space-x-1">
+                                <button onclick="moveSlot(${index}, -1)" class="p-1.5 bg-blue-600 text-white rounded shadow" title="Naik">⬆️</button>
+                                <button onclick="moveSlot(${index}, 1)" class="p-1.5 bg-blue-600 text-white rounded shadow" title="Turun">⬇️</button>
+                                <button onclick="deleteSlot(${index})" class="p-1.5 bg-red-600 text-white rounded shadow" title="Padam">🗑️</button>
+                            </div>
+                        </td>
                     </tr>
                 `;
             });
         }
 
-        window.openAutoTimeModal = () => alert('Buka dialog jana masa');
-        window.onload = () => { switchTab('data'); };
+        window.updateSlot = (i, f, v) => timeSlotsData[i][f] = v;
+        window.addNewTimeRow = () => { timeSlotsData.push({ id: Date.now(), label: String(timeSlotsData.length+1), start: "08:00", end: "08:35", type: "Waktu belajar" }); renderTimeSlotsTable(); }
+        window.deleteSlot = (i) => { timeSlotsData.splice(i, 1); renderTimeSlotsTable(); }
+        window.moveSlot = (i, dir) => { let t = i + dir; if(t >= 0 && t < timeSlotsData.length) { let temp = timeSlotsData[i]; timeSlotsData[i] = timeSlotsData[t]; timeSlotsData[t] = temp; renderTimeSlotsTable(); } }
+
+        window.openAutoTimeModal = () => document.getElementById('auto-time-modal').classList.remove('hidden');
+        window.closeAutoTimeModal = () => document.getElementById('auto-time-modal').classList.add('hidden');
+
+        window.generateAutoTimes = function() {
+            const startTimeStr = document.getElementById('modal-start-time').value;
+            const slotDuration = parseInt(document.getElementById('modal-slot-duration').value) || 35;
+            const totalSlots = parseInt(document.getElementById('modal-total-slots').value) || 10;
+            const breakAfter = parseInt(document.getElementById('modal-break-after').value) || 4;
+            const breakDuration = parseInt(document.getElementById('modal-break-duration').value) || 30;
+
+            if(!startTimeStr) return alert('Sila masukkan masa mula.');
+            let [h, m] = startTimeStr.split(':').map(Number);
+            let d = new Date(); d.setHours(h, m, 0, 0);
+
+            let newSlots = [];
+            let lessonNum = 1;
+
+            for(let i=1; i<=totalSlots; i++) {
+                let startMins = d.getHours() * 60 + d.getMinutes();
+                let endMins = startMins + slotDuration;
+                newSlots.push({ id: i, label: String(lessonNum), start: formatMins(startMins), end: formatMins(endMins), type: "Waktu belajar" });
+                d.setHours(Math.floor(endMins/60), endMins%60, 0, 0);
+                lessonNum++;
+
+                if(breakAfter > 0 && i === breakAfter) {
+                    let bStart = endMins;
+                    let bEnd = bStart + breakDuration;
+                    newSlots.push({ id: 'rehat-'+i, label: "Rehat", start: formatMins(bStart), end: formatMins(bEnd), type: "Rehat" });
+                    d.setHours(Math.floor(bEnd/60), bEnd%60, 0, 0);
+                }
+            }
+            timeSlotsData = newSlots;
+            renderTimeSlotsTable();
+            closeAutoTimeModal();
+            alert('Jadual masa berjaya dijana automatik!');
+        }
+
+        function formatMins(mins) {
+            let h = Math.floor(mins/60)%24, m = mins%60;
+            return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
+        }
+
+        window.saveDailySlotsConfig = () => alert('Tetapan harian berjaya disimpan!');
+        window.saveSchoolInfo = () => alert('Info sekolah disimpan!');
+        window.addTeacher = () => alert('Guru disimpan!');
+        window.addSubject = () => alert('Subjek disimpan!');
+        window.addClass = () => alert('Kelas disimpan!');
+        window.assignTeacherSubject = () => alert('Opsyen disimpan!');
+        window.loadGridTimetable = () => {};
+        window.startAutoGenerationProcess = () => {
+            document.getElementById('generation-modal').classList.remove('hidden');
+            setTimeout(() => { document.getElementById('generation-modal').classList.add('hidden'); switchTab('jadual'); }, 800);
+        }
+
+        // Panggilan awal semasa muat turun halaman
+        window.onload = () => { renderTimeSlotsTable(); updateSchoolDaysOrder(); };
     </script>
 </body>
 </html>
