@@ -108,9 +108,10 @@
             </div>
         </section>
 
-        <!-- Tab Waktu & Rehat -->
+        <!-- Tab Waktu & Rehat (Disimpan dalam localStorage) -->
         <section id="tab-waktu" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
+                
                 <div class="p-4 bg-blue-50/70 border border-blue-200 rounded-xl flex flex-wrap justify-between items-center gap-4">
                     <div class="space-y-1">
                         <h4 class="font-bold text-[#0b1b3d] text-sm">Tetapan Hari Persekolahan Seminggu</h4>
@@ -158,6 +159,12 @@
                         <tbody id="time-slots-table-body" class="font-medium"></tbody>
                     </table>
                 </div>
+
+                <div class="text-[11px] text-slate-500 bg-slate-50 p-3 rounded-lg border border-slate-200 flex flex-wrap gap-4 items-center">
+                    <span>ℹ️ Klik butang ⬆️ ⬇️ untuk menyusun waktu.</span>
+                    <span>•</span>
+                    <span>Klik 🗑️ untuk memadam waktu.</span>
+                </div>
             </div>
 
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
@@ -196,7 +203,6 @@
             <input type="hidden" id="modal-edit-id" value="">
 
             <div class="space-y-4 text-xs">
-                <!-- Nama Utama -->
                 <div>
                     <label id="label-input-name" class="font-semibold text-slate-700 block mb-1">Nama / Maklumat Utama</label>
                     <input type="text" id="modal-input-name" placeholder="Masukkan nama..." class="w-full px-3 py-2 border rounded-lg bg-slate-50">
@@ -205,19 +211,16 @@
                     </select>
                 </div>
 
-                <!-- Kod / Singkatan -->
                 <div>
                     <label id="label-input-code" class="font-semibold text-slate-700 block mb-1">Kod / Singkatan</label>
                     <input type="text" id="modal-input-code" placeholder="Masukkan kod singkatan..." class="w-full px-3 py-2 border rounded-lg bg-slate-50">
                 </div>
                 
-                <!-- Checkboxes Subjek khusus untuk Guru & Subjek -->
                 <div id="modal-container-subjects" class="hidden space-y-2">
                     <label class="font-semibold text-slate-700 block">Subjek yang diajar (Sila pilih):</label>
                     <div id="checkbox-subjects-list" class="max-h-40 overflow-y-auto p-3 border rounded-lg bg-slate-50 space-y-2"></div>
                 </div>
 
-                <!-- Kategori / Butiran Lanjut (Dropdown untuk Senarai Guru, Input teks biasa untuk lain-lain) -->
                 <div id="modal-container-category">
                     <label id="label-input-category" class="font-semibold text-slate-700 block mb-1">Kategori / Butiran Lanjut</label>
                     <input type="text" id="modal-input-category" placeholder="Masukkan butiran..." class="w-full px-3 py-2 border rounded-lg bg-slate-50">
@@ -273,7 +276,7 @@
         </div>
     </div>
 
-    <!-- Skrip Aplikasi -->
+    <!-- Skrip Aplikasi (Storan Kekal localStorage untuk Waktu & Data Asas) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -293,6 +296,7 @@
 
         let currentSubTab = 'subjek';
 
+        // Pangkalan Data Storan Tempatan (localStorage)
         function loadDatabase() {
             let data = localStorage.getItem('school_database');
             if(data) {
@@ -332,24 +336,38 @@
         }
 
         let databaseRecords = loadDatabase();
-
         function saveDatabase() {
             localStorage.setItem('school_database', JSON.stringify(databaseRecords));
         }
 
-        let timeSlotsData = [
-            { id: 1, label: "1", start: "07:30", end: "08:05", type: "Waktu belajar" },
-            { id: 2, label: "2", start: "08:05", end: "08:40", type: "Waktu belajar" },
-            { id: 3, label: "3", start: "08:40", end: "09:15", type: "Waktu belajar" },
-            { id: 4, label: "4", start: "09:15", end: "09:50", type: "Waktu belajar" },
-            { id: 'rehat', label: "Rehat", start: "09:50", end: "10:20", type: "Rehat" },
-            { id: 5, label: "5", start: "10:20", end: "10:55", type: "Waktu belajar" },
-            { id: 6, label: "6", start: "10:55", end: "11:30", type: "Waktu belajar" },
-            { id: 7, label: "7", start: "11:30", end: "12:05", type: "Waktu belajar" },
-            { id: 8, label: "8", start: "12:05", end: "12:40", type: "Waktu belajar" },
-            { id: 9, label: "9", start: "12:40", end: "01:15", type: "Waktu belajar" },
-            { id: 10, label: "10", start: "01:15", end: "01:50", type: "Waktu belajar" }
-        ];
+        // Muat data Waktu & Rehat dari localStorage
+        function loadTimeSlots() {
+            let data = localStorage.getItem('school_time_slots');
+            if(data) {
+                return JSON.parse(data);
+            } else {
+                let initial = [
+                    { id: 1, label: "1", start: "07:30", end: "08:05", type: "Waktu belajar" },
+                    { id: 2, label: "2", start: "08:05", end: "08:40", type: "Waktu belajar" },
+                    { id: 3, label: "3", start: "08:40", end: "09:15", type: "Waktu belajar" },
+                    { id: 4, label: "4", start: "09:15", end: "09:50", type: "Waktu belajar" },
+                    { id: 'rehat', label: "Rehat", start: "09:50", end: "10:20", type: "Rehat" },
+                    { id: 5, label: "5", start: "10:20", end: "10:55", type: "Waktu belajar" },
+                    { id: 6, label: "6", start: "10:55", end: "11:30", type: "Waktu belajar" },
+                    { id: 7, label: "7", start: "11:30", end: "12:05", type: "Waktu belajar" },
+                    { id: 8, label: "8", start: "12:05", end: "12:40", type: "Waktu belajar" },
+                    { id: 9, label: "9", start: "12:40", end: "01:15", type: "Waktu belajar" },
+                    { id: 10, label: "10", start: "01:15", end: "01:50", type: "Waktu belajar" }
+                ];
+                localStorage.setItem('school_time_slots', JSON.stringify(initial));
+                return initial;
+            }
+        }
+
+        let timeSlotsData = loadTimeSlots();
+        function saveTimeSlots() {
+            localStorage.setItem('school_time_slots', JSON.stringify(timeSlotsData));
+        }
 
         window.switchTab = function(tabId) {
             ['utama', 'data', 'waktu', 'opsyen', 'jadual', 'guru', 'relief', 'laporan', 'tetapan'].forEach(t => {
@@ -429,7 +447,6 @@
         }
 
         window.openAddModal = function() {
-            // Tajuk tanpa simbol garis bawah (Underscore)
             let tabDisplayName = currentSubTab.toUpperCase().replace('_', ' ');
             document.getElementById('modal-title').innerText = `Tambah Rekod ${tabDisplayName}`;
             document.getElementById('modal-edit-id').value = '';
@@ -631,7 +648,7 @@
             });
         }
 
-        // Fungsi Waktu & Rehat (Ahad - Khamis & Dinamik)
+        // Fungsi Waktu & Rehat dengan Storan Kekal localStorage
         window.updateSchoolDaysOrder = function() {
             const startDay = document.getElementById('select-start-day').value;
             const container = document.getElementById('daily-slots-container');
@@ -689,10 +706,33 @@
             });
         }
 
-        window.updateSlot = (i, f, v) => timeSlotsData[i][f] = v;
-        window.addNewTimeRow = () => { timeSlotsData.push({ id: Date.now(), label: String(timeSlotsData.length+1), start: "08:00", end: "08:35", type: "Waktu belajar" }); renderTimeSlotsTable(); }
-        window.deleteSlot = (i) => { timeSlotsData.splice(i, 1); renderTimeSlotsTable(); }
-        window.moveSlot = (i, dir) => { let t = i + dir; if(t >= 0 && t < timeSlotsData.length) { let temp = timeSlotsData[i]; timeSlotsData[i] = timeSlotsData[t]; timeSlotsData[t] = temp; renderTimeSlotsTable(); } }
+        window.updateSlot = function(i, f, v) {
+            timeSlotsData[i][f] = v;
+            saveTimeSlots(); // Simpan automatik ke localStorage
+        }
+
+        window.addNewTimeRow = function() {
+            timeSlotsData.push({ id: Date.now(), label: String(timeSlotsData.length+1), start: "08:00", end: "08:35", type: "Waktu belajar" });
+            saveTimeSlots();
+            renderTimeSlotsTable();
+        }
+
+        window.deleteSlot = function(i) {
+            timeSlotsData.splice(i, 1);
+            saveTimeSlots();
+            renderTimeSlotsTable();
+        }
+
+        window.moveSlot = function(i, dir) {
+            let t = i + dir;
+            if(t >= 0 && t < timeSlotsData.length) {
+                let temp = timeSlotsData[i];
+                timeSlotsData[i] = timeSlotsData[t];
+                timeSlotsData[t] = temp;
+                saveTimeSlots();
+                renderTimeSlotsTable();
+            }
+        }
 
         window.openAutoTimeModal = () => document.getElementById('auto-time-modal').classList.remove('hidden');
         window.closeAutoTimeModal = () => document.getElementById('auto-time-modal').classList.add('hidden');
@@ -726,9 +766,10 @@
                 }
             }
             timeSlotsData = newSlots;
+            saveTimeSlots();
             renderTimeSlotsTable();
             closeAutoTimeModal();
-            alert('Jadual masa berjaya dijana automatik!');
+            alert('Jadual masa berjaya dijana dan disimpan secara kekal!');
         }
 
         function formatMins(mins) {
