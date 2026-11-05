@@ -209,12 +209,10 @@
             </div>
         </section>
 
-        <!-- Tab Jana Jadual (Auto) - Lengkap dengan Import & Backup -->
+        <!-- Tab Jana Jadual (Auto) -->
         <section id="tab-jana" class="hidden space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <!-- Bahagian Kiri: Panel Kawalan -->
                 <div class="lg:col-span-5 space-y-6">
-                    <!-- Kotak 1: Jana Automatik -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5">
                         <div class="flex items-center space-x-3 border-b pb-3">
                             <div class="bg-[#0b1b3d] text-white p-2 rounded-xl text-lg font-bold">⚡</div>
@@ -249,7 +247,6 @@
                         </div>
                     </div>
 
-                    <!-- Kotak 2: Import Jadual Excel -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
                         <div class="flex items-center space-x-3 border-b pb-3">
                             <div class="bg-emerald-800 text-white p-2 rounded-xl text-lg font-bold">📊</div>
@@ -261,7 +258,6 @@
                         </div>
                     </div>
 
-                    <!-- Kotak 3: Simpan Versi (Backup) -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
                         <div class="flex items-center space-x-3 border-b pb-3">
                             <div class="bg-indigo-900 text-white p-2 rounded-xl text-lg font-bold">💾</div>
@@ -289,7 +285,6 @@
                     </div>
                 </div>
 
-                <!-- Bahagian Kanan: Status Pengisian Jadual Waktu -->
                 <div class="lg:col-span-7 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
                     <div class="flex justify-between items-center border-b pb-3">
                         <h3 class="text-base font-bold text-[#0b1b3d]">Status Pengisian Jadual Waktu</h3>
@@ -510,51 +505,60 @@
         let currentSubTab = 'subjek';
         let currentMasterMode = 'kelas';
 
+        // Storan Tetap Kekal (LocalStorage) yang Diperbaiki
         function loadDatabase() {
             let data = localStorage.getItem('school_database');
             if(data) {
-                let parsed = JSON.parse(data);
-                if(!parsed.senarai_guru) {
-                    parsed.senarai_guru = [
-                        { id: 1, name: "Pn. Siti Aisyah Bt Ahmad", code: "SAA", category: "Akademik" },
-                        { id: 2, name: "En. Ahmad Hafiz Bin Salleh", code: "AHS", category: "Arab / Agama" }
-                    ];
+                try {
+                    let parsed = JSON.parse(data);
+                    if(!parsed.senarai_guru) {
+                        parsed.senarai_guru = [
+                            { id: 1, name: "Pn. Siti Aisyah Bt Ahmad", code: "SAA", category: "Akademik" },
+                            { id: 2, name: "En. Ahmad Hafiz Bin Salleh", code: "AHS", category: "Arab / Agama" }
+                        ];
+                    }
+                    return parsed;
+                } catch(e) {
+                    console.error("Ralat parsing database", e);
                 }
-                return parsed;
-            } else {
-                let initial = {
-                    subjek: [
-                        { id: 1, name: "Bahasa Melayu", code: "BM", category: "Teras" },
-                        { id: 2, name: "Matematik", code: "MAT", category: "Teras" },
-                        { id: 3, name: "Sains", code: "SN", category: "Teras" }
-                    ],
-                    kelas: [
-                        { id: 1, name: "Tingkatan 1 - IS", code: "1IS", category: "Menengah Rendah" },
-                        { id: 2, name: "Tingkatan 2 - IS", code: "2IS", category: "Menengah Rendah" }
-                    ],
-                    bilik: [
-                        { id: 1, name: "Makmal Komputer 1", code: "MK1", category: "Khas" }
-                    ],
-                    senarai_guru: [
-                        { id: 1, name: "Pn. Siti Aisyah Bt Ahmad", code: "SAA", category: "Akademik" },
-                        { id: 2, name: "En. Ahmad Hafiz Bin Salleh", code: "AHS", category: "Arab / Agama" }
-                    ],
-                    guru: [
-                        { id: 1, name: "Pn. Siti Aisyah Bt Ahmad", code: "SAA", category: "Bahasa Melayu, Matematik" },
-                        { id: 2, name: "En. Ahmad Hafiz Bin Salleh", code: "AHS", category: "Matematik, Sains" }
-                    ]
-                };
-                localStorage.setItem('school_database', JSON.stringify(initial));
-                return initial;
             }
+            
+            let initial = {
+                subjek: [
+                    { id: 1, name: "Bahasa Melayu", code: "BM", category: "Teras" },
+                    { id: 2, name: "Matematik", code: "MAT", category: "Teras" },
+                    { id: 3, name: "Sains", code: "SN", category: "Teras" }
+                ],
+                kelas: [
+                    { id: 1, name: "Tingkatan 1 - IS", code: "1IS", category: "Menengah Rendah" },
+                    { id: 2, name: "Tingkatan 2 - IS", code: "2IS", category: "Menengah Rendah" }
+                ],
+                bilik: [
+                    { id: 1, name: "Makmal Komputer 1", code: "MK1", category: "Khas" }
+                ],
+                senarai_guru: [
+                    { id: 1, name: "Pn. Siti Aisyah Bt Ahmad", code: "SAA", category: "Akademik" },
+                    { id: 2, name: "En. Ahmad Hafiz Bin Salleh", code: "AHS", category: "Arab / Agama" }
+                ],
+                guru: [
+                    { id: 1, name: "Pn. Siti Aisyah Bt Ahmad", code: "SAA", category: "Bahasa Melayu, Matematik" },
+                    { id: 2, name: "En. Ahmad Hafiz Bin Salleh", code: "AHS", category: "Matematik, Sains" }
+                ]
+            };
+            localStorage.setItem('school_database', JSON.stringify(initial));
+            return initial;
         }
 
         let databaseRecords = loadDatabase();
-        function saveDatabase() { localStorage.setItem('school_database', JSON.stringify(databaseRecords)); }
+        function saveDatabase() { 
+            localStorage.setItem('school_database', JSON.stringify(databaseRecords)); 
+        }
 
         function loadTimeSlots() {
             let data = localStorage.getItem('school_time_slots');
-            if(data) return JSON.parse(data);
+            if(data) {
+                try { return JSON.parse(data); } catch(e) {}
+            }
             let initial = [
                 { id: 1, label: "1", start: "07:30", end: "08:05", type: "Waktu belajar" },
                 { id: 2, label: "2", start: "08:05", end: "08:40", type: "Waktu belajar" },
@@ -573,7 +577,9 @@
         }
 
         let timeSlotsData = loadTimeSlots();
-        function saveTimeSlots() { localStorage.setItem('school_time_slots', JSON.stringify(timeSlotsData)); }
+        function saveTimeSlots() { 
+            localStorage.setItem('school_time_slots', JSON.stringify(timeSlotsData)); 
+        }
 
         function formatTo12Hour(timeStr) {
             if(!timeStr || !timeStr.includes(':')) return timeStr;
@@ -598,7 +604,9 @@
                 let el = document.getElementById(`tab-${t}`);
                 if(el) el.classList.add('hidden');
             });
-            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            let targetTab = document.getElementById(`tab-${tabId}`);
+            if(targetTab) targetTab.classList.remove('hidden');
+
             if(tabId === 'data') renderDataTable();
             if(tabId === 'waktu') { renderTimeSlotsTable(); updateSchoolDaysOrder(); }
             if(tabId === 'blok') renderBlockedTable();
@@ -627,12 +635,14 @@
         }
 
         function initMasterTimetableTab() {
+            databaseRecords = loadDatabase(); // Sentiasa muat data terkini
             populateMasterDropdown();
             renderMasterTimetable();
         }
 
         function populateMasterDropdown() {
             let select = document.getElementById('master-select-target');
+            if(!select) return;
             select.innerHTML = '';
             if(currentMasterMode === 'kelas') {
                 (databaseRecords.kelas || []).forEach(k => {
@@ -650,6 +660,7 @@
             let titleEl = document.getElementById('master-table-title');
             let theadRow = document.getElementById('master-thead-row');
             let tbody = document.getElementById('master-tbody');
+            if(!tbody) return;
 
             if(!selectTarget) {
                 titleEl.innerText = "Sila pilih kelas atau guru terlebih dahulu";
@@ -694,11 +705,14 @@
 
         // --- Logik Tab Jana Jadual (Auto) ---
         function initJanaAutoTab() {
+            databaseRecords = loadDatabase(); // Sentiasa muat data terkini
             const selectClass = document.getElementById('auto-select-class');
-            selectClass.innerHTML = '<option value="Semua">Semua kelas</option>';
-            (databaseRecords.kelas || []).forEach(k => {
-                selectClass.innerHTML += `<option value="${k.name}">${k.name}</option>`;
-            });
+            if(selectClass) {
+                selectClass.innerHTML = '<option value="Semua">Semua kelas</option>';
+                (databaseRecords.kelas || []).forEach(k => {
+                    selectClass.innerHTML += `<option value="${k.name}">${k.name}</option>`;
+                });
+            }
             renderClassStatusTable();
         }
 
@@ -932,6 +946,7 @@
         }
 
         function renderDataTable() {
+            databaseRecords = loadDatabase(); // Sentiasa muat data terkini dari localStorage
             const tbody = document.getElementById('data-table-body');
             const totalCountEl = document.getElementById('total-stat-count');
             const thName = document.getElementById('th-name');
@@ -1037,6 +1052,7 @@
                 let item = databaseRecords[currentSubTab].find(x => x.id == editId);
                 if(item) { item.name = name; item.code = code; item.category = categoryValue; }
             } else {
+                if(!databaseRecords[currentSubTab]) databaseRecords[currentSubTab] = [];
                 databaseRecords[currentSubTab].push({ id: Date.now(), name, code, category: categoryValue });
             }
             saveDatabase();
@@ -1088,6 +1104,7 @@
         }
 
         function renderTimeSlotsTable() {
+            timeSlotsData = loadTimeSlots(); // Muat data terkini
             const tbody = document.getElementById('time-slots-table-body');
             if(!tbody) return;
             tbody.innerHTML = '';
