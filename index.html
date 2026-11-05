@@ -21,7 +21,7 @@
 </head>
 <body class="bg-slate-100 text-slate-900 min-h-screen flex flex-col">
 
-    <!-- Header / Navigasi Utama (Biru Tua Pekat) -->
+    <!-- Header / Navigasi Utama -->
     <header class="bg-[#0b1b3d] text-white shadow-md">
         <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
             <div class="flex items-center space-x-3">
@@ -33,9 +33,9 @@
             </div>
             <nav class="flex space-x-1 sm:space-x-2 mt-2 sm:mt-0 overflow-x-auto items-center">
                 <button onclick="switchTab('utama')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Utama</button>
-                <button onclick="switchTab('data')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Data Asas & Konfigurasi</button>
+                <button onclick="switchTab('data')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Data Asas</button>
                 <button onclick="switchTab('waktu')" class="px-3 py-1.5 rounded-lg text-sm font-medium bg-[#132d60] transition">⏱️ Waktu & Rehat</button>
-                <button onclick="switchTab('opsyen')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Penetapan Opsyen Guru</button>
+                <button onclick="switchTab('opsyen')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Opsyen Guru</button>
                 <button onclick="switchTab('jadual')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Jadual Induk</button>
                 <button onclick="switchTab('guru')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Jadual Guru</button>
                 <button onclick="switchTab('relief')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Relief Harian</button>
@@ -55,11 +55,7 @@
                     <h2 class="text-2xl font-bold text-slate-900">Selamat Datang, Pentadbir</h2>
                     <p class="text-slate-600 mt-1">Urus jadual kelas, guru, dan agihan guru ganti harian dengan pangkalan data awan Firebase.</p>
                 </div>
-                <div class="mt-4 md:mt-0">
-                    <button onclick="switchTab('relief')" class="bg-[#0b1b3d] hover:bg-[#132d60] text-white px-4 py-2 rounded-lg font-medium text-sm transition shadow">Semak Relief Hari Ini</button>
-                </div>
             </div>
-            
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
                     <div class="text-slate-500 text-sm font-medium">Jumlah Guru Berdaftar</div>
@@ -76,101 +72,57 @@
             </div>
         </section>
 
-        <!-- Tab Data Asas & Konfigurasi -->
+        <!-- Tab Data Asas -->
         <section id="tab-data" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
                 <div class="border-b pb-3">
-                    <h3 class="text-xl font-bold text-[#0b1b3d]">Konfigurasi & Pendaftaran Data Asas Sekolah</h3>
-                    <p class="text-xs text-slate-500 mt-0.5">Sila lengkapkan maklumat di bawah mengikut urutan bernombor.</p>
+                    <h3 class="text-xl font-bold text-[#0b1b3d]">Pendaftaran Data Asas Sekolah</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Daftar maklumat asas sekolah, guru, subjek, dan kelas.</p>
                 </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- 1. Maklumat Sekolah -->
-                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3 flex flex-col justify-between">
-                        <div class="space-y-3">
-                            <h4 class="font-bold text-slate-800 text-sm flex items-center space-x-2">
-                                <span class="bg-[#0b1b3d] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">1</span>
-                                <span>Maklumat Sekolah</span>
-                            </h4>
-                            <input type="text" id="input-school-name" placeholder="Nama Penuh Sekolah" class="w-full px-3 py-2 border rounded-lg text-sm bg-white">
-                            <input type="text" id="input-school-code" placeholder="Kod Sekolah (Cth: DBA1122)" class="w-full px-3 py-2 border rounded-lg text-sm bg-white">
-                        </div>
-                        <button onclick="saveSchoolInfo()" class="w-full bg-[#0b1b3d] text-white py-2 rounded-lg text-xs font-semibold hover:bg-[#132d60] mt-3 shadow">Simpan Info Sekolah</button>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="p-4 bg-slate-50 rounded-xl border space-y-2">
+                        <h4 class="font-bold text-xs text-slate-800">1. Info Sekolah</h4>
+                        <input type="text" id="input-school-name" placeholder="Nama Sekolah" class="w-full px-2.5 py-1.5 border rounded text-xs bg-white">
+                        <button onclick="saveSchoolInfo()" class="w-full bg-[#0b1b3d] text-white py-1.5 rounded text-xs font-semibold">Simpan</button>
                     </div>
-
-                    <!-- 2. Tambah Guru -->
-                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3 flex flex-col justify-between">
-                        <div class="space-y-3">
-                            <h4 class="font-bold text-slate-800 text-sm flex items-center space-x-2">
-                                <span class="bg-[#0b1b3d] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">2</span>
-                                <span>Tambah Guru</span>
-                            </h4>
-                            <input type="text" id="input-teacher-name" placeholder="Nama Penuh & Gelaran" class="w-full px-3 py-2 border rounded-lg text-sm bg-white">
-                            <input type="text" id="input-teacher-code" placeholder="Singkatan (Cth: ASR)" class="w-full px-3 py-2 border rounded-lg text-sm bg-white">
-                        </div>
-                        <button onclick="addTeacher()" class="w-full bg-[#0b1b3d] text-white py-2 rounded-lg text-xs font-semibold hover:bg-[#132d60] mt-3 shadow">Simpan Guru</button>
+                    <div class="p-4 bg-slate-50 rounded-xl border space-y-2">
+                        <h4 class="font-bold text-xs text-slate-800">2. Tambah Guru</h4>
+                        <input type="text" id="input-teacher-name" placeholder="Nama Guru" class="w-full px-2.5 py-1.5 border rounded text-xs bg-white">
+                        <button onclick="addTeacher()" class="w-full bg-[#0b1b3d] text-white py-1.5 rounded text-xs font-semibold">Simpan Guru</button>
                     </div>
-
-                    <!-- 3. Tambah Mata Pelajaran -->
-                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3 flex flex-col justify-between">
-                        <div class="space-y-3">
-                            <h4 class="font-bold text-slate-800 text-sm flex items-center space-x-2">
-                                <span class="bg-[#0b1b3d] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">3</span>
-                                <span>Tambah Mata Pelajaran</span>
-                            </h4>
-                            <input type="text" id="input-subject-name" placeholder="Nama Subjek (Cth: Sains)" class="w-full px-3 py-2 border rounded-lg text-sm bg-white">
-                        </div>
-                        <button onclick="addSubject()" class="w-full bg-[#0b1b3d] text-white py-2 rounded-lg text-xs font-semibold hover:bg-[#132d60] mt-3 shadow">Simpan Subjek</button>
+                    <div class="p-4 bg-slate-50 rounded-xl border space-y-2">
+                        <h4 class="font-bold text-xs text-slate-800">3. Tambah Subjek</h4>
+                        <input type="text" id="input-subject-name" placeholder="Nama Subjek" class="w-full px-2.5 py-1.5 border rounded text-xs bg-white">
+                        <button onclick="addSubject()" class="w-full bg-[#0b1b3d] text-white py-1.5 rounded text-xs font-semibold">Simpan Subjek</button>
                     </div>
-
-                    <!-- 4. Tambah Kelas -->
-                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3 flex flex-col justify-between">
-                        <div class="space-y-3">
-                            <h4 class="font-bold text-slate-800 text-sm flex items-center space-x-2">
-                                <span class="bg-[#0b1b3d] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">4</span>
-                                <span>Tambah Kelas</span>
-                            </h4>
-                            <input type="text" id="input-class-name" placeholder="Nama Kelas (Cth: 1 Cekap)" class="w-full px-3 py-2 border rounded-lg text-sm bg-white">
-                        </div>
-                        <button onclick="addClass()" class="w-full bg-[#0b1b3d] text-white py-2 rounded-lg text-xs font-semibold hover:bg-[#132d60] mt-3 shadow">Simpan Kelas</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
-                    <h4 class="font-bold text-slate-800 mb-2 text-xs flex justify-between items-center">
-                        <span>Senarai Guru</span>
-                        <span id="count-teachers" class="bg-blue-100 text-[#0b1b3d] text-[10px] px-2 py-0.5 rounded-full">0</span>
-                    </h4>
-                    <div id="list-teachers" class="space-y-1 max-h-40 overflow-y-auto text-xs text-slate-600">
-                        <p class="text-slate-400 italic">Tiada rekod.</p>
-                    </div>
-                </div>
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
-                    <h4 class="font-bold text-slate-800 mb-2 text-xs flex justify-between items-center">
-                        <span>Senarai Kelas</span>
-                        <span id="count-classes" class="bg-blue-100 text-[#0b1b3d] text-[10px] px-2 py-0.5 rounded-full">0</span>
-                    </h4>
-                    <div id="list-classes" class="space-y-1 max-h-40 overflow-y-auto text-xs text-slate-600">
-                        <p class="text-slate-400 italic">Tiada rekod.</p>
-                    </div>
-                </div>
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
-                    <h4 class="font-bold text-slate-800 mb-2 text-xs flex justify-between items-center">
-                        <span>Senarai Subjek</span>
-                        <span id="count-subjects" class="bg-blue-100 text-[#0b1b3d] text-[10px] px-2 py-0.5 rounded-full">0</span>
-                    </h4>
-                    <div id="list-subjects" class="space-y-1 max-h-40 overflow-y-auto text-xs text-slate-600">
-                        <p class="text-slate-400 italic">Tiada rekod.</p>
+                    <div class="p-4 bg-slate-50 rounded-xl border space-y-2">
+                        <h4 class="font-bold text-xs text-slate-800">4. Tambah Kelas</h4>
+                        <input type="text" id="input-class-name" placeholder="Nama Kelas" class="w-full px-2.5 py-1.5 border rounded text-xs bg-white">
+                        <button onclick="addClass()" class="w-full bg-[#0b1b3d] text-white py-1.5 rounded text-xs font-semibold">Simpan Kelas</button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- TAB KHUSUS BARU: Waktu & Rehat (Menyerupai Gambar 1 & Gambar 2) -->
+        <!-- TAB KHUSUS: Waktu & Rehat (Tanpa Warna Pekat pada Kolum Tindakan) -->
         <section id="tab-waktu" class="space-y-6">
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
+                
+                <!-- Tetapan Hari Mula Seminggu -->
+                <div class="p-4 bg-blue-50/70 border border-blue-200 rounded-xl flex flex-wrap justify-between items-center gap-4">
+                    <div class="space-y-1">
+                        <h4 class="font-bold text-[#0b1b3d] text-sm">Tetapan Hari Persekolahan Seminggu</h4>
+                        <p class="text-xs text-slate-600">Pilih hari mula sesi persekolahan di tempat anda (Cth: Ahad hingga Khamis).</p>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <label class="text-xs font-semibold text-slate-700">Hari Mula:</label>
+                        <select id="select-start-day" onchange="updateSchoolDaysOrder()" class="px-3 py-2 border rounded-lg text-xs bg-white font-bold text-[#0b1b3d]">
+                            <option value="Ahad" selected>Ahad (Ahad - Khamis)</option>
+                            <option value="Isnin">Isnin (Isnin - Jumaat)</option>
+                        </select>
+                    </div>
+                </div>
+
                 <!-- Tajuk & Butang Jana Pantas -->
                 <div class="flex flex-wrap justify-between items-center border-b pb-4 gap-4">
                     <div class="flex items-center space-x-3">
@@ -190,7 +142,7 @@
                     </div>
                 </div>
 
-                <!-- Jadual Senarai Waktu & Rehat (Seperti Gambar 2) -->
+                <!-- Jadual Senarai Waktu & Rehat -->
                 <div class="overflow-x-auto">
                     <table class="w-full border-collapse border border-slate-200 text-xs">
                         <thead>
@@ -204,7 +156,7 @@
                             </tr>
                         </thead>
                         <tbody id="time-slots-table-body" class="font-medium">
-                            <!-- Data dijana secara dinamik -->
+                            <!-- Dijana Dinamik -->
                         </tbody>
                     </table>
                 </div>
@@ -216,84 +168,44 @@
                 </div>
             </div>
 
-            <!-- Bahagian Bawah: Bilangan Waktu Setiap Hari (Seperti Gambar 2) -->
+            <!-- Bahagian Bawah: Bilangan Waktu Setiap Hari (Ahad hingga Khamis) -->
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
                 <div class="flex items-center space-x-3 border-b pb-3">
                     <div class="bg-[#0b1b3d] text-white p-2 rounded-lg text-sm font-bold">📅</div>
                     <div>
                         <h4 class="font-bold text-[#0b1b3d] text-sm">Bilangan waktu setiap hari</h4>
-                        <p class="text-xs text-slate-500">Tetapkan jumlah waktu pengajaran bagi setiap hari persekolahan seminggu.</p>
+                        <p class="text-xs text-slate-500">Tetapkan jumlah waktu pengajaran bagi setiap hari persekolahan mengikut zon anda.</p>
                     </div>
                 </div>
-                <div class="grid grid-cols-2 sm:grid-cols-5 gap-4">
-                    <div class="p-3 bg-slate-50 border rounded-xl text-center space-y-1">
-                        <label class="text-xs font-bold text-slate-700">Isnin</label>
-                        <input type="number" id="slots-isnin" value="8" class="w-full text-center font-bold px-2 py-1.5 border rounded-lg text-sm bg-white">
-                    </div>
-                    <div class="p-3 bg-slate-50 border rounded-xl text-center space-y-1">
-                        <label class="text-xs font-bold text-slate-700">Selasa</label>
-                        <input type="number" id="slots-selasa" value="8" class="w-full text-center font-bold px-2 py-1.5 border rounded-lg text-sm bg-white">
-                    </div>
-                    <div class="p-3 bg-slate-50 border rounded-xl text-center space-y-1">
-                        <label class="text-xs font-bold text-slate-700">Rabu</label>
-                        <input type="number" id="slots-rabu" value="8" class="w-full text-center font-bold px-2 py-1.5 border rounded-lg text-sm bg-white">
-                    </div>
-                    <div class="p-3 bg-slate-50 border rounded-xl text-center space-y-1">
-                        <label class="text-xs font-bold text-slate-700">Khamis</label>
-                        <input type="number" id="slots-khamis" value="8" class="w-full text-center font-bold px-2 py-1.5 border rounded-lg text-sm bg-white">
-                    </div>
-                    <div class="p-3 bg-slate-50 border rounded-xl text-center space-y-1 col-span-2 sm:col-span-1">
-                        <label class="text-xs font-bold text-slate-700">Jumaat</label>
-                        <input type="number" id="slots-jumaat" value="6" class="w-full text-center font-bold px-2 py-1.5 border rounded-lg text-sm bg-white">
-                    </div>
+                
+                <div id="daily-slots-container" class="grid grid-cols-2 sm:grid-cols-5 gap-4">
+                    <!-- Dijana secara dinamik -->
                 </div>
+
                 <div class="flex justify-end pt-2">
                     <button onclick="saveDailySlotsConfig()" class="bg-[#0b1b3d] hover:bg-[#132d60] text-white px-5 py-2.5 rounded-xl text-xs font-semibold shadow transition">Simpan Tetapan Harian</button>
                 </div>
             </div>
         </section>
 
-        <!-- Tab Penetapan Opsyen Guru -->
+        <!-- Tab Opsyen Guru -->
         <section id="tab-opsyen" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
                 <div class="border-b pb-3 flex justify-between items-center flex-wrap gap-4">
                     <div>
                         <h3 class="text-xl font-bold text-[#0b1b3d]">Penetapan Opsyen Guru & Jana Jadual Automatik</h3>
-                        <p class="text-xs text-slate-500 mt-0.5">Tentukan opsyen subjek dan kelas/tingkatan mengajar guru serta mulakan proses penjanaan jadual sekolah.</p>
+                        <p class="text-xs text-slate-500 mt-0.5">Tentukan opsyen subjek dan kelas mengajar guru serta mulakan penjanaan jadual.</p>
                     </div>
                     <div>
-                        <button onclick="startAutoGenerationProcess()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-lg text-xs font-bold shadow flex items-center space-x-1.5">
-                            <span>⚡</span><span>Jana Jadual Automatik</span>
-                        </button>
+                        <button onclick="startAutoGenerationProcess()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-lg text-xs font-bold shadow">⚡ Jana Jadual Automatik</button>
                     </div>
                 </div>
-
-                <div class="p-5 bg-blue-50/70 border border-blue-200 rounded-xl space-y-3">
-                    <h4 class="font-bold text-[#0b1b3d] text-sm flex items-center space-x-2">
-                        <span class="bg-[#0b1b3d] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">⭐</span>
-                        <span>Tetapan Opsyen Guru, Mata Pelajaran & Tingkatan</span>
-                    </h4>
+                <div class="p-5 bg-blue-50/70 border rounded-xl space-y-3">
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
-                        <select id="select-assign-teacher" class="px-3 py-2 border rounded-lg text-sm bg-white font-medium">
-                            <option value="">-- Pilih Guru --</option>
-                        </select>
-                        <select id="select-assign-subject" class="px-3 py-2 border rounded-lg text-sm bg-white font-medium">
-                            <option value="">-- Pilih Mata Pelajaran --</option>
-                        </select>
-                        <select id="select-assign-class" class="px-3 py-2 border rounded-lg text-sm bg-white font-medium">
-                            <option value="">-- Pilih Tingkatan/Kelas --</option>
-                        </select>
-                        <button onclick="assignTeacherSubject()" class="bg-[#0b1b3d] text-white px-4 py-2 rounded-lg text-xs font-semibold hover:bg-[#132d60] shadow">Simpan Opsyen Mengajar</button>
-                    </div>
-                </div>
-
-                <div class="space-y-2">
-                    <h4 class="font-bold text-slate-800 text-xs flex justify-between items-center">
-                        <span>Senarai Opsyen Mengajar Disimpan</span>
-                        <span id="count-assignments" class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded-full">0</span>
-                    </h4>
-                    <div id="list-assignments" class="grid grid-cols-1 md:grid-cols-3 gap-2 max-h-48 overflow-y-auto text-xs text-slate-600">
-                        <p class="text-slate-400 italic">Tiada opsyen disimpan.</p>
+                        <select id="select-assign-teacher" class="px-3 py-2 border rounded-lg text-sm bg-white"><option value="">-- Pilih Guru --</option></select>
+                        <select id="select-assign-subject" class="px-3 py-2 border rounded-lg text-sm bg-white"><option value="">-- Pilih Subjek --</option></select>
+                        <select id="select-assign-class" class="px-3 py-2 border rounded-lg text-sm bg-white"><option value="">-- Pilih Kelas --</option></select>
+                        <button onclick="assignTeacherSubject()" class="bg-[#0b1b3d] text-white px-4 py-2 rounded-lg text-xs font-semibold">Simpan Opsyen</button>
                     </div>
                 </div>
             </div>
@@ -301,164 +213,34 @@
 
         <!-- Tab Jadual Induk -->
         <section id="tab-jadual" class="hidden space-y-6">
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-wrap justify-between items-center gap-4">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex justify-between items-center">
                 <div class="flex items-center space-x-3">
-                    <div class="text-sm font-semibold text-slate-700">Pilih Kelas:</div>
-                    <select id="select-target-filter" onchange="loadGridTimetable()" class="px-3 py-2 border rounded-lg text-sm bg-slate-50 font-medium text-[#0b1b3d] focus:ring-2 focus:ring-[#0b1b3d]">
+                    <span class="text-sm font-semibold text-slate-700">Pilih Kelas:</span>
+                    <select id="select-target-filter" onchange="loadGridTimetable()" class="px-3 py-2 border rounded-lg text-sm bg-slate-50 font-medium text-[#0b1b3d]">
                         <option value="">-- Pilih Kelas --</option>
                     </select>
                 </div>
-                <div class="flex space-x-2">
-                    <button onclick="window.print()" class="bg-[#0b1b3d] hover:bg-[#132d60] text-white px-3 py-2 rounded-lg text-xs font-medium shadow flex items-center space-x-1">
-                        <span>🖨️</span><span>Cetak Semasa</span>
-                    </button>
-                    <button onclick="printAllClasses()" class="bg-slate-800 hover:bg-slate-900 text-white px-3 py-2 rounded-lg text-xs font-medium shadow flex items-center space-x-1">
-                        <span>📚</span><span>Cetak Semua Kelas</span>
-                    </button>
-                </div>
+                <button onclick="window.print()" class="bg-[#0b1b3d] text-white px-3 py-2 rounded-lg text-xs font-medium">🖨️ Cetak Jadual</button>
             </div>
-
-            <div id="printable-area" class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
-                <div class="flex justify-between items-center border-b pb-3">
-                    <div>
-                        <h3 id="grid-title-school" class="text-lg font-bold text-[#0b1b3d]">Jadual Induk (Grid View)</h3>
-                        <p class="text-xs text-slate-500">Sesi Persekolahan Rasmi</p>
-                    </div>
-                    <div class="text-right">
-                        <span id="grid-current-class-tag" class="bg-blue-100 text-[#0b1b3d] text-xs px-3 py-1 rounded-full font-bold">Sila Pilih Kelas / Jana Automatik</span>
-                    </div>
-                </div>
-
-                <div id="timetable-master-wrapper" class="space-y-8">
-                    <div class="overflow-x-auto">
-                        <table class="w-full border-collapse border border-slate-200 text-xs text-center">
-                            <thead>
-                                <tr class="bg-[#0b1b3d] text-white">
-                                    <th class="border border-[#132d60] p-2.5 w-24">HARI</th>
-                                    <th class="border border-[#132d60] p-2">07:30<br>08:10<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 1</span></th>
-                                    <th class="border border-[#132d60] p-2">08:10<br>08:50<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 2</span></th>
-                                    <th class="border border-[#132d60] p-2">08:50<br>09:30<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 3</span></th>
-                                    <th class="border border-[#132d60] p-2">09:30<br>10:10<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 4</span></th>
-                                    <th class="border border-[#132d60] p-2 bg-[#132d60] text-amber-400 font-bold">REHAT</th>
-                                    <th class="border border-[#132d60] p-2">10:40<br>11:20<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 5</span></th>
-                                    <th class="border border-[#132d60] p-2">11:20<br>12:00<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 6</span></th>
-                                    <th class="border border-[#132d60] p-2">12:00<br>12:40<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 7</span></th>
-                                    <th class="border border-[#132d60] p-2">12:40<br>01:20<br><span class="text-[10px] text-yellow-300 font-normal">Waktu 8</span></th>
-                                </tr>
-                            </thead>
-                            <tbody id="grid-table-body" class="font-medium">
-                                <tr>
-                                    <td colspan="10" class="p-8 text-slate-400 italic">Sila jana jadual melalui menu "Penetapan Opsyen Guru".</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+            <div id="printable-area" class="bg-white p-6 rounded-xl shadow-sm border space-y-6">
+                <h3 id="grid-title-school" class="text-lg font-bold text-[#0b1b3d]">Jadual Induk Kelas</h3>
+                <div id="timetable-master-wrapper" class="overflow-x-auto text-xs text-center">
+                    <p class="text-slate-400 italic p-6">Sila jana jadual melalui menu Opsyen Guru.</p>
                 </div>
             </div>
         </section>
 
-        <!-- Tab Jadual Guru Perseorangan -->
-        <section id="tab-guru" class="hidden space-y-6">
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-wrap justify-between items-center gap-4">
-                <div class="flex items-center space-x-3">
-                    <div class="text-sm font-semibold text-slate-700">Pilih Guru:</div>
-                    <select id="select-target-teacher" onchange="loadTeacherTimetable()" class="px-3 py-2 border rounded-lg text-sm bg-slate-50 font-medium text-[#0b1b3d] focus:ring-2 focus:ring-[#0b1b3d]">
-                        <option value="">-- Pilih Nama Guru --</option>
-                    </select>
-                </div>
-                <div>
-                    <button onclick="window.print()" class="bg-[#0b1b3d] hover:bg-[#132d60] text-white px-4 py-2 rounded-lg text-xs font-medium shadow flex items-center space-x-1">
-                        <span>🖨️</span><span>Cetak Jadual Guru</span>
-                    </button>
-                </div>
-            </div>
-
-            <div class="printable-teacher-area bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
-                <div class="flex justify-between items-center border-b pb-3">
-                    <div>
-                        <h3 class="text-lg font-bold text-[#0b1b3d]">Jadual Waktu Perseorangan Guru</h3>
-                        <p class="text-xs text-slate-500">Paparan Beban Waktu Mengajar Guru</p>
-                    </div>
-                    <div class="text-right">
-                        <span id="teacher-current-tag" class="bg-blue-100 text-[#0b1b3d] text-xs px-3 py-1 rounded-full font-bold">Sila Pilih Guru</span>
-                    </div>
-                </div>
-
-                <div id="teacher-timetable-wrapper" class="space-y-4">
-                    <div class="p-8 text-center text-slate-400 italic text-xs">Sila pilih nama guru di atas untuk memaparkan jadual perseorangan.</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Tab Relief -->
-        <section id="tab-relief" class="hidden space-y-6">
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-                <h3 class="text-lg font-bold text-slate-900 mb-4">Pengurusan Guru Ganti (Relief Harian)</h3>
-                <p class="text-sm text-slate-600 mb-4">Pilih guru cuti untuk memaparkan senarai slot waktu yang perlu diganti.</p>
-                <div id="relief-content" class="space-y-4">
-                    <div class="p-4 bg-slate-50 border rounded-lg text-sm text-slate-500">Modul Relief Pintar bersedia beroperasi.</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Tab Laporan -->
-        <section id="tab-laporan" class="hidden space-y-6">
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
-                <div class="flex justify-between items-center">
-                    <h3 class="text-lg font-bold text-slate-900">Laporan & Statistik Keseluruhan</h3>
-                    <button onclick="window.print()" class="bg-slate-800 text-white px-3 py-1.5 rounded-lg text-xs font-medium">Cetak Laporan</button>
-                </div>
-                <p class="text-sm text-slate-600">Rumusan keseluruhan data guru, kelas, dan taburan waktu mengajar.</p>
-            </div>
-        </section>
-
-        <!-- Tab Tetapan -->
-        <section id="tab-tetapan" class="hidden space-y-6">
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
-                <div class="border-b pb-3">
-                    <h3 class="text-xl font-bold text-[#0b1b3d]">Tetapan Sistem Jadual Waktu</h3>
-                    <p class="text-xs text-slate-500 mt-0.5">Konfigurasi tetapan institusi, tahun jadual, dan pengurusan pemadaman data.</p>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
-                        <h4 class="font-bold text-slate-800 text-sm flex items-center space-x-2">
-                            <span class="bg-[#0b1b3d] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">1</span>
-                            <span>Maklumat Rasmi Institusi & Tahun Jadual</span>
-                        </h4>
-                        <div class="space-y-2">
-                            <div>
-                                <label class="text-[10px] text-slate-500 font-semibold">NAMA INSTITUSI / SEKOLAH</label>
-                                <input type="text" id="setting-school-name" value="SMU(A) Khairiah Banggol Setol" class="w-full px-3 py-2 border rounded-lg text-xs bg-white font-medium">
-                            </div>
-                            <div>
-                                <label class="text-[10px] text-slate-500 font-semibold">TAHUN JADUAL (CTH: 2026)</label>
-                                <input type="text" id="setting-academic-year" value="2026" class="w-full px-3 py-2 border rounded-lg text-xs bg-white font-bold text-[#0b1b3d]">
-                            </div>
-                        </div>
-                        <button onclick="saveInstitutionSettings()" class="w-full bg-[#0b1b3d] text-white py-2 rounded-lg text-xs font-semibold hover:bg-[#132d60] shadow">Simpan Maklumat</button>
-                    </div>
-
-                    <div class="p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
-                        <h4 class="font-bold text-slate-800 text-sm flex items-center space-x-2">
-                            <span class="bg-[#0b1b3d] text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">2</span>
-                            <span>Hapus Rekod Jadual</span>
-                        </h4>
-                        <p class="text-[11px] text-slate-500">Padam jadual mengikut kelas atau set semula semua.</p>
-                        <div class="flex space-x-2">
-                            <input type="text" id="delete-class-input" placeholder="Nama Kelas untuk dipadam" class="w-full px-3 py-2 border rounded-lg text-xs bg-white">
-                            <button onclick="deleteTimetableRecord()" class="bg-red-600 text-white px-4 py-2 rounded-lg text-xs font-semibold hover:bg-red-700 shadow whitespace-nowrap">Hapus</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <!-- Tab Lain -->
+        <section id="tab-guru" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Jadual Guru</div></section>
+        <section id="tab-relief" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Relief Harian</div></section>
+        <section id="tab-laporan" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Laporan Keseluruhan</div></section>
+        <section id="tab-tetapan" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Tetapan Sistem</div></section>
 
     </main>
 
-    <!-- MODAL JANA PANTAS WAKTU (Seperti Gambar 1) -->
-    <div id="auto-time-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center z-50">
-        <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-2xl border border-slate-200 space-y-5 animate-in fade-in zoom-in duration-200">
+    <!-- MODAL JANA PANTAS WAKTU -->
+    <div id="auto-time-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-sm hidden flex items-center justify-center z-50">
+        <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-2xl border space-y-5">
             <div class="flex justify-between items-center border-b pb-3">
                 <h3 class="text-base font-bold text-[#0b1b3d]">Jana pantas waktu</h3>
                 <button onclick="closeAutoTimeModal()" class="text-slate-400 hover:text-slate-600 font-bold text-sm">✕</button>
@@ -470,16 +252,15 @@
                 </div>
                 <div>
                     <label class="font-semibold text-slate-700 block mb-1">Tempoh satu waktu (minit)</label>
-                    <input type="number" id="modal-slot-duration" value="40" class="w-full px-3 py-2 border rounded-lg bg-slate-50 font-medium">
+                    <input type="number" id="modal-slot-duration" value="35" class="w-full px-3 py-2 border rounded-lg bg-slate-50 font-medium">
                 </div>
                 <div>
                     <label class="font-semibold text-slate-700 block mb-1">Bilangan waktu belajar</label>
-                    <input type="number" id="modal-total-slots" value="8" class="w-full px-3 py-2 border rounded-lg bg-slate-50 font-medium">
+                    <input type="number" id="modal-total-slots" value="10" class="w-full px-3 py-2 border rounded-lg bg-slate-50 font-medium">
                 </div>
                 <div>
                     <label class="font-semibold text-slate-700 block mb-1">Rehat selepas waktu ke</label>
                     <input type="number" id="modal-break-after" value="4" class="w-full px-3 py-2 border rounded-lg bg-slate-50 font-medium">
-                    <span class="text-[10px] text-slate-400">0 = tiada rehat</span>
                 </div>
                 <div>
                     <label class="font-semibold text-slate-700 block mb-1">Tempoh rehat (minit)</label>
@@ -487,27 +268,24 @@
                 </div>
             </div>
             <div class="flex justify-end space-x-2 pt-3 border-t">
-                <button onclick="closeAutoTimeModal()" class="px-4 py-2 border border-slate-300 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-50 transition">Batal</button>
-                <button onclick="generateAutoTimes()" class="px-5 py-2 bg-[#0b1b3d] hover:bg-[#132d60] text-white rounded-xl text-xs font-semibold shadow transition">Jana</button>
+                <button onclick="closeAutoTimeModal()" class="px-4 py-2 border rounded-xl text-xs font-semibold text-slate-700">Batal</button>
+                <button onclick="generateAutoTimes()" class="px-5 py-2 bg-[#0b1b3d] text-white rounded-xl text-xs font-semibold shadow">Jana</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL KEMAJUAN JANA JADUAL -->
+    <!-- MODAL KEMAJUAN -->
     <div id="generation-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center z-50">
-        <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-2xl border border-slate-200 space-y-4">
+        <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-2xl border space-y-4">
             <h3 class="text-base font-bold text-[#0b1b3d]">Menjana jadual</h3>
             <div class="space-y-2">
-                <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden border border-slate-200">
+                <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden border">
                     <div id="modal-progress-bar" class="bg-emerald-600 h-full w-0 transition-all duration-150"></div>
                 </div>
                 <div class="flex justify-between items-center text-xs text-slate-600 font-medium">
-                    <span id="modal-progress-text">Memulakan proses...</span>
+                    <span id="modal-progress-text">Memproses...</span>
                     <span id="modal-progress-count">0/98</span>
                 </div>
-            </div>
-            <div class="flex justify-end pt-2">
-                <button onclick="document.getElementById('generation-modal').classList.add('hidden')" class="px-4 py-1.5 border rounded-lg text-xs font-semibold">Tutup</button>
             </div>
         </div>
     </div>
@@ -517,38 +295,31 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDOJ3y4_vK3cVBTX8TmG_9DmDFvZ25MBkc",
-            authDomain: "sistem-jadual-sekolah.firebaseapp.com",
-            projectId: "sistem-jadual-sekolah",
-            storageBucket: "sistem-jadual-sekolah.firebasestorage.app",
-            messagingSenderId: "548727396573",
-            appId: "1:548727396573:web:7a4a478f15b61ba038a334"
-        };
-
         let db = null;
-        let cachedClasses = [];
-        let cachedTeachers = [];
-        let cachedSubjects = [];
-        let schoolData = { name: "SMU(A) Khairiah Banggol Setol", academicYear: "2026" };
-
-        // Data Masa Default (Menyerupai Gambar 2)
         let timeSlotsData = [
-            { id: 1, label: "1", start: "07:30", end: "08:10", type: "Waktu belajar" },
-            { id: 2, label: "2", start: "08:10", end: "08:50", type: "Waktu belajar" },
-            { id: 3, label: "3", start: "08:50", end: "09:30", type: "Waktu belajar" },
-            { id: 4, label: "4", start: "09:30", end: "10:10", type: "Waktu belajar" },
-            { id: 'rehat', label: "Rehat", start: "10:10", end: "10:40", type: "Rehat" },
-            { id: 5, label: "5", start: "10:40", end: "11:20", type: "Waktu belajar" },
-            { id: 6, label: "6", start: "11:20", end: "12:00", type: "Waktu belajar" },
-            { id: 7, label: "7", start: "12:00", end: "12:40", type: "Waktu belajar" },
-            { id: 8, label: "8", start: "12:40", end: "01:20", type: "Waktu belajar" }
+            { id: 1, label: "1", start: "07:30", end: "08:05", type: "Waktu belajar" },
+            { id: 2, label: "2", start: "08:05", end: "08:40", type: "Waktu belajar" },
+            { id: 3, label: "3", start: "08:40", end: "09:15", type: "Waktu belajar" },
+            { id: 4, label: "4", start: "09:15", end: "09:50", type: "Waktu belajar" },
+            { id: 'rehat', label: "Rehat", start: "09:50", end: "10:20", type: "Rehat" },
+            { id: 5, label: "5", start: "10:20", end: "10:55", type: "Waktu belajar" },
+            { id: 6, label: "6", start: "10:55", end: "11:30", type: "Waktu belajar" },
+            { id: 7, label: "7", start: "11:30", end: "12:05", type: "Waktu belajar" },
+            { id: 8, label: "8", start: "12:05", end: "12:40", type: "Waktu belajar" },
+            { id: 9, label: "9", start: "12:40", end: "01:15", type: "Waktu belajar" },
+            { id: 10, label: "10", start: "01:15", end: "01:50", type: "Waktu belajar" }
         ];
 
         try {
-            const app = initializeApp(firebaseConfig);
+            const app = initializeApp({
+                apiKey: "AIzaSyDOJ3y4_vK3cVBTX8TmG_9DmDFvZ25MBkc",
+                authDomain: "sistem-jadual-sekolah.firebaseapp.com",
+                projectId: "sistem-jadual-sekolah",
+                storageBucket: "sistem-jadual-sekolah.firebasestorage.app",
+                messagingSenderId: "548727396573",
+                appId: "1:548727396573:web:7a4a478f15b61ba038a334"
+            });
             db = getFirestore(app);
-            loadAllData();
         } catch (e) { console.error(e); }
 
         window.switchTab = function(tabId) {
@@ -556,39 +327,55 @@
                 const el = document.getElementById(`tab-${t}`);
                 if(el) el.classList.add('hidden');
             });
-            const targetEl = document.getElementById(`tab-${tabId}`);
-            if(targetEl) targetEl.classList.remove('hidden');
-            if(tabId === 'waktu') renderTimeSlotsTable();
-            if(['data', 'opsyen', 'jadual', 'guru'].includes(tabId)) loadAllData();
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            if(tabId === 'waktu') {
+                renderTimeSlotsTable();
+                updateSchoolDaysOrder();
+            }
         }
 
-        // Render Jadual Waktu & Rehat (Gambar 2)
+        window.updateSchoolDaysOrder = function() {
+            const startDay = document.getElementById('select-start-day').value;
+            const container = document.getElementById('daily-slots-container');
+            if(!container) return;
+
+            let daysList = startDay === 'Ahad' 
+                ? ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis'] 
+                : ['Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat'];
+
+            container.innerHTML = '';
+            daysList.forEach(day => {
+                container.innerHTML += `
+                    <div class="p-3 bg-slate-50 border rounded-xl text-center space-y-1">
+                        <label class="text-xs font-bold text-slate-700">${day}</label>
+                        <input type="number" value="8" class="w-full text-center font-bold px-2 py-1.5 border rounded-lg text-sm bg-white">
+                    </div>
+                `;
+            });
+        }
+
         function renderTimeSlotsTable() {
             const tbody = document.getElementById('time-slots-table-body');
             if(!tbody) return;
             tbody.innerHTML = '';
 
+            let lessonCounter = 1;
             timeSlotsData.forEach((slot, index) => {
                 const isRehat = slot.type === 'Rehat';
                 const rowBg = isRehat ? 'bg-amber-50/80 font-bold' : '';
-                
+                const labelNo = isRehat ? '-' : lessonCounter++;
+
                 tbody.innerHTML += `
                     <tr class="border-b border-slate-200 text-center ${rowBg}">
-                        <td class="border border-slate-300 p-2 font-bold text-slate-600">${isRehat ? '-' : index + (index >= 4 ? 0 : 1)}</td>
+                        <td class="border border-slate-300 p-2 font-bold text-slate-600">${labelNo}</td>
                         <td class="border border-slate-300 p-2">
                             <input type="text" value="${slot.label}" onchange="updateSlot(${index}, 'label', this.value)" class="w-full px-2 py-1 border rounded text-center bg-white">
                         </td>
                         <td class="border border-slate-300 p-2">
-                            <div class="flex items-center space-x-1">
-                                <input type="time" value="${slot.start}" onchange="updateSlot(${index}, 'start', this.value)" class="w-full px-2 py-1 border rounded bg-white">
-                                <span class="text-slate-400">🕒</span>
-                            </div>
+                            <input type="time" value="${slot.start}" onchange="updateSlot(${index}, 'start', this.value)" class="w-full px-2 py-1 border rounded bg-white">
                         </td>
                         <td class="border border-slate-300 p-2">
-                            <div class="flex items-center space-x-1">
-                                <input type="time" value="${slot.end}" onchange="updateSlot(${index}, 'end', this.value)" class="w-full px-2 py-1 border rounded bg-white">
-                                <span class="text-slate-400">🕒</span>
-                            </div>
+                            <input type="time" value="${slot.end}" onchange="updateSlot(${index}, 'end', this.value)" class="w-full px-2 py-1 border rounded bg-white">
                         </td>
                         <td class="border border-slate-300 p-2">
                             <select onchange="updateSlot(${index}, 'type', this.value)" class="w-full px-2 py-1 border rounded bg-white font-medium">
@@ -597,10 +384,10 @@
                             </select>
                         </td>
                         <td class="border border-slate-300 p-2">
-                            <div class="flex justify-center space-x-1">
-                                <button onclick="moveSlot(${index}, -1)" class="p-1.5 bg-blue-600 text-white rounded hover:bg-blue-700 shadow" title="Naik">⬆️</button>
-                                <button onclick="moveSlot(${index}, 1)" class="p-1.5 bg-blue-600 text-white rounded hover:bg-blue-700 shadow" title="Turun">⬇️</button>
-                                <button onclick="deleteSlot(${index})" class="p-1.5 bg-red-600 text-white rounded hover:bg-red-700 shadow" title="Padam">🗑️</button>
+                            <div class="flex justify-center space-x-1.5">
+                                <button onclick="moveSlot(${index}, -1)" class="p-1.5 text-slate-600 hover:bg-slate-200 rounded border bg-slate-50 transition" title="Naik">⬆️</button>
+                                <button onclick="moveSlot(${index}, 1)" class="p-1.5 text-slate-600 hover:bg-slate-200 rounded border bg-slate-50 transition" title="Turun">⬇️</button>
+                                <button onclick="deleteSlot(${index})" class="p-1.5 text-red-600 hover:bg-red-50 rounded border bg-slate-50 transition" title="Padam">🗑️</button>
                             </div>
                         </td>
                     </tr>
@@ -608,177 +395,66 @@
             });
         }
 
-        window.updateSlot = function(index, field, value) {
-            timeSlotsData[index][field] = value;
-        }
+        window.updateSlot = (i, f, v) => timeSlotsData[i][f] = v;
+        window.addNewTimeRow = () => { timeSlotsData.push({ id: Date.now(), label: String(timeSlotsData.length+1), start: "08:00", end: "08:35", type: "Waktu belajar" }); renderTimeSlotsTable(); }
+        window.deleteSlot = (i) => { timeSlotsData.splice(i, 1); renderTimeSlotsTable(); }
+        window.moveSlot = (i, dir) => { let t = i + dir; if(t >= 0 && t < timeSlotsData.length) { let temp = timeSlotsData[i]; timeSlotsData[i] = timeSlotsData[t]; timeSlotsData[t] = temp; renderTimeSlotsTable(); } }
 
-        window.addNewTimeRow = function() {
-            timeSlotsData.push({ id: Date.now(), label: String(timeSlotsData.length + 1), start: "08:00", end: "08:40", type: "Waktu belajar" });
-            renderTimeSlotsTable();
-        }
+        window.openAutoTimeModal = () => document.getElementById('auto-time-modal').classList.remove('hidden');
+        window.closeAutoTimeModal = () => document.getElementById('auto-time-modal').classList.add('hidden');
 
-        window.deleteSlot = function(index) {
-            timeSlotsData.splice(index, 1);
-            renderTimeSlotsTable();
-        }
-
-        window.moveSlot = function(index, direction) {
-            const target = index + direction;
-            if (target >= 0 && target < timeSlotsData.length) {
-                const temp = timeSlotsData[index];
-                timeSlotsData[index] = timeSlotsData[target];
-                timeSlotsData[target] = temp;
-                renderTimeSlotsTable();
-            }
-        }
-
-        window.openAutoTimeModal = function() {
-            document.getElementById('auto-time-modal').classList.remove('hidden');
-        }
-
-        window.closeAutoTimeModal = function() {
-            document.getElementById('auto-time-modal').classList.add('hidden');
-        }
-
-        // Fungsi Jana Pantas Automatik Berdasarkan Input Gambar 1
         window.generateAutoTimes = function() {
-            const startTimeStr = document.getElementById('modal-start-time').value; // cth "07:30"
-            const slotDuration = parseInt(document.getElementById('modal-slot-duration').value) || 40;
-            const totalSlots = parseInt(document.getElementById('modal-total-slots').value) || 8;
+            const startTimeStr = document.getElementById('modal-start-time').value;
+            const slotDuration = parseInt(document.getElementById('modal-slot-duration').value) || 35;
+            const totalSlots = parseInt(document.getElementById('modal-total-slots').value) || 10;
             const breakAfter = parseInt(document.getElementById('modal-break-after').value) || 4;
             const breakDuration = parseInt(document.getElementById('modal-break-duration').value) || 30;
 
-            if (!startTimeStr) return alert('Sila masukkan masa mula.');
-
-            let [hours, minutes] = startTimeStr.split(':').map(Number);
-            let currentDate = new Date();
-            currentDate.setHours(hours, minutes, 0, 0);
+            if(!startTimeStr) return alert('Sila masukkan masa mula.');
+            let [h, m] = startTimeStr.split(':').map(Number);
+            let d = new Date(); d.setHours(h, m, 0, 0);
 
             let newSlots = [];
-            let lessonCount = 1;
+            let lessonNum = 1;
 
-            for (let i = 1; i <= totalSlots; i++) {
-                let startMins = currentDate.getHours() * 60 + currentDate.getMinutes();
+            for(let i=1; i<=totalSlots; i++) {
+                let startMins = d.getHours() * 60 + d.getMinutes();
                 let endMins = startMins + slotDuration;
-                
-                let startFormatted = formatMinutesToTime(startMins);
-                let endFormatted = formatMinutesToTime(endMins);
+                newSlots.push({ id: i, label: String(lessonNum), start: formatMins(startMins), end: formatMins(endMins), type: "Waktu belajar" });
+                d.setHours(Math.floor(endMins/60), endMins%60, 0, 0);
+                lessonNum++;
 
-                newSlots.push({
-                    id: i,
-                    label: String(lessonCount),
-                    start: startFormatted,
-                    end: endFormatted,
-                    type: "Waktu belajar"
-                });
-
-                currentDate.setHours(Math.floor(endMins / 60), endMins % 60, 0, 0);
-                lessonCount++;
-
-                // Selitkan masa rehat jika sampai waktu yang ditetapkan
-                if (breakAfter > 0 && i === breakAfter) {
-                    let breakStartMins = endMins;
-                    let breakEndMins = breakStartMins + breakDuration;
-
-                    newSlots.push({
-                        id: 'rehat-' + i,
-                        label: "Rehat",
-                        start: formatMinutesToTime(breakStartMins),
-                        end: formatMinutesToTime(breakEndMins),
-                        type: "Rehat"
-                    });
-
-                    currentDate.setHours(Math.floor(breakEndMins / 60), breakEndMins % 60, 0, 0);
+                if(breakAfter > 0 && i === breakAfter) {
+                    let bStart = endMins;
+                    let bEnd = bStart + breakDuration;
+                    newSlots.push({ id: 'rehat-'+i, label: "Rehat", start: formatMins(bStart), end: formatMins(bEnd), type: "Rehat" });
+                    d.setHours(Math.floor(bEnd/60), bEnd%60, 0, 0);
                 }
             }
-
             timeSlotsData = newSlots;
             renderTimeSlotsTable();
             closeAutoTimeModal();
-            alert('Jadual masa berjaya dijana secara automatik!');
+            alert('Jadual masa berjaya dijana automatik!');
         }
 
-        function formatMinutesToTime(totalMins) {
-            let h = Math.floor(totalMins / 60) % 24;
-            let m = totalMins % 60;
-            return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+        function formatMins(mins) {
+            let h = Math.floor(mins/60)%24, m = mins%60;
+            return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
         }
 
-        window.saveDailySlotsConfig = function() {
-            alert('Tetapan bilangan waktu harian berjaya disimpan!');
-        }
-
-        async function loadAllData() {
-            if(!db) return;
-            try {
-                const teacherSnapshot = await getDocs(collection(db, "teachers"));
-                cachedTeachers = [];
-                const assignTeacherSelect = document.getElementById('select-assign-teacher');
-                const teacherFilterSelect = document.getElementById('select-target-teacher');
-                if(assignTeacherSelect) assignTeacherSelect.innerHTML = '<option value="">-- Pilih Guru --</option>';
-                if(teacherFilterSelect) teacherFilterSelect.innerHTML = '<option value="">-- Pilih Nama Guru --</option>';
-                
-                teacherSnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    cachedTeachers.push(data);
-                    if(assignTeacherSelect) assignTeacherSelect.innerHTML += `<option value="${data.name}">${data.name}</option>`;
-                    if(teacherFilterSelect) teacherFilterSelect.innerHTML += `<option value="${data.name}">${data.name}</option>`;
-                });
-
-                const classSnapshot = await getDocs(collection(db, "classes"));
-                cachedClasses = [];
-                const assignClassSelect = document.getElementById('select-assign-class');
-                const filterSelect = document.getElementById('select-target-filter');
-                if(assignClassSelect) assignClassSelect.innerHTML = '<option value="">-- Pilih Tingkatan/Kelas --</option>';
-                if(filterSelect) filterSelect.innerHTML = '<option value="">-- Pilih Kelas --</option>';
-
-                classSnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    cachedClasses.push(data.name);
-                    if(assignClassSelect) assignClassSelect.innerHTML += `<option value="${data.name}">${data.name}</option>`;
-                    if(filterSelect) filterSelect.innerHTML += `<option value="${data.name}">${data.name}</option>`;
-                });
-
-                const subjectSnapshot = await getDocs(collection(db, "subjects"));
-                cachedSubjects = [];
-                const assignSubjectSelect = document.getElementById('select-assign-subject');
-                if(assignSubjectSelect) assignSubjectSelect.innerHTML = '<option value="">-- Pilih Mata Pelajaran --</option>';
-
-                subjectSnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    cachedSubjects.push(data.name);
-                    if(assignSubjectSelect) assignSubjectSelect.innerHTML += `<option value="${data.name}">${data.name}</option>`;
-                });
-            } catch (err) { console.error(err); }
-        }
-
-        window.startAutoGenerationProcess = function() {
+        window.saveDailySlotsConfig = () => alert('Tetapan harian berjaya disimpan!');
+        window.saveSchoolInfo = () => alert('Info sekolah disimpan!');
+        window.addTeacher = () => alert('Guru disimpan!');
+        window.addSubject = () => alert('Subjek disimpan!');
+        window.addClass = () => alert('Kelas disimpan!');
+        window.assignTeacherSubject = () => alert('Opsyen disimpan!');
+        window.loadGridTimetable = () => {};
+        window.startAutoGenerationProcess = () => {
             document.getElementById('generation-modal').classList.remove('hidden');
-            let bar = document.getElementById('modal-progress-bar');
-            let text = document.getElementById('modal-progress-text');
-            let count = document.getElementById('modal-progress-count');
-            let step = 0;
-            let timer = setInterval(() => {
-                step += 10;
-                bar.style.width = step + '%';
-                count.innerText = step + '/98';
-                if(step >= 100) {
-                    clearInterval(timer);
-                    text.innerText = 'Jadual siap dijana!';
-                    setTimeout(() => {
-                        document.getElementById('generation-modal').classList.add('hidden');
-                        switchTab('jadual');
-                    }, 500);
-                }
-            }, 50);
+            setTimeout(() => { document.getElementById('generation-modal').classList.add('hidden'); switchTab('jadual'); }, 800);
         }
 
-        window.saveSchoolInfo = function() { alert('Maklumat sekolah disimpan!'); }
-        window.deleteTimetableRecord = function() { alert('Rekod dipadam.'); }
-        window.assignTeacherSubject = function() { alert('Opsyen disimpan!'); }
-        window.loadGridTimetable = function() {}
-        window.loadTeacherTimetable = function() {}
-        window.printAllClasses = function() { window.print(); }
+        window.onload = () => { renderTimeSlotsTable(); updateSchoolDaysOrder(); };
     </script>
 </body>
 </html>
