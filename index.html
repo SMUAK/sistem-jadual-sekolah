@@ -32,6 +32,7 @@
                 <button onclick="switchTab('utama')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Utama</button>
                 <button onclick="switchTab('data')" class="px-3 py-1.5 rounded-lg text-sm font-medium bg-[#132d60] transition">Data Asas</button>
                 <button onclick="switchTab('waktu')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">⏱️ Waktu & Rehat</button>
+                <button onclick="switchTab('blok')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">🚫 Blok Waktu</button>
                 <button onclick="switchTab('opsyen')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Opsyen Guru</button>
                 <button onclick="switchTab('jadual')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Jadual Induk</button>
                 <button onclick="switchTab('guru')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Jadual Guru</button>
@@ -108,7 +109,7 @@
             </div>
         </section>
 
-        <!-- Tab Waktu & Rehat (Disimpan dalam localStorage) -->
+        <!-- Tab Waktu & Rehat -->
         <section id="tab-waktu" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
                 
@@ -182,6 +183,40 @@
             </div>
         </section>
 
+        <!-- TAB BARU: BLOK WAKTU MENGAJAR -->
+        <section id="tab-blok" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-wrap justify-between items-center gap-4">
+                <div class="flex items-center space-x-4">
+                    <div class="bg-[#0b1b3d] text-white p-3 rounded-2xl text-2xl font-bold shadow">🚫</div>
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900">Blok Waktu Mengajar Guru</h2>
+                        <p class="text-xs text-slate-500">Tetapkan masa wajib dikosongkan (slot off) bagi guru tertentu sebelum penjanaan jadual</p>
+                    </div>
+                </div>
+                <button onclick="openBlockModal()" class="bg-[#0b1b3d] hover:bg-[#132d60] text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow flex items-center space-x-2 transition">
+                    <span>+ Tambah Blok Waktu</span>
+                </button>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse border border-slate-200 text-xs">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-700 font-bold text-center">
+                                <th class="border border-slate-300 p-2.5 w-16">Bil.</th>
+                                <th class="border border-slate-300 p-2.5 text-left pl-4">Nama Guru</th>
+                                <th class="border border-slate-300 p-2.5 w-32">Hari</th>
+                                <th class="border border-slate-300 p-2.5 w-48">Waktu / Slot Di-blok</th>
+                                <th class="border border-slate-300 p-2.5">Catatan / Sebab</th>
+                                <th class="border border-slate-300 p-2.5 w-28">Tindakan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="block-table-body" class="font-medium text-center"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
         <!-- Tab Lain -->
         <section id="tab-opsyen" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Opsyen Guru</div></section>
         <section id="tab-jadual" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Jadual Induk</div></section>
@@ -192,7 +227,53 @@
 
     </main>
 
-    <!-- MODAL TAMBAH / EDIT REKOD -->
+    <!-- MODAL TAMBAH / EDIT BLOK WAKTU -->
+    <div id="block-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-sm hidden flex items-center justify-center z-50">
+        <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-2xl border space-y-5">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="text-base font-bold text-[#0b1b3d]">Tetap Blok Waktu Guru</h3>
+                <button onclick="closeBlockModal()" class="text-slate-400 font-bold text-sm">✕</button>
+            </div>
+            
+            <input type="hidden" id="block-edit-id" value="">
+
+            <div class="space-y-4 text-xs">
+                <div>
+                    <label class="font-semibold text-slate-700 block mb-1">Pilih Guru</label>
+                    <select id="block-select-teacher" class="w-full px-3 py-2 border rounded-lg bg-slate-50 font-medium">
+                        <option value="">-- Pilih Guru --</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="font-semibold text-slate-700 block mb-1">Pilih Hari</label>
+                    <select id="block-select-day" class="w-full px-3 py-2 border rounded-lg bg-slate-50 font-medium">
+                        <option value="Semua Hari">Semua Hari Persekolahan</option>
+                        <option value="Ahad">Ahad</option>
+                        <option value="Isnin">Isnin</option>
+                        <option value="Selasa">Selasa</option>
+                        <option value="Rabu">Rabu</option>
+                        <option value="Khamis">Khamis</option>
+                        <option value="Jumaat">Jumaat</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="font-semibold text-slate-700 block mb-1">Slot Waktu Yang Di-blok</label>
+                    <input type="text" id="block-input-slots" placeholder="Cth: Waktu 1, Waktu 2 (atau Semua)" class="w-full px-3 py-2 border rounded-lg bg-slate-50">
+                </div>
+                <div>
+                    <label class="font-semibold text-slate-700 block mb-1">Catatan / Sebab (Pilihan)</label>
+                    <input type="text" id="block-input-reason" placeholder="Cth: Tugas Pentadbiran / Mesyuarat" class="w-full px-3 py-2 border rounded-lg bg-slate-50">
+                </div>
+            </div>
+
+            <div class="flex justify-end space-x-2 pt-3 border-t">
+                <button onclick="closeBlockModal()" class="px-4 py-2 border rounded-xl text-xs font-semibold">Batal</button>
+                <button onclick="saveBlockRecord()" class="px-5 py-2 bg-[#0b1b3d] text-white rounded-xl text-xs font-semibold shadow">Simpan Blok</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL TAMBAH / EDIT REKOD DATA ASAS -->
     <div id="data-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-sm hidden flex items-center justify-center z-50">
         <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-2xl border space-y-5">
             <div class="flex justify-between items-center border-b pb-3">
@@ -276,7 +357,7 @@
         </div>
     </div>
 
-    <!-- Skrip Aplikasi (Storan Kekal localStorage untuk Waktu & Data Asas) -->
+    <!-- Skrip Aplikasi -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -369,8 +450,27 @@
             localStorage.setItem('school_time_slots', JSON.stringify(timeSlotsData));
         }
 
+        // Muat data Blok Waktu Guru dari localStorage
+        function loadBlockedTimes() {
+            let data = localStorage.getItem('school_blocked_times');
+            if(data) {
+                return JSON.parse(data);
+            } else {
+                let initial = [
+                    { id: 1, teacher: "Pn. Siti Aisyah Bt Ahmad", day: "Semua Hari", slots: "Waktu 1, Waktu 2", reason: "Tugas Pentadbiran Pengetua" }
+                ];
+                localStorage.setItem('school_blocked_times', JSON.stringify(initial));
+                return initial;
+            }
+        }
+
+        let blockedTimesData = loadBlockedTimes();
+        function saveBlockedTimes() {
+            localStorage.setItem('school_blocked_times', JSON.stringify(blockedTimesData));
+        }
+
         window.switchTab = function(tabId) {
-            ['utama', 'data', 'waktu', 'opsyen', 'jadual', 'guru', 'relief', 'laporan', 'tetapan'].forEach(t => {
+            ['utama', 'data', 'waktu', 'blok', 'opsyen', 'jadual', 'guru', 'relief', 'laporan', 'tetapan'].forEach(t => {
                 const el = document.getElementById(`tab-${t}`);
                 if(el) el.classList.add('hidden');
             });
@@ -380,8 +480,113 @@
                 renderTimeSlotsTable();
                 updateSchoolDaysOrder();
             }
+            if(tabId === 'blok') {
+                renderBlockedTable();
+            }
         }
 
+        // --- Logik Modul Blok Waktu ---
+        function renderBlockedTable() {
+            const tbody = document.getElementById('block-table-body');
+            if(!tbody) return;
+            tbody.innerHTML = '';
+
+            if(blockedTimesData.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-slate-400 italic">Tiada rekod blok waktu dijumpai.</td></tr>`;
+                return;
+            }
+
+            blockedTimesData.forEach((item, index) => {
+                tbody.innerHTML += `
+                    <tr class="border-b border-slate-200 hover:bg-slate-50 transition">
+                        <td class="border border-slate-300 p-2.5 font-bold text-slate-600">${index + 1}</td>
+                        <td class="border border-slate-300 p-2.5 text-left pl-4 font-bold text-[#0b1b3d]">${item.teacher}</td>
+                        <td class="border border-slate-300 p-2.5 font-semibold text-slate-700">${item.day}</td>
+                        <td class="border border-slate-300 p-2.5 text-indigo-700 font-bold">${item.slots}</td>
+                        <td class="border border-slate-300 p-2.5 text-slate-600">${item.reason || '-'}</td>
+                        <td class="border border-slate-300 p-2.5">
+                            <div class="flex justify-center space-x-1.5">
+                                <button onclick="editBlockRecord(${item.id})" class="p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow" title="Edit">✏️</button>
+                                <button onclick="deleteBlockRecord(${item.id})" class="p-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow" title="Padam">🗑️</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        window.openBlockModal = function() {
+            document.getElementById('block-edit-id').value = '';
+            document.getElementById('block-select-day').value = 'Semua Hari';
+            document.getElementById('block-input-slots').value = '';
+            document.getElementById('block-input-reason').value = '';
+
+            const selectTeacher = document.getElementById('block-select-teacher');
+            selectTeacher.innerHTML = '<option value="">-- Pilih Guru --</option>';
+            (databaseRecords.senarai_guru || []).forEach(g => {
+                selectTeacher.innerHTML += `<option value="${g.name}">${g.name} (${g.code})</option>`;
+            });
+
+            document.getElementById('block-modal').classList.remove('hidden');
+        }
+
+        window.closeBlockModal = () => document.getElementById('block-modal').classList.add('hidden');
+
+        window.saveBlockRecord = function() {
+            const editId = document.getElementById('block-edit-id').value;
+            const teacher = document.getElementById('block-select-teacher').value;
+            const day = document.getElementById('block-select-day').value;
+            const slots = document.getElementById('block-input-slots').value;
+            const reason = document.getElementById('block-input-reason').value;
+
+            if(!teacher || !slots) return alert('Sila pilih guru dan masukkan slot masa yang ingin di-blok.');
+
+            if(editId) {
+                let item = blockedTimesData.find(x => x.id == editId);
+                if(item) {
+                    item.teacher = teacher;
+                    item.day = day;
+                    item.slots = slots;
+                    item.reason = reason;
+                }
+            } else {
+                blockedTimesData.push({ id: Date.now(), teacher, day, slots, reason });
+            }
+
+            saveBlockedTimes();
+            closeBlockModal();
+            renderBlockedTable();
+            alert('Tetapan blok waktu berjaya disimpan!');
+        }
+
+        window.editBlockRecord = function(id) {
+            let item = blockedTimesData.find(x => x.id == id);
+            if(!item) return;
+
+            document.getElementById('block-edit-id').value = item.id;
+            document.getElementById('block-select-day').value = item.day;
+            document.getElementById('block-input-slots').value = item.slots;
+            document.getElementById('block-input-reason').value = item.reason;
+
+            const selectTeacher = document.getElementById('block-select-teacher');
+            selectTeacher.innerHTML = '<option value="">-- Pilih Guru --</option>';
+            (databaseRecords.senarai_guru || []).forEach(g => {
+                let sel = (g.name === item.teacher) ? 'selected' : '';
+                selectTeacher.innerHTML += `<option value="${g.name}" ${sel}>${g.name} (${g.code})</option>`;
+            });
+
+            document.getElementById('block-modal').classList.remove('hidden');
+        }
+
+        window.deleteBlockRecord = function(id) {
+            if(confirm('Adakah anda pasti ingin memadam tetapan blok waktu ini?')) {
+                blockedTimesData = blockedTimesData.filter(x => x.id !== id);
+                saveBlockedTimes();
+                renderBlockedTable();
+            }
+        }
+
+        // --- Logik Modul Data Asas ---
         window.switchDataSubTab = function(subTab) {
             currentSubTab = subTab;
             ['subjek', 'kelas', 'bilik', 'senarai_guru', 'guru'].forEach(t => {
@@ -648,7 +853,7 @@
             });
         }
 
-        // Fungsi Waktu & Rehat dengan Storan Kekal localStorage
+        // --- Logik Waktu & Rehat ---
         window.updateSchoolDaysOrder = function() {
             const startDay = document.getElementById('select-start-day').value;
             const container = document.getElementById('daily-slots-container');
@@ -708,7 +913,7 @@
 
         window.updateSlot = function(i, f, v) {
             timeSlotsData[i][f] = v;
-            saveTimeSlots(); // Simpan automatik ke localStorage
+            saveTimeSlots();
         }
 
         window.addNewTimeRow = function() {
