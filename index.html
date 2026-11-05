@@ -225,7 +225,7 @@
 
     </main>
 
-    <!-- MODAL TETAP BLOK WAKTU (Bentuk Matriks Checkbox) -->
+    <!-- MODAL TETAP BLOK WAKTU (Bentuk Matriks Checkbox 12 Jam) -->
     <div id="block-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-sm hidden flex items-center justify-center z-50">
         <div class="bg-white w-full max-w-4xl p-6 rounded-2xl shadow-2xl border space-y-5 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b pb-3">
@@ -249,7 +249,7 @@
                         <table class="w-full border-collapse text-xs text-center">
                             <thead>
                                 <tr class="bg-slate-100 text-slate-700 font-bold">
-                                    <th class="border p-2 w-24">Waktu</th>
+                                    <th class="border p-2 w-32">Waktu</th>
                                     <th class="border p-2">Ahad</th>
                                     <th class="border p-2">Isnin</th>
                                     <th class="border p-2">Selasa</th>
@@ -258,7 +258,7 @@
                                 </tr>
                             </thead>
                             <tbody id="block-matrix-tbody">
-                                <!-- Dijana secara dinamik mengikut waktu belajar -->
+                                <!-- Dijana secara dinamik mengikut waktu format 12 jam -->
                             </tbody>
                         </table>
                     </div>
@@ -449,6 +449,19 @@
             localStorage.setItem('school_time_slots', JSON.stringify(timeSlotsData));
         }
 
+        // Fungsi Penukar Format 24 Jam kepada 12 Jam (Cth: 14:25 -> 02:25 PM)
+        function formatTo12Hour(timeStr) {
+            if(!timeStr || !timeStr.includes(':')) return timeStr;
+            let parts = timeStr.split(':');
+            let h = parseInt(parts[0], 10);
+            let m = parts[1];
+            let ampm = h >= 12 ? 'PM' : 'AM';
+            h = h % 12;
+            h = h ? h : 12; // Jam '0' ditukar kepada '12'
+            let formattedH = h < 10 ? '0' + h : h;
+            return `${formattedH}:${m} ${ampm}`;
+        }
+
         // Muat data Blok Waktu Guru dari localStorage
         function loadBlockedTimes() {
             let data = localStorage.getItem('school_blocked_times');
@@ -484,7 +497,7 @@
             }
         }
 
-        // --- Logik Modul Blok Waktu (Matriks Checkbox) ---
+        // --- Logik Modul Blok Waktu (Matriks Checkbox Format 12 Jam) ---
         function renderBlockedTable() {
             const tbody = document.getElementById('block-table-body');
             if(!tbody) return;
@@ -527,7 +540,7 @@
                 selectTeacher.value = existingData.teacher;
             }
 
-            // Bina Jadual Matriks Checkbox
+            // Bina Jadual Matriks Checkbox dengan Format 12 Jam
             const matrixTbody = document.getElementById('block-matrix-tbody');
             matrixTbody.innerHTML = '';
 
@@ -535,10 +548,13 @@
             timeSlotsData.forEach(slot => {
                 if(slot.type === 'Waktu belajar') {
                     let slotName = `Waktu ${lessonNo}`;
+                    let startTime12 = formatTo12Hour(slot.start);
+                    let endTime12 = formatTo12Hour(slot.end);
+
                     let tr = document.createElement('tr');
                     tr.className = "border-b";
                     tr.innerHTML = `
-                        <td class="border p-2 font-bold bg-slate-50 text-slate-700">${slotName} (${slot.start} - ${slot.end})</td>
+                        <td class="border p-2 font-bold bg-slate-50 text-slate-700">${slotName}<br><span class="text-[10px] text-slate-500">(${startTime12} - ${endTime12})</span></td>
                         <td class="border p-2"><input type="checkbox" data-day="Ahad" data-slot="${slotName}" class="w-4 h-4 rounded border-slate-300"></td>
                         <td class="border p-2"><input type="checkbox" data-day="Isnin" data-slot="${slotName}" class="w-4 h-4 rounded border-slate-300"></td>
                         <td class="border p-2"><input type="checkbox" data-day="Selasa" data-slot="${slotName}" class="w-4 h-4 rounded border-slate-300"></td>
