@@ -13,9 +13,6 @@
             body * { visibility: hidden; }
             #printable-area, #printable-area * { visibility: visible; }
             #printable-area { position: absolute; left: 0; top: 0; width: 100%; }
-            .printable-teacher-area, .printable-teacher-area * { visibility: visible; }
-            .printable-teacher-area { position: absolute; left: 0; top: 0; width: 100%; }
-            .page-break { page-break-after: always; }
         }
     </style>
 </head>
@@ -50,31 +47,14 @@
         
         <!-- Tab Utama -->
         <section id="tab-utama" class="hidden space-y-6">
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-center">
-                <div>
-                    <h2 class="text-2xl font-bold text-slate-900">Selamat Datang, Pentadbir</h2>
-                    <p class="text-slate-600 mt-1">Urus jadual kelas, guru, dan agihan guru ganti harian dengan pangkalan data awan Firebase.</p>
-                </div>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                    <div class="text-slate-500 text-sm font-medium">Jumlah Guru Berdaftar</div>
-                    <div id="stat-teachers" class="text-3xl font-bold text-[#0b1b3d] mt-2">0</div>
-                </div>
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                    <div class="text-slate-500 text-sm font-medium">Jumlah Kelas Aktif</div>
-                    <div id="stat-classes" class="text-3xl font-bold text-[#0b1b3d] mt-2">0</div>
-                </div>
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                    <div class="text-slate-500 text-sm font-medium">Guru Cuti / Perlu Relief</div>
-                    <div id="stat-relief" class="text-3xl font-bold text-red-600 mt-2">0</div>
-                </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-2xl font-bold text-slate-900">Selamat Datang, Pentadbir</h2>
+                <p class="text-slate-600 mt-1">Urus jadual kelas, guru, dan agihan guru ganti harian dengan pangkalan data awan.</p>
             </div>
         </section>
 
-        <!-- TAB DATA ASAS (Gaya Gambar 2) -->
+        <!-- TAB DATA ASAS (Tanpa Tab Pelajaran) -->
         <section id="tab-data" class="space-y-6">
-            <!-- Kad Header Atas -->
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-wrap justify-between items-center gap-4">
                 <div class="flex items-center space-x-4">
                     <div class="bg-[#0b1b3d] text-white p-3 rounded-2xl text-2xl font-bold shadow">📚</div>
@@ -92,17 +72,15 @@
                 </div>
             </div>
 
-            <!-- Tab Dalaman Data Asas (Guru, Subjek, Kelas, Bilik, Pelajaran) -->
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
+                <!-- Sub-Tab Navigasi (Pelajaran Dibuang) -->
                 <div class="flex flex-wrap gap-2 border-b pb-4">
                     <button onclick="switchDataSubTab('guru')" id="subtab-btn-guru" class="px-4 py-2 rounded-xl text-xs font-bold bg-[#0b1b3d] text-white transition shadow">👨‍🏫 Guru</button>
                     <button onclick="switchDataSubTab('subjek')" id="subtab-btn-subjek" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">📖 Subjek</button>
                     <button onclick="switchDataSubTab('kelas')" id="subtab-btn-kelas" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">🏫 Kelas</button>
                     <button onclick="switchDataSubTab('bilik')" id="subtab-btn-bilik" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">🚪 Bilik Khas</button>
-                    <button onclick="switchDataSubTab('pelajaran')" id="subtab-btn-pelajaran" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">📋 Pelajaran</button>
                 </div>
 
-                <!-- Tindakan & Carian Atas Jadual -->
                 <div class="flex flex-wrap justify-between items-center gap-4">
                     <button onclick="openAddModal()" class="bg-[#0b1b3d] hover:bg-[#132d60] text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow flex items-center space-x-2 transition">
                         <span>+ Tambah Rekod Baharu</span>
@@ -112,26 +90,19 @@
                     </div>
                 </div>
 
-                <!-- Jadual Paparan Rekod -->
                 <div class="overflow-x-auto">
                     <table class="w-full border-collapse border border-slate-200 text-xs">
                         <thead>
                             <tr class="bg-emerald-50/70 text-slate-700 font-bold text-center">
                                 <th class="border border-slate-300 p-2.5 w-16">Bil.</th>
-                                <th class="border border-slate-300 p-2.5 text-left pl-4">Nama / Maklumat</th>
-                                <th class="border border-slate-300 p-2.5 w-32">Kod / Singkatan</th>
-                                <th class="border border-slate-300 p-2.5 w-44">Kategori / Butiran</th>
+                                <th class="border border-slate-300 p-2.5 text-left pl-4">Nama / Maklumat Utama</th>
+                                <th class="border border-slate-300 p-2.5 w-36">Kod / Singkatan</th>
+                                <th class="border border-slate-300 p-2.5 w-56">Kategori / Subjek Diajar</th>
                                 <th class="border border-slate-300 p-2.5 w-32">Tindakan</th>
                             </tr>
                         </thead>
-                        <tbody id="data-table-body" class="font-medium text-center">
-                            <!-- Dijana Secara Dinamik -->
-                        </tbody>
+                        <tbody id="data-table-body" class="font-medium text-center"></tbody>
                     </table>
-                </div>
-
-                <div class="flex justify-between items-center text-xs text-slate-500 pt-2">
-                    <span id="pagination-info">Paparan rekod semasa</span>
                 </div>
             </div>
         </section>
@@ -139,48 +110,24 @@
         <!-- Tab Waktu & Rehat -->
         <section id="tab-waktu" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
-                <div class="p-4 bg-blue-50/70 border border-blue-200 rounded-xl flex flex-wrap justify-between items-center gap-4">
-                    <div class="space-y-1">
-                        <h4 class="font-bold text-[#0b1b3d] text-sm">Tetapan Hari Persekolahan Seminggu</h4>
-                        <p class="text-xs text-slate-600">Pilih hari mula sesi persekolahan di tempat anda.</p>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <label class="text-xs font-semibold text-slate-700">Hari Mula:</label>
-                        <select id="select-start-day" onchange="updateSchoolDaysOrder()" class="px-3 py-2 border rounded-lg text-xs bg-white font-bold text-[#0b1b3d]">
-                            <option value="Ahad" selected>Ahad (Ahad - Khamis)</option>
-                            <option value="Isnin">Isnin (Isnin - Jumaat)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="flex flex-wrap justify-between items-center border-b pb-4 gap-4">
+                <div class="flex justify-between items-center border-b pb-4">
                     <h3 class="text-xl font-bold text-[#0b1b3d]">Waktu dan Rehat</h3>
-                    <div class="flex space-x-2">
-                        <button onclick="openAutoTimeModal()" class="bg-indigo-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow">⚡ Jana Pantas Waktu</button>
-                        <button onclick="addNewTimeRow()" class="bg-emerald-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow">+ Tambah Waktu</button>
-                    </div>
+                    <button onclick="openAutoTimeModal()" class="bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-bold shadow">⚡ Jana Pantas Waktu</button>
                 </div>
-
                 <div class="overflow-x-auto">
                     <table class="w-full border-collapse border border-slate-200 text-xs">
                         <thead>
-                            <tr class="bg-slate-100 text-slate-700 font-bold text-center">
-                                <th class="border border-slate-300 p-2.5 w-16">Bil.</th>
-                                <th class="border border-slate-300 p-2.5 w-36">Label</th>
-                                <th class="border border-slate-300 p-2.5">Mula</th>
-                                <th class="border border-slate-300 p-2.5">Tamat</th>
-                                <th class="border border-slate-300 p-2.5 w-44">Jenis</th>
-                                <th class="border border-slate-300 p-2.5 w-32">Tindakan</th>
+                            <tr class="bg-slate-100 font-bold text-center">
+                                <th class="border p-2">Bil.</th>
+                                <th class="border p-2">Label</th>
+                                <th class="border p-2">Mula</th>
+                                <th class="border p-2">Tamat</th>
+                                <th class="border p-2">Jenis</th>
                             </tr>
                         </thead>
-                        <tbody id="time-slots-table-body" class="font-medium"></tbody>
+                        <tbody id="time-slots-table-body" class="text-center"></tbody>
                     </table>
                 </div>
-            </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
-                <h4 class="font-bold text-[#0b1b3d] text-sm border-b pb-3">Bilangan waktu setiap hari</h4>
-                <div id="daily-slots-container" class="grid grid-cols-2 sm:grid-cols-5 gap-4"></div>
             </div>
         </section>
 
@@ -194,66 +141,42 @@
 
     </main>
 
-    <!-- MODAL TAMBAH / EDIT REKOD DATA ASAS -->
+    <!-- MODAL TAMBAH REKOD DINAMIK -->
     <div id="data-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-sm hidden flex items-center justify-center z-50">
         <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-2xl border space-y-5">
             <div class="flex justify-between items-center border-b pb-3">
                 <h3 id="modal-title" class="text-base font-bold text-[#0b1b3d]">Tambah Rekod</h3>
                 <button onclick="closeDataModal()" class="text-slate-400 font-bold text-sm">✕</button>
             </div>
+            
             <div class="space-y-4 text-xs">
                 <div>
-                    <label class="font-semibold text-slate-700 block mb-1">Nama / Maklumat Utama</label>
-                    <input type="text" id="modal-input-name" placeholder="Cth: Ahmad bin Ali" class="w-full px-3 py-2 border rounded-lg bg-slate-50">
+                    <label id="label-input-name" class="font-semibold text-slate-700 block mb-1">Nama / Maklumat Utama</label>
+                    <input type="text" id="modal-input-name" placeholder="Masukkan nama..." class="w-full px-3 py-2 border rounded-lg bg-slate-50">
                 </div>
                 <div>
-                    <label class="font-semibold text-slate-700 block mb-1">Kod / Singkatan</label>
-                    <input type="text" id="modal-input-code" placeholder="Cth: AAH" class="w-full px-3 py-2 border rounded-lg bg-slate-50">
+                    <label id="label-input-code" class="font-semibold text-slate-700 block mb-1">Kod / Singkatan</label>
+                    <input type="text" id="modal-input-code" placeholder="Masukkan kod singkatan..." class="w-full px-3 py-2 border rounded-lg bg-slate-50">
                 </div>
-                <div>
-                    <label class="font-semibold text-slate-700 block mb-1">Kategori / Butiran Lanjut</label>
-                    <input type="text" id="modal-input-category" placeholder="Cth: Bahasa Melayu / Tingkatan 1" class="w-full px-3 py-2 border rounded-lg bg-slate-50">
+                
+                <!-- Bahagian Dinamik: Jika Tab Guru, paparkan Checkboxes Subjek -->
+                <div id="modal-container-subjects" class="hidden space-y-2">
+                    <label class="font-semibold text-slate-700 block">Subjek yang diajar (Sila pilih):</label>
+                    <div id="checkbox-subjects-list" class="max-h-40 overflow-y-auto p-3 border rounded-lg bg-slate-50 space-y-2">
+                        <!-- Senarai subjek checkbox dijana automatik -->
+                    </div>
+                </div>
+
+                <!-- Bahagian Biasa untuk Subjek/Kelas/Bilik -->
+                <div id="modal-container-category">
+                    <label id="label-input-category" class="font-semibold text-slate-700 block mb-1">Kategori / Butiran Lanjut</label>
+                    <input type="text" id="modal-input-category" placeholder="Masukkan butiran..." class="w-full px-3 py-2 border rounded-lg bg-slate-50">
                 </div>
             </div>
+
             <div class="flex justify-end space-x-2 pt-3 border-t">
                 <button onclick="closeDataModal()" class="px-4 py-2 border rounded-xl text-xs font-semibold">Batal</button>
                 <button onclick="saveModalData()" class="px-5 py-2 bg-[#0b1b3d] text-white rounded-xl text-xs font-semibold shadow">Simpan</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL JANA PANTAS WAKTU -->
-    <div id="auto-time-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-sm hidden flex items-center justify-center z-50">
-        <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-2xl border space-y-5">
-            <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="text-base font-bold text-[#0b1b3d]">Jana pantas waktu</h3>
-                <button onclick="closeAutoTimeModal()" class="text-slate-400 font-bold text-sm">✕</button>
-            </div>
-            <div class="space-y-4 text-xs">
-                <div>
-                    <label class="font-semibold text-slate-700 block mb-1">Waktu mula persekolahan</label>
-                    <input type="time" id="modal-start-time" value="07:30" class="w-full px-3 py-2 border rounded-lg bg-slate-50">
-                </div>
-                <div>
-                    <label class="font-semibold text-slate-700 block mb-1">Tempoh satu waktu (minit)</label>
-                    <input type="number" id="modal-slot-duration" value="35" class="w-full px-3 py-2 border rounded-lg bg-slate-50">
-                </div>
-                <div>
-                    <label class="font-semibold text-slate-700 block mb-1">Bilangan waktu belajar</label>
-                    <input type="number" id="modal-total-slots" value="8" class="w-full px-3 py-2 border rounded-lg bg-slate-50">
-                </div>
-                <div>
-                    <label class="font-semibold text-slate-700 block mb-1">Rehat selepas waktu ke</label>
-                    <input type="number" id="modal-break-after" value="4" class="w-full px-3 py-2 border rounded-lg bg-slate-50">
-                </div>
-                <div>
-                    <label class="font-semibold text-slate-700 block mb-1">Tempoh rehat (minit)</label>
-                    <input type="number" id="modal-break-duration" value="30" class="w-full px-3 py-2 border rounded-lg bg-slate-50">
-                </div>
-            </div>
-            <div class="flex justify-end space-x-2 pt-3 border-t">
-                <button onclick="closeAutoTimeModal()" class="px-4 py-2 border rounded-xl text-xs font-semibold">Batal</button>
-                <button onclick="generateAutoTimes()" class="px-5 py-2 bg-[#0b1b3d] text-white rounded-xl text-xs font-semibold shadow">Jana</button>
             </div>
         </div>
     </div>
@@ -263,34 +186,25 @@
         let currentSubTab = 'guru';
         let databaseRecords = {
             guru: [
-                { id: 1, name: "Pn. Siti Aisyah Bt Ahmad", code: "SAA", category: "Bahasa Melayu" },
-                { id: 2, name: "En. Ahmad Hafiz Bin Salleh", code: "AHS", category: "Matematik" },
-                { id: 3, name: "Pn. Noraini Bt Hassan", code: "NOR", category: "Sains" }
+                { id: 1, name: "Pn. Siti Aisyah Bt Ahmad", code: "SAA", category: "Bahasa Melayu, Matematik" },
+                { id: 2, name: "En. Ahmad Hafiz Bin Salleh", code: "AHS", category: "Matematik, Sains" }
             ],
             subjek: [
                 { id: 1, name: "Bahasa Melayu", code: "BM", category: "Teras" },
-                { id: 2, name: "Matematik", code: "MAT", category: "Teras" }
+                { id: 2, name: "Matematik", code: "MAT", category: "Teras" },
+                { id: 3, name: "Sains", code: "SN", category: "Teras" }
             ],
             kelas: [
-                { id: 1, name: "1 Cekap", code: "1C", category: "Menengah Rendah" },
-                { id: 2, name: "2 Bestari", code: "2B", category: "Menengah Rendah" }
+                { id: 1, name: "1 Cekap", code: "1C", category: "Menengah Rendah" }
             ],
             bilik: [
                 { id: 1, name: "Makmal Komputer 1", code: "MK1", category: "Khas" }
-            ],
-            pelajaran: [
-                { id: 1, name: "Pendidikan Islam", code: "PI", category: "Wajib" }
             ]
         };
 
         let timeSlotsData = [
             { id: 1, label: "1", start: "07:30", end: "08:10", type: "Waktu belajar" },
-            { id: 2, label: "2", start: "08:10", end: "08:50", type: "Waktu belajar" },
-            { id: 3, label: "3", start: "08:50", end: "09:30", type: "Waktu belajar" },
-            { id: 4, label: "4", start: "09:30", end: "10:10", type: "Waktu belajar" },
-            { id: 'rehat', label: "Rehat", start: "10:10", end: "10:40", type: "Rehat" },
-            { id: 5, label: "5", start: "10:40", end: "11:20", type: "Waktu belajar" },
-            { id: 6, label: "6", start: "11:20", end: "12:00", type: "Waktu belajar" }
+            { id: 2, label: "2", start: "08:10", end: "08:50", type: "Waktu belajar" }
         ];
 
         window.switchTab = function(tabId) {
@@ -300,19 +214,17 @@
             });
             document.getElementById(`tab-${tabId}`).classList.remove('hidden');
             if(tabId === 'data') renderDataTable();
-            if(tabId === 'waktu') { renderTimeSlotsTable(); updateSchoolDaysOrder(); }
+            if(tabId === 'waktu') renderTimeSlotsTable();
         }
 
         window.switchDataSubTab = function(subTab) {
             currentSubTab = subTab;
-            ['guru', 'subjek', 'kelas', 'bilik', 'pelajaran'].forEach(t => {
+            ['guru', 'subjek', 'kelas', 'bilik'].forEach(t => {
                 const btn = document.getElementById(`subtab-btn-${t}`);
                 if(btn) {
-                    if(t === subTab) {
-                        btn.className = "px-4 py-2 rounded-xl text-xs font-bold bg-[#0b1b3d] text-white transition shadow";
-                    } else {
-                        btn.className = "px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition";
-                    }
+                    btn.className = (t === subTab) 
+                        ? "px-4 py-2 rounded-xl text-xs font-bold bg-[#0b1b3d] text-white transition shadow"
+                        : "px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition";
                 }
             });
             renderDataTable();
@@ -341,7 +253,6 @@
                         <td class="border border-slate-300 p-2.5 text-slate-600">${item.category}</td>
                         <td class="border border-slate-300 p-2.5">
                             <div class="flex justify-center space-x-1.5">
-                                <button onclick="editRecord(${item.id})" class="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow text-[10px] font-bold">Edit</button>
                                 <button onclick="deleteRecord(${item.id})" class="px-2.5 py-1 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow text-[10px] font-bold">Padam</button>
                             </div>
                         </td>
@@ -350,16 +261,65 @@
             });
         }
 
-        window.openAddModal = () => document.getElementById('data-modal').classList.remove('hidden');
+        window.openAddModal = function() {
+            const modal = document.getElementById('data-modal');
+            const titleEl = document.getElementById('modal-title');
+            const subSubjectsContainer = document.getElementById('modal-container-subjects');
+            const categoryContainer = document.getElementById('modal-container-category');
+            
+            titleEl.innerText = `Tambah Rekod ${currentSubTab.toUpperCase()}`;
+            document.getElementById('modal-input-name').value = '';
+            document.getElementById('modal-input-code').value = '';
+
+            // Jika tab Guru aktif, paparkan senarai subjek dalam bentuk checkboxes
+            if(currentSubTab === 'guru') {
+                subSubjectsContainer.classList.remove('hidden');
+                categoryContainer.classList.add('hidden');
+                
+                const checkboxList = document.getElementById('checkbox-subjects-list');
+                checkboxList.innerHTML = '';
+                
+                const availableSubjects = databaseRecords.subjek || [];
+                if(availableSubjects.length === 0) {
+                    checkboxList.innerHTML = '<span class="text-slate-400 italic">Tiada subjek berdaftar. Sila daftar di tab Subjek dahulu.</span>';
+                } else {
+                    availableSubjects.forEach(sub => {
+                        checkboxList.innerHTML += `
+                            <label class="flex items-center space-x-2 text-xs font-medium text-slate-700 cursor-pointer">
+                                <input type="checkbox" name="teacher-subject-checkbox" value="${sub.name}" class="rounded border-slate-300">
+                                <span>${sub.name} (${sub.code})</span>
+                            </label>
+                        `;
+                    });
+                }
+            } else {
+                subSubjectsContainer.classList.add('hidden');
+                categoryContainer.classList.remove('hidden');
+                document.getElementById('label-input-category').innerText = currentSubTab === 'subjek' ? 'Kategori Subjek (Cth: Teras)' : 'Butiran Lanjut / Kategori';
+                document.getElementById('modal-input-category').value = '';
+            }
+
+            modal.classList.remove('hidden');
+        }
+
         window.closeDataModal = () => document.getElementById('data-modal').classList.add('hidden');
 
         window.saveModalData = function() {
             const name = document.getElementById('modal-input-name').value;
             const code = document.getElementById('modal-input-code').value;
-            const category = document.getElementById('modal-input-category').value;
-            if(!name) return alert('Sila masukkan nama.');
+            if(!name) return alert('Sila masukkan nama/maklumat.');
 
-            databaseRecords[currentSubTab].push({ id: Date.now(), name, code, category });
+            let categoryValue = '';
+            if(currentSubTab === 'guru') {
+                const checkedBoxes = document.querySelectorAll('input[name="teacher-subject-checkbox"]:checked');
+                let selectedSubjects = [];
+                checkedBoxes.forEach(cb => selectedSubjects.push(cb.value));
+                categoryValue = selectedSubjects.length > 0 ? selectedSubjects.join(', ') : 'Tiada Subjek';
+            } else {
+                categoryValue = document.getElementById('modal-input-category').value || '-';
+            }
+
+            databaseRecords[currentSubTab].push({ id: Date.now(), name, code, category: categoryValue });
             closeDataModal();
             renderDataTable();
             alert('Rekod berjaya disimpan!');
@@ -372,58 +332,24 @@
             }
         }
 
-        window.editRecord = function(id) {
-            alert('Fungsi kemaskini rekod ID: ' + id);
-        }
-
-        window.updateSchoolDaysOrder = function() {
-            const startDay = document.getElementById('select-start-day').value;
-            const container = document.getElementById('daily-slots-container');
-            if(!container) return;
-            let daysList = startDay === 'Ahad' ? ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis'] : ['Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat'];
-            container.innerHTML = '';
-            daysList.forEach(day => {
-                container.innerHTML += `
-                    <div class="p-3 bg-slate-50 border rounded-xl text-center space-y-1">
-                        <label class="text-xs font-bold text-slate-700">${day}</label>
-                        <input type="number" value="8" class="w-full text-center font-bold px-2 py-1.5 border rounded-lg text-sm bg-white">
-                    </div>
-                `;
-            });
-        }
-
         function renderTimeSlotsTable() {
             const tbody = document.getElementById('time-slots-table-body');
             if(!tbody) return;
             tbody.innerHTML = '';
-            let lessonCounter = 1;
             timeSlotsData.forEach((slot, index) => {
-                const isRehat = slot.type === 'Rehat';
-                const rowBg = isRehat ? 'bg-amber-50/80 font-bold' : '';
-                const labelNo = isRehat ? '-' : lessonCounter++;
                 tbody.innerHTML += `
-                    <tr class="border-b border-slate-200 text-center ${rowBg}">
-                        <td class="border border-slate-300 p-2 font-bold text-slate-600">${labelNo}</td>
-                        <td class="border border-slate-300 p-2"><input type="text" value="${slot.label}" class="w-full px-2 py-1 border rounded text-center bg-white"></td>
-                        <td class="border border-slate-300 p-2"><input type="time" value="${slot.start}" class="w-full px-2 py-1 border rounded bg-white"></td>
-                        <td class="border border-slate-300 p-2"><input type="time" value="${slot.end}" class="w-full px-2 py-1 border rounded bg-white"></td>
-                        <td class="border border-slate-300 p-2"><select class="w-full px-2 py-1 border rounded bg-white"><option>${slot.type}</option></select></td>
-                        <td class="border border-slate-300 p-2">
-                            <div class="flex justify-center space-x-1.5">
-                                <button class="p-1.5 text-slate-600 border rounded bg-slate-50">⬆️</button>
-                                <button class="p-1.5 text-slate-600 border rounded bg-slate-50">⬇️</button>
-                                <button class="p-1.5 text-red-600 border rounded bg-slate-50">🗑️</button>
-                            </div>
-                        </td>
+                    <tr class="border-b">
+                        <td class="p-2">${index + 1}</td>
+                        <td class="p-2">${slot.label}</td>
+                        <td class="p-2">${slot.start}</td>
+                        <td class="p-2">${slot.end}</td>
+                        <td class="p-2">${slot.type}</td>
                     </tr>
                 `;
             });
         }
 
-        window.openAutoTimeModal = () => document.getElementById('auto-time-modal').classList.remove('hidden');
-        window.closeAutoTimeModal = () => document.getElementById('auto-time-modal').classList.add('hidden');
-        window.generateAutoTimes = () => { closeAutoTimeModal(); alert('Jadual masa dijana!'); }
-
+        window.openAutoTimeModal = () => alert('Buka dialog jana masa');
         window.onload = () => { switchTab('data'); };
     </script>
 </body>
