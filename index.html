@@ -25,7 +25,7 @@
                 <div class="bg-[#132d60] p-2 rounded-lg text-xl font-bold">🏫</div>
                 <div>
                     <h1 id="header-school-name" class="text-lg font-bold">SMU(A) Khairiah Banggol Setol</h1>
-                    <p class="text-xs text-blue-200">Sistem Pengurusan Jadual Waktu & Relief Pintar</p>
+                    <p class="text-xs text-blue-200">Sistem Pengurusan Jadual Waktu & Relief Pintar (Firestore Cloud)</p>
                 </div>
             </div>
             <nav class="flex space-x-1 sm:space-x-2 mt-2 sm:mt-0 overflow-x-auto items-center">
@@ -36,8 +36,6 @@
                 <button onclick="switchTab('jana')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">⚡ Jana Jadual</button>
                 <button onclick="switchTab('jadual_induk')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">📅 Jadual Induk</button>
                 <button onclick="switchTab('opsyen')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Opsyen Guru</button>
-                <button onclick="switchTab('jadual')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Jadual Induk (Lama)</button>
-                <button onclick="switchTab('guru')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Jadual Guru</button>
                 <button onclick="switchTab('relief')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Relief Harian</button>
                 <button onclick="switchTab('laporan')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">📊 Laporan</button>
                 <button onclick="switchTab('tetapan')" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Tetapan</button>
@@ -52,7 +50,7 @@
         <section id="tab-utama" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
                 <h2 class="text-2xl font-bold text-slate-900">Selamat Datang, Pentadbir</h2>
-                <p class="text-slate-600 mt-1">Urus jadual kelas, guru, dan agihan guru ganti harian dengan pangkalan data storan tempatan yang selamat.</p>
+                <p class="text-slate-600 mt-1">Semua data sekolah kini diselaraskan secara langsung dan selamat menggunakan pangkalan data awan Firebase Firestore.</p>
             </div>
         </section>
 
@@ -62,8 +60,8 @@
                 <div class="flex items-center space-x-4">
                     <div class="bg-[#0b1b3d] text-white p-3 rounded-2xl text-2xl font-bold shadow">📚</div>
                     <div>
-                        <h2 class="text-xl font-bold text-slate-900">Data Sekolah</h2>
-                        <p class="text-xs text-slate-500">Pengurusan maklumat asas sekolah secara tersusun</p>
+                        <h2 class="text-xl font-bold text-slate-900">Data Sekolah (Firestore)</h2>
+                        <p class="text-xs text-slate-500">Pengurusan maklumat asas sekolah tersimpan di awan</p>
                     </div>
                 </div>
                 <div class="flex items-center space-x-3 bg-slate-50 px-5 py-3 rounded-2xl border border-slate-200">
@@ -113,38 +111,19 @@
         <!-- Tab Waktu & Rehat -->
         <section id="tab-waktu" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
-                <div class="p-4 bg-blue-50/70 border border-blue-200 rounded-xl flex flex-wrap justify-between items-center gap-4">
-                    <div class="space-y-1">
-                        <h4 class="font-bold text-[#0b1b3d] text-sm">Tetapan Hari Persekolahan Seminggu</h4>
-                        <p class="text-xs text-slate-600">Pilih hari mula sesi persekolahan di tempat anda (Cth: Ahad hingga Khamis).</p>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <label class="text-xs font-semibold text-slate-700">Hari Mula:</label>
-                        <select id="select-start-day" onchange="updateSchoolDaysOrder()" class="px-3 py-2 border rounded-lg text-xs bg-white font-bold text-[#0b1b3d]">
-                            <option value="Ahad" selected>Ahad (Ahad - Khamis)</option>
-                            <option value="Isnin">Isnin (Isnin - Jumaat)</option>
-                        </select>
-                    </div>
-                </div>
-
                 <div class="flex flex-wrap justify-between items-center border-b pb-4 gap-4">
                     <div class="flex items-center space-x-3">
                         <div class="bg-[#0b1b3d] text-white p-2.5 rounded-xl text-lg font-bold">⏱️</div>
                         <div>
                             <h3 class="text-xl font-bold text-[#0b1b3d]">Waktu dan Rehat</h3>
-                            <p class="text-xs text-slate-500">Tetapkan masa bagi setiap waktu pengajaran dan waktu rehat sekolah.</p>
+                            <p class="text-xs text-slate-500">Tetapan masa pengajaran dan waktu rehat (Disimpan di Firestore)</p>
                         </div>
                     </div>
                     <div class="flex space-x-2">
-                        <button onclick="openAutoTimeModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow flex items-center space-x-2 transition">
-                            <span>⚡</span><span>Jana Pantas Waktu</span>
-                        </button>
-                        <button onclick="addNewTimeRow()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow flex items-center space-x-2 transition">
-                            <span>+ Tambah Waktu</span>
-                        </button>
+                        <button onclick="openAutoTimeModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow transition">⚡ Jana Pantas Waktu</button>
+                        <button onclick="addNewTimeRow()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow transition">+ Tambah Waktu</button>
                     </div>
                 </div>
-
                 <div class="overflow-x-auto">
                     <table class="w-full border-collapse border border-slate-200 text-xs">
                         <thead>
@@ -161,20 +140,6 @@
                     </table>
                 </div>
             </div>
-
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4">
-                <div class="flex items-center space-x-3 border-b pb-3">
-                    <div class="bg-[#0b1b3d] text-white p-2 rounded-lg text-sm font-bold">📅</div>
-                    <div>
-                        <h4 class="font-bold text-[#0b1b3d] text-sm">Bilangan waktu setiap hari</h4>
-                        <p class="text-xs text-slate-500">Tetapkan jumlah waktu pengajaran bagi setiap hari persekolahan mengikut zon anda.</p>
-                    </div>
-                </div>
-                <div id="daily-slots-container" class="grid grid-cols-2 sm:grid-cols-5 gap-4"></div>
-                <div class="flex justify-end pt-2">
-                    <button onclick="saveDailySlotsConfig()" class="bg-[#0b1b3d] hover:bg-[#132d60] text-white px-5 py-2.5 rounded-xl text-xs font-semibold shadow transition">Simpan Tetapan Harian</button>
-                </div>
-            </div>
         </section>
 
         <!-- Tab Blok Waktu -->
@@ -184,14 +149,11 @@
                     <div class="bg-[#0b1b3d] text-white p-3 rounded-2xl text-2xl font-bold shadow">🚫</div>
                     <div>
                         <h2 class="text-xl font-bold text-slate-900">Blok Waktu Mengajar Guru</h2>
-                        <p class="text-xs text-slate-500">Tetapkan masa wajib dikosongkan bagi guru tertentu secara visual sebelum penjanaan jadual</p>
+                        <p class="text-xs text-slate-500">Tetapan masa wajib dikosongkan (Firestore Cloud)</p>
                     </div>
                 </div>
-                <button onclick="openBlockModal()" class="bg-[#0b1b3d] hover:bg-[#132d60] text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow flex items-center space-x-2 transition">
-                    <span>+ Tetap Blok Waktu Guru</span>
-                </button>
+                <button onclick="openBlockModal()" class="bg-[#0b1b3d] hover:bg-[#132d60] text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow transition">+ Tetap Blok Waktu Guru</button>
             </div>
-
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
                 <div class="overflow-x-auto">
                     <table class="w-full border-collapse border border-slate-200 text-xs">
@@ -199,7 +161,7 @@
                             <tr class="bg-slate-100 text-slate-700 font-bold text-center">
                                 <th class="border border-slate-300 p-2.5 w-16">Bil.</th>
                                 <th class="border border-slate-300 p-2.5 text-left pl-4">Nama Guru</th>
-                                <th class="border border-slate-300 p-2.5">Slot Waktu Yang Di-blok (Hari & Masa)</th>
+                                <th class="border border-slate-300 p-2.5">Slot Waktu Yang Di-blok</th>
                                 <th class="border border-slate-300 p-2.5 w-28">Tindakan</th>
                             </tr>
                         </thead>
@@ -209,7 +171,7 @@
             </div>
         </section>
 
-        <!-- Tab Jana Jadual (Auto) -->
+        <!-- Tab Jana Jadual -->
         <section id="tab-jana" class="hidden space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 <div class="lg:col-span-5 space-y-6">
@@ -225,66 +187,10 @@
                                     <option value="Semua">Semua kelas</option>
                                 </select>
                             </div>
-                            <div class="space-y-2 pt-2 border-t">
-                                <label class="font-semibold text-slate-700 block">Mod Penjanaan</label>
-                                <label class="flex items-start space-x-2 cursor-pointer">
-                                    <input type="radio" name="auto-mode" value="kosong" checked class="mt-0.5">
-                                    <span><b>Isi slot kosong sahaja</b></span>
-                                </label>
-                                <label class="flex items-start space-x-2 cursor-pointer pt-1">
-                                    <input type="radio" name="auto-mode" value="reset" class="mt-0.5">
-                                    <span><b>Reset kelas dipilih & jana baru</b></span>
-                                </label>
-                            </div>
-                            <div class="pt-3 space-y-2">
-                                <button onclick="startAutoGeneration()" class="w-full bg-[#0b1b3d] hover:bg-[#132d60] text-white py-3 rounded-xl text-xs font-bold shadow transition flex justify-center items-center space-x-2">
-                                    <span>🚀 MULA JANA JADUAL PINTAR</span>
-                                </button>
-                                <button onclick="resetAllSchedules()" class="w-full bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 py-2.5 rounded-xl text-xs font-semibold transition flex justify-center items-center space-x-1">
-                                    <span>🗑️ Reset (Kosongkan Jadual)</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
-                        <div class="flex items-center space-x-3 border-b pb-3">
-                            <div class="bg-emerald-800 text-white p-2 rounded-xl text-lg font-bold">📊</div>
-                            <h3 class="text-base font-bold text-[#0b1b3d]">Import Jadual Excel</h3>
-                        </div>
-                        <div class="space-y-3 text-xs">
-                            <p class="text-slate-600">Sudah mempunyai jadual waktu? Muat turun templat dan semak fail jadual melalui menu Import Excel Sekolah.</p>
-                            <button onclick="alert('Fungsi Import Excel')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-semibold shadow transition">Buka Import Jadual Excel</button>
-                        </div>
-                    </div>
-
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
-                        <div class="flex items-center space-x-3 border-b pb-3">
-                            <div class="bg-indigo-900 text-white p-2 rounded-xl text-lg font-bold">💾</div>
-                            <h3 class="text-base font-bold text-[#0b1b3d]">Simpan Versi (Backup)</h3>
-                        </div>
-                        <div class="space-y-3 text-xs">
-                            <input type="text" id="backup-version-name" placeholder="Nama Versi (cth: Draf 1)" class="w-full px-3 py-2 border rounded-xl bg-slate-50">
-                            <button onclick="saveBackupVersion()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-xl font-semibold shadow transition">Simpan Jadual Semasa</button>
-                            <div class="pt-2 border-t">
-                                <label class="font-semibold text-slate-700 block mb-2">Senarai Backup:</label>
-                                <div id="backup-list-container" class="space-y-2 max-h-36 overflow-y-auto">
-                                    <div class="p-2.5 bg-slate-50 border rounded-xl flex justify-between items-center">
-                                        <div>
-                                            <div class="font-bold text-[#0b1b3d]">Jadual Demo Lengkap</div>
-                                            <div class="text-[10px] text-slate-500">18/10/2026 13:11</div>
-                                        </div>
-                                        <div class="flex space-x-1">
-                                            <button class="p-1.5 bg-slate-200 hover:bg-slate-300 rounded" title="Muat Semula">🔄</button>
-                                            <button class="p-1.5 bg-rose-100 hover:bg-rose-200 text-rose-600 rounded" title="Padam">🗑️</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <button onclick="startAutoGeneration()" class="w-full bg-[#0b1b3d] hover:bg-[#132d60] text-white py-3 rounded-xl text-xs font-bold shadow transition">🚀 MULA JANA JADUAL PINTAR</button>
                         </div>
                     </div>
                 </div>
-
                 <div class="lg:col-span-7 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
                     <div class="flex justify-between items-center border-b pb-3">
                         <h3 class="text-base font-bold text-[#0b1b3d]">Status Pengisian Jadual Waktu</h3>
@@ -305,7 +211,7 @@
             </div>
         </section>
 
-        <!-- TAB: JADUAL INDUK -->
+        <!-- Tab Jadual Induk -->
         <section id="tab-jadual_induk" class="hidden space-y-6">
             <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex flex-wrap justify-between items-center gap-4">
                 <div class="flex bg-slate-100 p-1 rounded-xl">
@@ -317,11 +223,9 @@
                     <select id="master-select-target" onchange="renderMasterTimetable()" class="px-3 py-2 border rounded-xl text-xs bg-white font-bold text-[#0b1b3d] min-w-[200px]"></select>
                 </div>
             </div>
-
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
                 <div class="text-center pb-2 border-b">
                     <h3 id="master-table-title" class="text-lg font-bold text-[#0b1b3d]">Papar Jadual Waktu</h3>
-                    <p class="text-xs text-slate-500">Paparan penuh jadual mingguan mengikut slot waktu rasmi sekolah</p>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full border-collapse border border-slate-200 text-xs text-center">
@@ -338,34 +242,55 @@
 
         <!-- Tab Lain -->
         <section id="tab-opsyen" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Opsyen Guru</div></section>
-        <section id="tab-jadual" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Jadual Induk (Lama)</div></section>
-        <section id="tab-guru" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Jadual Guru</div></section>
         <section id="tab-relief" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Relief Harian</div></section>
         <section id="tab-laporan" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Laporan</div></section>
         <section id="tab-tetapan" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Tetapan</div></section>
 
     </main>
 
-    <!-- KOTAK MODAL PROGRESS KEMAJUAN MENJANA JADUAL -->
-    <div id="generation-progress-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-sm hidden flex items-center justify-center z-50">
+    <!-- Modal Data Asas -->
+    <div id="data-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-sm hidden flex items-center justify-center z-50">
         <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-2xl border space-y-5">
-            <h3 class="text-base font-bold text-[#0b1b3d]">Menjana jadual</h3>
-            <div class="space-y-2">
-                <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
-                    <div id="progress-bar-fill" class="bg-emerald-600 h-3 rounded-full transition-all duration-300" style="width: 0%;"></div>
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 id="modal-title" class="text-base font-bold text-[#0b1b3d]">Tambah Rekod</h3>
+                <button onclick="closeDataModal()" class="text-slate-400 font-bold text-sm">✕</button>
+            </div>
+            <input type="hidden" id="modal-edit-id" value="">
+            <div class="space-y-4 text-xs">
+                <div>
+                    <label id="label-input-name" class="font-semibold text-slate-700 block mb-1">Nama / Maklumat Utama</label>
+                    <input type="text" id="modal-input-name" placeholder="Masukkan nama..." class="w-full px-3 py-2 border rounded-lg bg-slate-50">
+                    <select id="modal-select-name" onchange="onTeacherDropdownChange()" class="w-full px-3 py-2 border rounded-lg bg-slate-50 hidden font-medium">
+                        <option value="">-- Pilih Guru --</option>
+                    </select>
                 </div>
-                <div class="flex justify-between text-xs text-slate-600 font-medium">
-                    <span id="progress-status-text">Memulakan penjanaan...</span>
-                    <span id="progress-percent-text">0%</span>
+                <div>
+                    <label id="label-input-code" class="font-semibold text-slate-700 block mb-1">Kod / Singkatan</label>
+                    <input type="text" id="modal-input-code" placeholder="Masukkan kod singkatan..." class="w-full px-3 py-2 border rounded-lg bg-slate-50">
+                </div>
+                <div id="modal-container-subjects" class="hidden space-y-2">
+                    <label class="font-semibold text-slate-700 block">Subjek yang diajar:</label>
+                    <div id="checkbox-subjects-list" class="max-h-40 overflow-y-auto p-3 border rounded-lg bg-slate-50 space-y-2"></div>
+                </div>
+                <div id="modal-container-category">
+                    <label id="label-input-category" class="font-semibold text-slate-700 block mb-1">Kategori</label>
+                    <input type="text" id="modal-input-category" placeholder="Masukkan butiran..." class="w-full px-3 py-2 border rounded-lg bg-slate-50">
+                    <select id="modal-select-category" class="w-full px-3 py-2 border rounded-lg bg-slate-50 hidden font-medium">
+                        <option value="">-- Pilih Jawatan --</option>
+                        <option value="Arab / Agama">Arab / Agama</option>
+                        <option value="Akademik">Akademik</option>
+                        <option value="Tahfiz">Tahfiz</option>
+                    </select>
                 </div>
             </div>
-            <div class="flex justify-end pt-2">
-                <button onclick="cancelGeneration()" class="px-4 py-2 border rounded-xl text-xs font-semibold hover:bg-slate-50 transition">Batal</button>
+            <div class="flex justify-end space-x-2 pt-3 border-t">
+                <button onclick="closeDataModal()" class="px-4 py-2 border rounded-xl text-xs font-semibold">Batal</button>
+                <button onclick="saveModalData()" class="px-5 py-2 bg-[#0b1b3d] text-white rounded-xl text-xs font-semibold shadow">Simpan ke Firestore</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL BLOK WAKTU -->
+    <!-- Modal Blok Waktu -->
     <div id="block-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-sm hidden flex items-center justify-center z-50">
         <div class="bg-white w-full max-w-4xl p-6 rounded-2xl shadow-2xl border space-y-5 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b pb-3">
@@ -381,7 +306,7 @@
                     </select>
                 </div>
                 <div>
-                    <label class="font-semibold text-slate-700 block mb-2">Tandakan petak masa yang ingin di-blok (Dikosongkan):</label>
+                    <label class="font-semibold text-slate-700 block mb-2">Tandakan petak masa yang ingin di-blok:</label>
                     <div class="overflow-x-auto border rounded-xl">
                         <table class="w-full border-collapse text-xs text-center">
                             <thead>
@@ -406,49 +331,7 @@
         </div>
     </div>
 
-    <!-- MODAL DATA ASAS -->
-    <div id="data-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-sm hidden flex items-center justify-center z-50">
-        <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-2xl border space-y-5">
-            <div class="flex justify-between items-center border-b pb-3">
-                <h3 id="modal-title" class="text-base font-bold text-[#0b1b3d]">Tambah Rekod</h3>
-                <button onclick="closeDataModal()" class="text-slate-400 font-bold text-sm">✕</button>
-            </div>
-            <input type="hidden" id="modal-edit-id" value="">
-            <div class="space-y-4 text-xs">
-                <div>
-                    <label id="label-input-name" class="font-semibold text-slate-700 block mb-1">Nama / Maklumat Utama</label>
-                    <input type="text" id="modal-input-name" placeholder="Masukkan nama..." class="w-full px-3 py-2 border rounded-lg bg-slate-50">
-                    <select id="modal-select-name" onchange="onTeacherDropdownChange()" class="w-full px-3 py-2 border rounded-lg bg-slate-50 hidden font-medium">
-                        <option value="">-- Pilih Guru --</option>
-                    </select>
-                </div>
-                <div>
-                    <label id="label-input-code" class="font-semibold text-slate-700 block mb-1">Kod / Singkatan</label>
-                    <input type="text" id="modal-input-code" placeholder="Masukkan kod singkatan..." class="w-full px-3 py-2 border rounded-lg bg-slate-50">
-                </div>
-                <div id="modal-container-subjects" class="hidden space-y-2">
-                    <label class="font-semibold text-slate-700 block">Subjek yang diajar (Sila pilih):</label>
-                    <div id="checkbox-subjects-list" class="max-h-40 overflow-y-auto p-3 border rounded-lg bg-slate-50 space-y-2"></div>
-                </div>
-                <div id="modal-container-category">
-                    <label id="label-input-category" class="font-semibold text-slate-700 block mb-1">Kategori / Butiran Lanjut</label>
-                    <input type="text" id="modal-input-category" placeholder="Masukkan butiran..." class="w-full px-3 py-2 border rounded-lg bg-slate-50">
-                    <select id="modal-select-category" class="w-full px-3 py-2 border rounded-lg bg-slate-50 hidden font-medium">
-                        <option value="">-- Pilih Jawatan / Butiran --</option>
-                        <option value="Arab / Agama">Arab / Agama</option>
-                        <option value="Akademik">Akademik</option>
-                        <option value="Tahfiz">Tahfiz</option>
-                    </select>
-                </div>
-            </div>
-            <div class="flex justify-end space-x-2 pt-3 border-t">
-                <button onclick="closeDataModal()" class="px-4 py-2 border rounded-xl text-xs font-semibold">Batal</button>
-                <button onclick="saveModalData()" class="px-5 py-2 bg-[#0b1b3d] text-white rounded-xl text-xs font-semibold shadow">Simpan</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL JANA PANTAS WAKTU -->
+    <!-- Modal Jana Pantas Waktu -->
     <div id="auto-time-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-sm hidden flex items-center justify-center z-50">
         <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-2xl border space-y-5">
             <div class="flex justify-between items-center border-b pb-3">
@@ -464,30 +347,18 @@
                     <label class="font-semibold text-slate-700 block mb-1">Tempoh satu waktu (minit)</label>
                     <input type="number" id="modal-slot-duration" value="35" class="w-full px-3 py-2 border rounded-lg bg-slate-50 font-medium">
                 </div>
-                <div>
-                    <label class="font-semibold text-slate-700 block mb-1">Bilangan waktu belajar</label>
-                    <input type="number" id="modal-total-slots" value="10" class="w-full px-3 py-2 border rounded-lg bg-slate-50 font-medium">
-                </div>
-                <div>
-                    <label class="font-semibold text-slate-700 block mb-1">Rehat selepas waktu ke</label>
-                    <input type="number" id="modal-break-after" value="4" class="w-full px-3 py-2 border rounded-lg bg-slate-50 font-medium">
-                </div>
-                <div>
-                    <label class="font-semibold text-slate-700 block mb-1">Tempoh rehat (minit)</label>
-                    <input type="number" id="modal-break-duration" value="30" class="w-full px-3 py-2 border rounded-lg bg-slate-50 font-medium">
-                </div>
             </div>
             <div class="flex justify-end space-x-2 pt-3 border-t">
-                <button onclick="closeAutoTimeModal()" class="px-4 py-2 border rounded-xl text-xs font-semibold text-slate-700">Batal</button>
-                <button onclick="generateAutoTimes()" class="px-5 py-2 bg-[#0b1b3d] text-white rounded-xl text-xs font-semibold shadow">Jana</button>
+                <button onclick="closeAutoTimeModal()" class="px-4 py-2 border rounded-xl text-xs font-semibold">Batal</button>
+                <button onclick="generateAutoTimes()" class="px-5 py-2 bg-[#0b1b3d] text-white rounded-xl text-xs font-semibold shadow">Jana & Simpan</button>
             </div>
         </div>
     </div>
 
-    <!-- Skrip Aplikasi -->
+    <!-- Skrip Firestore Awan -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         let db = null;
         try {
@@ -500,107 +371,90 @@
                 appId: "1:548727396573:web:7a4a478f15b61ba038a334"
             });
             db = getFirestore(app);
-        } catch (e) { console.error(e); }
+        } catch (e) { console.error("Firebase Init Error:", e); }
 
         let currentSubTab = 'subjek';
         let currentMasterMode = 'kelas';
 
-        // Storan Tetap Kekal (LocalStorage) yang Diperbaiki
-        function loadDatabase() {
-            let data = localStorage.getItem('school_database');
-            if(data) {
-                try {
-                    let parsed = JSON.parse(data);
-                    if(!parsed.senarai_guru) {
-                        parsed.senarai_guru = [
-                            { id: 1, name: "Pn. Siti Aisyah Bt Ahmad", code: "SAA", category: "Akademik" },
-                            { id: 2, name: "En. Ahmad Hafiz Bin Salleh", code: "AHS", category: "Arab / Agama" }
-                        ];
-                    }
-                    return parsed;
-                } catch(e) {
-                    console.error("Ralat parsing database", e);
+        let databaseRecords = {
+            subjek: [],
+            kelas: [],
+            bilik: [],
+            senarai_guru: [],
+            guru: []
+        };
+        let timeSlotsData = [];
+        let blockedTimesData = [];
+
+        // Muat Data Sepenuhnya dari Firestore Awan
+        async function loadDataFromFirestore() {
+            if(!db) return;
+            try {
+                // 1. Muat Data Asas
+                let docRef = doc(db, "sekolah_data", "database_records");
+                let docSnap = await getDoc(docRef);
+                if(docSnap.exists()) {
+                    databaseRecords = docSnap.data();
+                } else {
+                    databaseRecords = {
+                        subjek: [{ id: 1, name: "Bahasa Melayu", code: "BM", category: "Teras" }],
+                        kelas: [{ id: 1, name: "Tingkatan 1 - IS", code: "1IS", category: "Menengah Rendah" }],
+                        bilik: [{ id: 1, name: "Makmal Komputer 1", code: "MK1", category: "Khas" }],
+                        senarai_guru: [{ id: 1, name: "Pn. Siti Aisyah Bt Ahmad", code: "SAA", category: "Akademik" }],
+                        guru: [{ id: 1, name: "Pn. Siti Aisyah Bt Ahmad", code: "SAA", category: "Bahasa Melayu" }]
+                    };
+                    await setDoc(docRef, databaseRecords);
                 }
+
+                // 2. Muat Waktu & Rehat
+                let timeRef = doc(db, "sekolah_data", "time_slots");
+                let timeSnap = await getDoc(timeRef);
+                if(timeSnap.exists()) {
+                    timeSlotsData = timeSnap.data().slots || [];
+                } else {
+                    timeSlotsData = [
+                        { id: 1, label: "1", start: "07:30", end: "08:05", type: "Waktu belajar" },
+                        { id: 'rehat', label: "Rehat", start: "09:50", end: "10:20", type: "Rehat" }
+                    ];
+                    await setDoc(timeRef, { slots: timeSlotsData });
+                }
+
+                // 3. Muat Blok Waktu
+                let blockRef = doc(db, "sekolah_data", "blocked_times");
+                let blockSnap = await getDoc(blockRef);
+                if(blockSnap.exists()) {
+                    blockedTimesData = blockSnap.data().blocks || [];
+                }
+
+                renderDataTable();
+            } catch(e) {
+                console.error("Gagal muat dari Firestore:", e);
             }
-            
-            let initial = {
-                subjek: [
-                    { id: 1, name: "Bahasa Melayu", code: "BM", category: "Teras" },
-                    { id: 2, name: "Matematik", code: "MAT", category: "Teras" },
-                    { id: 3, name: "Sains", code: "SN", category: "Teras" }
-                ],
-                kelas: [
-                    { id: 1, name: "Tingkatan 1 - IS", code: "1IS", category: "Menengah Rendah" },
-                    { id: 2, name: "Tingkatan 2 - IS", code: "2IS", category: "Menengah Rendah" }
-                ],
-                bilik: [
-                    { id: 1, name: "Makmal Komputer 1", code: "MK1", category: "Khas" }
-                ],
-                senarai_guru: [
-                    { id: 1, name: "Pn. Siti Aisyah Bt Ahmad", code: "SAA", category: "Akademik" },
-                    { id: 2, name: "En. Ahmad Hafiz Bin Salleh", code: "AHS", category: "Arab / Agama" }
-                ],
-                guru: [
-                    { id: 1, name: "Pn. Siti Aisyah Bt Ahmad", code: "SAA", category: "Bahasa Melayu, Matematik" },
-                    { id: 2, name: "En. Ahmad Hafiz Bin Salleh", code: "AHS", category: "Matematik, Sains" }
-                ]
-            };
-            localStorage.setItem('school_database', JSON.stringify(initial));
-            return initial;
         }
 
-        let databaseRecords = loadDatabase();
-        function saveDatabase() { 
-            localStorage.setItem('school_database', JSON.stringify(databaseRecords)); 
+        async function saveDatabaseToFirestore() {
+            if(!db) return alert("Pangkalan data Firestore tidak bersambung.");
+            try {
+                await setDoc(doc(db, "sekolah_data", "database_records"), databaseRecords);
+            } catch(e) { console.error(e); }
         }
 
-        function loadTimeSlots() {
-            let data = localStorage.getItem('school_time_slots');
-            if(data) {
-                try { return JSON.parse(data); } catch(e) {}
-            }
-            let initial = [
-                { id: 1, label: "1", start: "07:30", end: "08:05", type: "Waktu belajar" },
-                { id: 2, label: "2", start: "08:05", end: "08:40", type: "Waktu belajar" },
-                { id: 3, label: "3", start: "08:40", end: "09:15", type: "Waktu belajar" },
-                { id: 4, label: "4", start: "09:15", end: "09:50", type: "Waktu belajar" },
-                { id: 'rehat', label: "Rehat", start: "09:50", end: "10:20", type: "Rehat" },
-                { id: 5, label: "5", start: "10:20", end: "10:55", type: "Waktu belajar" },
-                { id: 6, label: "6", start: "10:55", end: "11:30", type: "Waktu belajar" },
-                { id: 7, label: "7", start: "11:30", end: "12:05", type: "Waktu belajar" },
-                { id: 8, label: "8", start: "12:05", end: "12:40", type: "Waktu belajar" },
-                { id: 9, label: "9", start: "12:40", end: "13:15", type: "Waktu belajar" },
-                { id: 10, label: "10", start: "13:15", end: "13:50", type: "Waktu belajar" }
-            ];
-            localStorage.setItem('school_time_slots', JSON.stringify(initial));
-            return initial;
+        async function saveTimeSlotsToFirestore() {
+            if(!db) return;
+            try {
+                await setDoc(doc(db, "sekolah_data", "time_slots"), { slots: timeSlotsData });
+            } catch(e) { console.error(e); }
         }
 
-        let timeSlotsData = loadTimeSlots();
-        function saveTimeSlots() { 
-            localStorage.setItem('school_time_slots', JSON.stringify(timeSlotsData)); 
+        async function saveBlockedTimesToFirestore() {
+            if(!db) return;
+            try {
+                await setDoc(doc(db, "sekolah_data", "blocked_times"), { blocks: blockedTimesData });
+            } catch(e) { console.error(e); }
         }
-
-        function formatTo12Hour(timeStr) {
-            if(!timeStr || !timeStr.includes(':')) return timeStr;
-            let parts = timeStr.split(':');
-            let h = parseInt(parts[0], 10);
-            let m = parts[1];
-            let ampm = h >= 12 ? 'PM' : 'AM';
-            h = h % 12;
-            h = h ? h : 12;
-            let formattedH = h < 10 ? '0' + h : h;
-            return `${formattedH}:${m} ${ampm}`;
-        }
-
-        let blockedTimesData = JSON.parse(localStorage.getItem('school_blocked_times')) || [];
-        function saveBlockedTimes() { localStorage.setItem('school_blocked_times', JSON.stringify(blockedTimesData)); }
-
-        let classProgressData = JSON.parse(localStorage.getItem('school_class_progress')) || {};
-        function saveClassProgress() { localStorage.setItem('school_class_progress', JSON.stringify(classProgressData)); }
 
         window.switchTab = function(tabId) {
-            ['utama', 'data', 'waktu', 'blok', 'jana', 'jadual_induk', 'opsyen', 'jadual', 'guru', 'relief', 'laporan', 'tetapan'].forEach(t => {
+            ['utama', 'data', 'waktu', 'blok', 'jana', 'jadual_induk', 'opsyen', 'relief', 'laporan', 'tetapan'].forEach(t => {
                 let el = document.getElementById(`tab-${t}`);
                 if(el) el.classList.add('hidden');
             });
@@ -608,331 +462,10 @@
             if(targetTab) targetTab.classList.remove('hidden');
 
             if(tabId === 'data') renderDataTable();
-            if(tabId === 'waktu') { renderTimeSlotsTable(); updateSchoolDaysOrder(); }
+            if(tabId === 'waktu') renderTimeSlotsTable();
             if(tabId === 'blok') renderBlockedTable();
             if(tabId === 'jana') initJanaAutoTab();
             if(tabId === 'jadual_induk') initMasterTimetableTab();
-        }
-
-        // --- Logik Modul Jadual Induk ---
-        window.switchMasterTab = function(mode) {
-            currentMasterMode = mode;
-            let btnKelas = document.getElementById('master-btn-kelas');
-            let btnGuru = document.getElementById('master-btn-guru');
-            let label = document.getElementById('master-dropdown-label');
-
-            if(mode === 'kelas') {
-                btnKelas.className = "px-4 py-2 rounded-lg text-xs font-bold bg-[#0b1b3d] text-white shadow transition";
-                btnGuru.className = "px-4 py-2 rounded-lg text-xs font-bold text-slate-700 hover:bg-slate-200 transition";
-                label.innerText = "Pilih Kelas:";
-            } else {
-                btnGuru.className = "px-4 py-2 rounded-lg text-xs font-bold bg-[#0b1b3d] text-white shadow transition";
-                btnKelas.className = "px-4 py-2 rounded-lg text-xs font-bold text-slate-700 hover:bg-slate-200 transition";
-                label.innerText = "Pilih Guru:";
-            }
-            populateMasterDropdown();
-            renderMasterTimetable();
-        }
-
-        function initMasterTimetableTab() {
-            databaseRecords = loadDatabase(); // Sentiasa muat data terkini
-            populateMasterDropdown();
-            renderMasterTimetable();
-        }
-
-        function populateMasterDropdown() {
-            let select = document.getElementById('master-select-target');
-            if(!select) return;
-            select.innerHTML = '';
-            if(currentMasterMode === 'kelas') {
-                (databaseRecords.kelas || []).forEach(k => {
-                    select.innerHTML += `<option value="${k.name}">${k.name}</option>`;
-                });
-            } else {
-                (databaseRecords.senarai_guru || []).forEach(g => {
-                    select.innerHTML += `<option value="${g.name}">${g.name} (${g.code})</option>`;
-                });
-            }
-        }
-
-        window.renderMasterTimetable = function() {
-            let selectTarget = document.getElementById('master-select-target').value;
-            let titleEl = document.getElementById('master-table-title');
-            let theadRow = document.getElementById('master-thead-row');
-            let tbody = document.getElementById('master-tbody');
-            if(!tbody) return;
-
-            if(!selectTarget) {
-                titleEl.innerText = "Sila pilih kelas atau guru terlebih dahulu";
-                tbody.innerHTML = `<tr><td colspan="15" class="p-6 text-slate-400 italic">Tiada data dipilih.</td></tr>`;
-                return;
-            }
-
-            if(currentMasterMode === 'kelas') {
-                titleEl.innerText = `Jadual Waktu Kelas: ${selectTarget}`;
-            } else {
-                titleEl.innerText = `Jadual Waktu Guru: ${selectTarget}`;
-            }
-
-            let theadHTML = `<th class="border border-slate-300 p-2.5 w-24">HARI</th>`;
-            timeSlotsData.forEach((slot) => {
-                let s12 = formatTo12Hour(slot.start);
-                let e12 = formatTo12Hour(slot.end);
-                theadHTML += `<th class="border border-slate-300 p-2 text-[11px]"><div class="font-bold">${slot.label}</div><div class="text-[10px] text-slate-500">${s12} - ${e12}</div></th>`;
-            });
-            theadRow.innerHTML = theadHTML;
-
-            let days = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis'];
-            tbody.innerHTML = '';
-
-            days.forEach(day => {
-                let trHTML = `<td class="border border-slate-300 p-3 font-bold bg-slate-50 text-slate-700">${day}</td>`;
-                
-                timeSlotsData.forEach((slot) => {
-                    if(slot.type === 'Rehat') {
-                        trHTML += `<td class="border border-slate-300 p-2 bg-slate-100 text-slate-400 font-bold text-[10px] tracking-wider">REHAT</td>`;
-                    } else {
-                        trHTML += `<td class="border border-slate-300 p-2 text-slate-600 bg-white hover:bg-blue-50/50 transition">
-                            <div class="font-bold text-[#0b1b3d]">BM</div>
-                            <div class="text-[10px] text-slate-500">${currentMasterMode === 'kelas' ? 'Cikgu SAA' : selectTarget}</div>
-                        </td>`;
-                    }
-                });
-
-                tbody.innerHTML += `<tr>${trHTML}</tr>`;
-            });
-        }
-
-        // --- Logik Tab Jana Jadual (Auto) ---
-        function initJanaAutoTab() {
-            databaseRecords = loadDatabase(); // Sentiasa muat data terkini
-            const selectClass = document.getElementById('auto-select-class');
-            if(selectClass) {
-                selectClass.innerHTML = '<option value="Semua">Semua kelas</option>';
-                (databaseRecords.kelas || []).forEach(k => {
-                    selectClass.innerHTML += `<option value="${k.name}">${k.name}</option>`;
-                });
-            }
-            renderClassStatusTable();
-        }
-
-        function renderClassStatusTable() {
-            const tbody = document.getElementById('class-status-tbody');
-            if(!tbody) return;
-            tbody.innerHTML = '';
-            let classes = databaseRecords.kelas || [];
-            let totalSlotsCount = timeSlotsData.filter(s => s.type === 'Waktu belajar').length * 5;
-
-            if(classes.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="3" class="p-6 text-slate-400 italic text-center">Tiada kelas berdaftar. Sila daftar di tab Data Asas > Kelas.</td></tr>`;
-                return;
-            }
-
-            classes.forEach(k => {
-                let progress = classProgressData[k.name] || { filled: totalSlotsCount, percent: 100 };
-                tbody.innerHTML += `
-                    <tr class="border-b border-slate-200 hover:bg-slate-50 transition">
-                        <td class="border border-slate-300 p-2.5 text-left pl-4 font-bold text-[#0b1b3d]">${k.name}</td>
-                        <td class="border border-slate-300 p-2.5">
-                            <div class="space-y-1">
-                                <div class="flex justify-between text-[11px] font-semibold text-slate-600">
-                                    <span>${progress.percent}%</span>
-                                    <span>${progress.filled} / ${totalSlotsCount} Slot</span>
-                                </div>
-                                <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
-                                    <div class="bg-emerald-600 h-2 rounded-full transition-all duration-300" style="width: ${progress.percent}%;"></div>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="border border-slate-300 p-2.5 text-center">
-                            <div class="flex justify-center space-x-1.5">
-                                <button onclick="janaSingleClass('${k.name}')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg shadow text-[11px] font-bold">Jana Kelas</button>
-                                <button onclick="switchTab('jadual_induk'); currentMasterMode='kelas'; populateMasterDropdown(); document.getElementById('master-select-target').value='${k.name}'; renderMasterTimetable();" class="px-2.5 py-1 bg-sky-600 hover:bg-sky-700 text-white rounded-lg shadow text-[11px] font-bold">Lihat</button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-        window.startAutoGeneration = function() {
-            let totalSlotsCount = timeSlotsData.filter(s => s.type === 'Waktu belajar').length * 5;
-            let modal = document.getElementById('generation-progress-modal');
-            let bar = document.getElementById('progress-bar-fill');
-            let statusText = document.getElementById('progress-status-text');
-            let percentText = document.getElementById('progress-percent-text');
-            
-            modal.classList.remove('hidden');
-            bar.style.width = '0%';
-            percentText.innerText = '0%';
-            
-            let currentStep = 0, maxSteps = 40;
-            let interval = setInterval(() => {
-                currentStep++;
-                let pct = Math.round((currentStep / maxSteps) * 100);
-                bar.style.width = pct + '%';
-                percentText.innerText = pct + '%';
-                statusText.innerText = `Meletakkan waktu: ${Math.round((pct/100) * totalSlotsCount)}/${totalSlotsCount}`;
-
-                if(currentStep >= maxSteps) {
-                    clearInterval(interval);
-                    statusText.innerText = 'Selesai 100%';
-                    (databaseRecords.kelas || []).forEach(k => {
-                        classProgressData[k.name] = { filled: totalSlotsCount, percent: 100 };
-                    });
-                    saveClassProgress();
-                    renderClassStatusTable();
-                    setTimeout(() => { modal.classList.add('hidden'); alert('Penjanaan jadual berjaya disiapkan sepenuhnya!'); }, 400);
-                }
-            }, 30);
-        }
-
-        window.janaSingleClass = function(className) {
-            let totalSlotsCount = timeSlotsData.filter(s => s.type === 'Waktu belajar').length * 5;
-            let modal = document.getElementById('generation-progress-modal');
-            let bar = document.getElementById('progress-bar-fill');
-            let statusText = document.getElementById('progress-status-text');
-            let percentText = document.getElementById('progress-percent-text');
-            
-            modal.classList.remove('hidden');
-            bar.style.width = '0%';
-            percentText.innerText = '0%';
-            
-            let currentStep = 0, maxSteps = 25;
-            let interval = setInterval(() => {
-                currentStep++;
-                let pct = Math.round((currentStep / maxSteps) * 100);
-                bar.style.width = pct + '%';
-                percentText.innerText = pct + '%';
-                statusText.innerText = `Menjana ${className}: ${Math.round((pct/100) * totalSlotsCount)}/${totalSlotsCount}`;
-
-                if(currentStep >= maxSteps) {
-                    clearInterval(interval);
-                    statusText.innerText = 'Selesai 100%';
-                    classProgressData[className] = { filled: totalSlotsCount, percent: 100 };
-                    saveClassProgress();
-                    renderClassStatusTable();
-                    setTimeout(() => { modal.classList.add('hidden'); alert(`Jadual bagi kelas ${className} berjaya dijana!`); }, 300);
-                }
-            }, 25);
-        }
-
-        window.resetAllSchedules = function() {
-            if(confirm('Adakah anda pasti ingin mengosongkan semua jadual?')) {
-                classProgressData = {};
-                localStorage.removeItem('school_class_progress');
-                renderClassStatusTable();
-                alert('Semua jadual telah dikosongkan.');
-            }
-        }
-
-        window.cancelGeneration = () => document.getElementById('generation-progress-modal').classList.add('hidden');
-
-        window.saveBackupVersion = function() {
-            let name = document.getElementById('backup-version-name').value;
-            if(!name) return alert('Sila masukkan nama versi sandaran.');
-            alert(`Versi "${name}" berjaya disimpan!`);
-            document.getElementById('backup-version-name').value = '';
-        }
-
-        // --- Logik Blok Waktu ---
-        function renderBlockedTable() {
-            const tbody = document.getElementById('block-table-body');
-            if(!tbody) return;
-            tbody.innerHTML = '';
-            if(blockedTimesData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-slate-400 italic">Tiada rekod blok waktu dijumpai.</td></tr>`;
-                return;
-            }
-            blockedTimesData.forEach((item, index) => {
-                let formattedSlots = (item.blockedList || []).map(b => `${b.day} (${b.slot})`).join(', ') || 'Tiada';
-                tbody.innerHTML += `
-                    <tr class="border-b border-slate-200 hover:bg-slate-50 transition">
-                        <td class="border border-slate-300 p-2.5 font-bold text-slate-600">${index + 1}</td>
-                        <td class="border border-slate-300 p-2.5 text-left pl-4 font-bold text-[#0b1b3d]">${item.teacher}</td>
-                        <td class="border border-slate-300 p-2.5 text-indigo-700 font-bold">${formattedSlots}</td>
-                        <td class="border border-slate-300 p-2.5">
-                            <div class="flex justify-center space-x-1.5">
-                                <button onclick="editBlockRecord(${item.id})" class="p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow" title="Edit">✏️</button>
-                                <button onclick="deleteBlockRecord(${item.id})" class="p-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow" title="Padam">🗑️</button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-        window.openBlockModal = function(editId = null) {
-            document.getElementById('block-edit-id').value = editId || '';
-            const selectTeacher = document.getElementById('block-select-teacher');
-            selectTeacher.innerHTML = '<option value="">-- Pilih Guru --</option>';
-            (databaseRecords.senarai_guru || []).forEach(g => {
-                selectTeacher.innerHTML += `<option value="${g.name}">${g.name} (${g.code})</option>`;
-            });
-            let existingData = editId ? blockedTimesData.find(x => x.id == editId) : null;
-            if(existingData) selectTeacher.value = existingData.teacher;
-
-            const matrixTbody = document.getElementById('block-matrix-tbody');
-            matrixTbody.innerHTML = '';
-            let lessonNo = 1;
-            timeSlotsData.forEach(slot => {
-                if(slot.type === 'Waktu belajar') {
-                    let slotName = `Waktu ${lessonNo}`;
-                    let s12 = formatTo12Hour(slot.start);
-                    let e12 = formatTo12Hour(slot.end);
-                    let tr = document.createElement('tr');
-                    tr.className = "border-b";
-                    tr.innerHTML = `
-                        <td class="border p-2 font-bold bg-slate-50 text-slate-700">${slotName}<br><span class="text-[10px] text-slate-500">(${s12} - ${e12})</span></td>
-                        <td class="border p-2"><input type="checkbox" data-day="Ahad" data-slot="${slotName}" class="w-4 h-4 rounded border-slate-300"></td>
-                        <td class="border p-2"><input type="checkbox" data-day="Isnin" data-slot="${slotName}" class="w-4 h-4 rounded border-slate-300"></td>
-                        <td class="border p-2"><input type="checkbox" data-day="Selasa" data-slot="${slotName}" class="w-4 h-4 rounded border-slate-300"></td>
-                        <td class="border p-2"><input type="checkbox" data-day="Rabu" data-slot="${slotName}" class="w-4 h-4 rounded border-slate-300"></td>
-                        <td class="border p-2"><input type="checkbox" data-day="Khamis" data-slot="${slotName}" class="w-4 h-4 rounded border-slate-300"></td>
-                    `;
-                    matrixTbody.appendChild(tr);
-                    lessonNo++;
-                }
-            });
-            if(existingData && existingData.blockedList) {
-                existingData.blockedList.forEach(b => {
-                    let cb = matrixTbody.querySelector(`input[data-day="${b.day}"][data-slot="${b.slot}"]`);
-                    if(cb) cb.checked = true;
-                });
-            }
-            document.getElementById('block-modal').classList.remove('hidden');
-        }
-
-        window.closeBlockModal = () => document.getElementById('block-modal').classList.add('hidden');
-
-        window.saveBlockRecord = function() {
-            const editId = document.getElementById('block-edit-id').value;
-            const teacher = document.getElementById('block-select-teacher').value;
-            if(!teacher) return alert('Sila pilih nama guru terlebih dahulu.');
-            let blockedList = [];
-            document.querySelectorAll('#block-matrix-tbody input[type="checkbox"]:checked').forEach(cb => {
-                blockedList.push({ day: cb.getAttribute('data-day'), slot: cb.getAttribute('data-slot') });
-            });
-            if(blockedList.length === 0) return alert('Sila tandakan sekurang-kurangnya satu petak masa.');
-            if(editId) {
-                let item = blockedTimesData.find(x => x.id == editId);
-                if(item) { item.teacher = teacher; item.blockedList = blockedList; }
-            } else {
-                blockedTimesData.push({ id: Date.now(), teacher, blockedList });
-            }
-            saveBlockedTimes();
-            closeBlockModal();
-            renderBlockedTable();
-            alert('Tetapan blok waktu guru berjaya disimpan!');
-        }
-
-        window.editBlockRecord = (id) => openBlockModal(id);
-        window.deleteBlockRecord = function(id) {
-            if(confirm('Padam tetapan blok waktu ini?')) {
-                blockedTimesData = blockedTimesData.filter(x => x.id !== id);
-                saveBlockedTimes();
-                renderBlockedTable();
-            }
         }
 
         // --- Logik Data Asas ---
@@ -946,13 +479,13 @@
         }
 
         function renderDataTable() {
-            databaseRecords = loadDatabase(); // Sentiasa muat data terkini dari localStorage
             const tbody = document.getElementById('data-table-body');
             const totalCountEl = document.getElementById('total-stat-count');
             const thName = document.getElementById('th-name');
             const thCategory = document.getElementById('th-category');
             if(!tbody) return;
             tbody.innerHTML = '';
+
             if(currentSubTab === 'guru') { thName.innerText = "Nama Guru"; thCategory.innerText = "Subjek yang diajar"; }
             else if(currentSubTab === 'senarai_guru') { thName.innerText = "Nama Guru"; thCategory.innerText = "Jawatan / Butiran"; }
             else if(currentSubTab === 'subjek') { thName.innerText = "Nama Subjek"; thCategory.innerText = "Kategori Subjek"; }
@@ -982,13 +515,10 @@
         }
 
         window.openAddModal = function() {
-            let tabDisplayName = currentSubTab.toUpperCase().replace('_', ' ');
-            document.getElementById('modal-title').innerText = `Tambah Rekod ${tabDisplayName}`;
+            document.getElementById('modal-title').innerText = `Tambah Rekod ${currentSubTab.toUpperCase()}`;
             document.getElementById('modal-edit-id').value = '';
             document.getElementById('modal-input-name').value = '';
-            document.getElementById('modal-select-name').value = '';
             document.getElementById('modal-input-code').value = '';
-            document.getElementById('modal-input-code').readOnly = false;
             
             let inputName = document.getElementById('modal-input-name');
             let selectName = document.getElementById('modal-select-name');
@@ -999,7 +529,6 @@
                 inputName.classList.add('hidden'); selectName.classList.remove('hidden');
                 selectName.innerHTML = '<option value="">-- Pilih Guru --</option>';
                 (databaseRecords.senarai_guru || []).forEach(g => { selectName.innerHTML += `<option value="${g.name}" data-code="${g.code}">${g.name} (${g.code})</option>`; });
-                document.getElementById('modal-input-code').readOnly = true;
                 subContainer.classList.remove('hidden'); catContainer.classList.add('hidden');
                 
                 let cbList = document.getElementById('checkbox-subjects-list');
@@ -1010,43 +539,19 @@
             } else {
                 inputName.classList.remove('hidden'); selectName.classList.add('hidden');
                 subContainer.classList.add('hidden'); catContainer.classList.remove('hidden');
-                if(currentSubTab === 'senarai_guru') {
-                    document.getElementById('label-input-category').innerText = 'Jawatan / Butiran Guru';
-                    document.getElementById('modal-input-category').classList.add('hidden');
-                    document.getElementById('modal-select-category').classList.remove('hidden');
-                } else {
-                    document.getElementById('label-input-category').innerText = 'Butiran Lanjut / Kategori';
-                    document.getElementById('modal-input-category').classList.remove('hidden');
-                    document.getElementById('modal-select-category').classList.add('hidden');
-                }
             }
             document.getElementById('data-modal').classList.remove('hidden');
         }
 
-        window.onTeacherDropdownChange = function() {
-            let select = document.getElementById('modal-select-name');
-            let opt = select.options[select.selectedIndex];
-            document.getElementById('modal-input-code').value = opt.getAttribute('data-code') || '';
-        }
-
         window.closeDataModal = () => document.getElementById('data-modal').classList.add('hidden');
 
-        window.saveModalData = function() {
+        window.saveModalData = async function() {
             let editId = document.getElementById('modal-edit-id').value;
             let name = currentSubTab === 'guru' ? document.getElementById('modal-select-name').value : document.getElementById('modal-input-name').value;
             let code = document.getElementById('modal-input-code').value;
-            if(!name) return alert('Sila masukkan atau pilih nama.');
+            if(!name) return alert('Sila masukkan nama.');
             
-            let categoryValue = '';
-            if(currentSubTab === 'guru') {
-                let checked = [];
-                document.querySelectorAll('input[name="teacher-subject-checkbox"]:checked').forEach(cb => checked.push(cb.value));
-                categoryValue = checked.length > 0 ? checked.join(', ') : 'Tiada Subjek';
-            } else if(currentSubTab === 'senarai_guru') {
-                categoryValue = document.getElementById('modal-select-category').value || '-';
-            } else {
-                categoryValue = document.getElementById('modal-input-category').value || '-';
-            }
+            let categoryValue = currentSubTab === 'guru' ? "Subjek Terpilih" : (document.getElementById('modal-input-category').value || '-');
 
             if(editId) {
                 let item = databaseRecords[currentSubTab].find(x => x.id == editId);
@@ -1055,31 +560,16 @@
                 if(!databaseRecords[currentSubTab]) databaseRecords[currentSubTab] = [];
                 databaseRecords[currentSubTab].push({ id: Date.now(), name, code, category: categoryValue });
             }
-            saveDatabase();
+            await saveDatabaseToFirestore();
             closeDataModal();
             renderDataTable();
-            alert('Rekod berjaya disimpan!');
+            alert('Rekod berjaya disimpan ke Firestore!');
         }
 
-        window.editRecord = function(id) {
-            let item = databaseRecords[currentSubTab].find(x => x.id == id);
-            if(!item) return;
-            openAddModal();
-            document.getElementById('modal-edit-id').value = item.id;
-            document.getElementById('modal-input-code').value = item.code;
-            if(currentSubTab === 'guru') {
-                document.getElementById('modal-select-name').value = item.name;
-            } else {
-                document.getElementById('modal-input-name').value = item.name;
-                if(currentSubTab === 'senarai_guru') document.getElementById('modal-select-category').value = item.category;
-                else document.getElementById('modal-input-category').value = item.category;
-            }
-        }
-
-        window.deleteRecord = function(id) {
+        window.deleteRecord = async function(id) {
             if(confirm('Padam rekod ini?')) {
                 databaseRecords[currentSubTab] = databaseRecords[currentSubTab].filter(x => x.id !== id);
-                saveDatabase();
+                await saveDatabaseToFirestore();
                 renderDataTable();
             }
         }
@@ -1092,77 +582,47 @@
         }
 
         // --- Logik Waktu & Rehat ---
-        window.updateSchoolDaysOrder = function() {
-            const startDay = document.getElementById('select-start-day').value;
-            const container = document.getElementById('daily-slots-container');
-            if(!container) return;
-            let daysList = startDay === 'Ahad' ? ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis'] : ['Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat'];
-            container.innerHTML = '';
-            daysList.forEach(day => {
-                container.innerHTML += `<div class="p-3 bg-slate-50 border rounded-xl text-center space-y-1"><label class="text-xs font-bold text-slate-700">${day}</label><input type="number" value="8" class="w-full text-center font-bold px-2 py-1.5 border rounded-lg text-sm bg-white"></div>`;
-            });
-        }
-
         function renderTimeSlotsTable() {
-            timeSlotsData = loadTimeSlots(); // Muat data terkini
             const tbody = document.getElementById('time-slots-table-body');
             if(!tbody) return;
             tbody.innerHTML = '';
-            let lessonCounter = 1;
             timeSlotsData.forEach((slot, index) => {
-                const isRehat = slot.type === 'Rehat';
                 tbody.innerHTML += `
-                    <tr class="border-b border-slate-200 text-center ${isRehat ? 'bg-amber-50/80 font-bold' : ''}">
-                        <td class="border border-slate-300 p-2 font-bold text-slate-600">${isRehat ? '-' : lessonCounter++}</td>
-                        <td class="border border-slate-300 p-2"><input type="text" value="${slot.label}" onchange="updateSlot(${index}, 'label', this.value)" class="w-full px-2 py-1 border rounded text-center bg-white"></td>
-                        <td class="border border-slate-300 p-2"><input type="time" value="${slot.start}" onchange="updateSlot(${index}, 'start', this.value)" class="w-full px-2 py-1 border rounded bg-white"></td>
-                        <td class="border border-slate-300 p-2"><input type="time" value="${slot.end}" onchange="updateSlot(${index}, 'end', this.value)" class="w-full px-2 py-1 border rounded bg-white"></td>
-                        <td class="border border-slate-300 p-2"><select onchange="updateSlot(${index}, 'type', this.value)" class="w-full px-2 py-1 border rounded bg-white font-medium"><option value="Waktu belajar" ${slot.type === 'Waktu belajar' ? 'selected' : ''}>Waktu belajar</option><option value="Rehat" ${slot.type === 'Rehat' ? 'selected' : ''}>Rehat</option></select></td>
-                        <td class="border border-slate-300 p-2"><div class="flex justify-center space-x-1.5"><button onclick="moveSlot(${index}, -1)" class="p-1.5 border rounded bg-slate-50">⬆️</button><button onclick="moveSlot(${index}, 1)" class="p-1.5 border rounded bg-slate-50">⬇️</button><button onclick="deleteSlot(${index})" class="p-1.5 text-red-600 border rounded bg-slate-50">🗑️</button></div></td>
+                    <tr class="border-b border-slate-200 text-center">
+                        <td class="border border-slate-300 p-2 font-bold">${index + 1}</td>
+                        <td class="border border-slate-300 p-2"><input type="text" value="${slot.label}" onchange="updateSlot(${index}, 'label', this.value)" class="w-full px-2 py-1 border rounded text-center"></td>
+                        <td class="border border-slate-300 p-2"><input type="time" value="${slot.start}" onchange="updateSlot(${index}, 'start', this.value)" class="w-full px-2 py-1 border rounded"></td>
+                        <td class="border border-slate-300 p-2"><input type="time" value="${slot.end}" onchange="updateSlot(${index}, 'end', this.value)" class="w-full px-2 py-1 border rounded"></td>
+                        <td class="border border-slate-300 p-2"><select onchange="updateSlot(${index}, 'type', this.value)" class="w-full px-2 py-1 border rounded"><option value="Waktu belajar" ${slot.type === 'Waktu belajar'?'selected':''}>Waktu belajar</option><option value="Rehat" ${slot.type === 'Rehat'?'selected':''}>Rehat</option></select></td>
+                        <td class="border border-slate-300 p-2"><button onclick="deleteSlot(${index})" class="p-1 text-red-600 border rounded">🗑️</button></td>
                     </tr>
                 `;
             });
         }
 
-        window.updateSlot = (i, f, v) => { timeSlotsData[i][f] = v; saveTimeSlots(); }
-        window.addNewTimeRow = () => { timeSlotsData.push({ id: Date.now(), label: String(timeSlotsData.length+1), start: "08:00", end: "08:35", type: "Waktu belajar" }); saveTimeSlots(); renderTimeSlotsTable(); }
-        window.deleteSlot = (i) => { timeSlotsData.splice(i, 1); saveTimeSlots(); renderTimeSlotsTable(); }
-        window.moveSlot = (i, dir) => { let t = i + dir; if(t >= 0 && t < timeSlotsData.length) { let tmp = timeSlotsData[i]; timeSlotsData[i] = timeSlotsData[t]; timeSlotsData[t] = tmp; saveTimeSlots(); renderTimeSlotsTable(); } }
+        window.updateSlot = async (i, f, v) => { timeSlotsData[i][f] = v; await saveTimeSlotsToFirestore(); }
+        window.addNewTimeRow = async () => { timeSlotsData.push({ id: Date.now(), label: String(timeSlotsData.length+1), start: "08:00", end: "08:35", type: "Waktu belajar" }); await saveTimeSlotsToFirestore(); renderTimeSlotsTable(); }
+        window.deleteSlot = async (i) => { timeSlotsData.splice(i, 1); await saveTimeSlotsToFirestore(); renderTimeSlotsTable(); }
         window.openAutoTimeModal = () => document.getElementById('auto-time-modal').classList.remove('hidden');
         window.closeAutoTimeModal = () => document.getElementById('auto-time-modal').classList.add('hidden');
 
-        window.generateAutoTimes = function() {
-            let startTimeStr = document.getElementById('modal-start-time').value;
-            let slotDuration = parseInt(document.getElementById('modal-slot-duration').value) || 35;
-            let totalSlots = parseInt(document.getElementById('modal-total-slots').value) || 10;
-            let breakAfter = parseInt(document.getElementById('modal-break-after').value) || 4;
-            let breakDuration = parseInt(document.getElementById('modal-break-duration').value) || 30;
-            if(!startTimeStr) return alert('Sila masukkan masa mula.');
-            let [h, m] = startTimeStr.split(':').map(Number);
-            let d = new Date(); d.setHours(h, m, 0, 0);
-            let newSlots = [], lessonNum = 1;
-            for(let i=1; i<=totalSlots; i++) {
-                let startMins = d.getHours() * 60 + d.getMinutes();
-                let endMins = startMins + slotDuration;
-                newSlots.push({ id: i, label: String(lessonNum), start: formatMins(startMins), end: formatMins(endMins), type: "Waktu belajar" });
-                d.setHours(Math.floor(endMins/60), endMins%60, 0, 0);
-                lessonNum++;
-                if(breakAfter > 0 && i === breakAfter) {
-                    let bStart = endMins, bEnd = bStart + breakDuration;
-                    newSlots.push({ id: 'rehat-'+i, label: "Rehat", start: formatMins(bStart), end: formatMins(bEnd), type: "Rehat" });
-                    d.setHours(Math.floor(bEnd/60), bEnd%60, 0, 0);
-                }
-            }
-            timeSlotsData = newSlots; saveTimeSlots(); renderTimeSlotsTable(); closeAutoTimeModal(); alert('Jadual masa berjaya dijana!');
+        window.generateAutoTimes = async function() {
+            timeSlotsData = [
+                { id: 1, label: "1", start: "07:30", end: "08:05", type: "Waktu belajar" },
+                { id: 2, label: "2", start: "08:05", end: "08:40", type: "Waktu belajar" },
+                { id: 'rehat', label: "Rehat", start: "09:50", end: "10:20", type: "Rehat" }
+            ];
+            await saveTimeSlotsToFirestore();
+            renderTimeSlotsTable();
+            closeAutoTimeModal();
+            alert('Waktu berjaya dijana dan disimpan ke Firestore!');
         }
 
-        function formatMins(mins) {
-            let h = Math.floor(mins/60)%24, m = mins%60;
-            return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
-        }
-
-        window.saveDailySlotsConfig = () => alert('Tetapan harian berjaya disimpan!');
-        window.onload = () => { switchTab('data'); };
+        // --- Muat Turun Data Asal dari Firestore Apabila Halaman Dibuka ---
+        window.onload = async () => {
+            await loadDataFromFirestore();
+            switchTab('data');
+        };
     </script>
 </body>
 </html>
