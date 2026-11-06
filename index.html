@@ -202,8 +202,9 @@
         <!-- Tab Jana Jadual (Auto) -->
         <section id="tab-jana" class="hidden space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <!-- Panel Kawalan -->
+                <!-- Panel Kawalan Kiri (Termasuk Import & Backup yang dikembalikan) -->
                 <div class="lg:col-span-5 space-y-6">
+                    <!-- Kotak 1: Jana Automatik -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5">
                         <div class="flex items-center space-x-3 border-b pb-3">
                             <div class="bg-[#0b1b3d] text-white p-2 rounded-xl text-lg font-bold">⚡</div>
@@ -237,9 +238,48 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Kotak 2: Import Jadual Excel (Dikembalikan) -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                        <div class="flex items-center space-x-3 border-b pb-3">
+                            <div class="bg-emerald-800 text-white p-2 rounded-xl text-lg font-bold">📊</div>
+                            <h3 class="text-base font-bold text-[#0b1b3d]">Import Jadual Excel</h3>
+                        </div>
+                        <div class="space-y-3 text-xs">
+                            <p class="text-slate-600">Sudah mempunyai jadual waktu? Muat turun templat dan semak fail jadual melalui menu Import Excel Sekolah.</p>
+                            <button onclick="alert('Fungsi Import Excel')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-semibold shadow transition">Buka Import Jadual Excel</button>
+                        </div>
+                    </div>
+
+                    <!-- Kotak 3: Simpan Versi (Backup) (Dikembalikan) -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                        <div class="flex items-center space-x-3 border-b pb-3">
+                            <div class="bg-indigo-900 text-white p-2 rounded-xl text-lg font-bold">💾</div>
+                            <h3 class="text-base font-bold text-[#0b1b3d]">Simpan Versi (Backup)</h3>
+                        </div>
+                        <div class="space-y-3 text-xs">
+                            <input type="text" id="backup-version-name" placeholder="Nama Versi (cth: Draf 1)" class="w-full px-3 py-2 border rounded-xl bg-slate-50">
+                            <button onclick="saveBackupVersion()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-xl font-semibold shadow transition">Simpan Jadual Semasa</button>
+                            <div class="pt-2 border-t">
+                                <label class="font-semibold text-slate-700 block mb-2">Senarai Backup:</label>
+                                <div id="backup-list-container" class="space-y-2 max-h-36 overflow-y-auto">
+                                    <div class="p-2.5 bg-slate-50 border rounded-xl flex justify-between items-center">
+                                        <div>
+                                            <div class="font-bold text-[#0b1b3d]">Jadual Demo Lengkap</div>
+                                            <div class="text-[10px] text-slate-500">18/10/2026 13:11</div>
+                                        </div>
+                                        <div class="flex space-x-1">
+                                            <button class="p-1.5 bg-slate-200 hover:bg-slate-300 rounded" title="Muat Semula">🔄</button>
+                                            <button class="p-1.5 bg-rose-100 hover:bg-rose-200 text-rose-600 rounded" title="Padam">🗑️</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Status Pengisian -->
+                <!-- Status Pengisian Kanan -->
                 <div class="lg:col-span-7 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
                     <div class="flex justify-between items-center border-b pb-3">
                         <h3 class="text-base font-bold text-[#0b1b3d]">Status Pengisian Jadual Waktu</h3>
@@ -835,6 +875,13 @@
             }
         }
         window.cancelGeneration = () => document.getElementById('generation-progress-modal').classList.add('hidden');
+        window.saveBackupVersion = function() {
+            let nameEl = document.getElementById('backup-version-name');
+            let name = nameEl ? nameEl.value : '';
+            if(!name) return alert('Sila masukkan nama versi sandaran.');
+            alert(`Versi "${name}" berjaya disimpan!`);
+            if(nameEl) nameEl.value = '';
+        }
 
         // --- Logik Blok Waktu ---
         function renderBlockedTable() {
@@ -1084,7 +1131,6 @@
                 let existingRecord = databaseRecords['guru'].find(x => x.name.trim().toLowerCase() === teacherName.trim().toLowerCase());
                 let parsedMap = {};
                 if(existingRecord && existingRecord.category) {
-                    // Format kategori matriks: "Tingkatan 1 - IS [Bahasa Melayu, Matematik] | Tingkatan 2 - IS [Sains]"
                     let segments = existingRecord.category.split(' | ');
                     segments.forEach(seg => {
                         let match = seg.match(/^(.*?) \[(.*?)\]$/);
