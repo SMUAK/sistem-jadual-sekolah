@@ -1031,7 +1031,6 @@
                 if(subContainer) subContainer.classList.remove('hidden');
                 if(catContainer) catContainer.classList.add('hidden');
                 
-                // Jana senarai checkbox Tingkatan berdasarkan tab Kelas
                 let cbTingkatanList = document.getElementById('checkbox-tingkatan-list');
                 if(cbTingkatanList) {
                     cbTingkatanList.innerHTML = '';
@@ -1045,7 +1044,6 @@
                     }
                 }
 
-                // Jana senarai checkbox Subjek
                 let cbList = document.getElementById('checkbox-subjects-list');
                 if(cbList) {
                     cbList.innerHTML = '';
@@ -1070,16 +1068,15 @@
                     let labelCat = document.getElementById('label-input-category');
                     if(labelCat) labelCat.innerText = 'Butiran Lanjut / Kategori';
                     let inputCat = document.getElementById('modal-input-category');
-                    if(inputCat) inputCat.classList.remove('hidden');
+                    if(inputCat) inputCat.classList.add('hidden');
                     let selectCat = document.getElementById('modal-select-category');
-                    if(selectCat) selectCat.classList.add('hidden');
+                    if(selectCat) selectCat.classList.remove('hidden');
                 }
             }
             let dataModalEl = document.getElementById('data-modal');
             if(dataModalEl) dataModalEl.classList.remove('hidden');
         }
 
-        // Automasi Singkatan Guru Berdasarkan Senarai Guru
         window.onTeacherDropdownChange = function() {
             let select = document.getElementById('modal-select-name');
             if(!select) return;
@@ -1091,6 +1088,8 @@
         }
 
         window.closeDataModal = () => document.getElementById('data-modal').classList.add('hidden');
+        
+        // Logik Kemas Kini: Gabungkan Data untuk Satu Guru dalam Satu Baris Sahaja
         window.saveModalData = function() {
             let editIdEl = document.getElementById('modal-edit-id');
             let editId = editIdEl ? editIdEl.value : '';
@@ -1118,17 +1117,31 @@
                 let inputCat = document.getElementById('modal-input-category');
                 categoryValue = inputCat ? inputCat.value : '-';
             }
+
             if(editId) {
                 let item = databaseRecords[currentSubTab].find(x => x.id == editId);
                 if(item) { item.name = name; item.code = code; item.category = categoryValue; }
             } else {
-                databaseRecords[currentSubTab].push({ id: Date.now(), name, code, category: categoryValue });
+                // Semak jika guru sudah wujud dalam senarai Guru & Subjek supaya tidak bertindih (1 guru = 1 baris)
+                if(currentSubTab === 'guru') {
+                    let existingTeacherIndex = databaseRecords[currentSubTab].findIndex(x => x.name.trim().toLowerCase() === name.trim().toLowerCase());
+                    if(existingTeacherIndex !== -1) {
+                        // Kemas kini baris sedia ada milik guru tersebut
+                        databaseRecords[currentSubTab][existingTeacherIndex].code = code;
+                        databaseRecords[currentSubTab][existingTeacherIndex].category = categoryValue;
+                    } else {
+                        databaseRecords[currentSubTab].push({ id: Date.now(), name, code, category: categoryValue });
+                    }
+                } else {
+                    databaseRecords[currentSubTab].push({ id: Date.now(), name, code, category: categoryValue });
+                }
             }
             saveDatabase();
             closeDataModal();
             renderDataTable();
             alert('Rekod berjaya disimpan!');
         }
+
         window.editRecord = function(id) {
             let item = databaseRecords[currentSubTab].find(x => x.id == id);
             if(!item) return;
