@@ -384,7 +384,7 @@
     </div>
     <!-- MODAL DATA ASAS -->
     <div id="data-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-sm hidden flex items-center justify-center z-50">
-        <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-2xl border space-y-5">
+        <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-2xl border space-y-5 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b pb-3">
                 <h3 id="modal-title" class="text-base font-bold text-[#0b1b3d]">Tambah Rekod</h3>
                 <button onclick="closeDataModal()" class="text-slate-400 font-bold text-sm">✕</button>
@@ -402,6 +402,13 @@
                     <label id="label-input-code" class="font-semibold text-slate-700 block mb-1">Kod / Singkatan</label>
                     <input type="text" id="modal-input-code" placeholder="Masukkan kod singkatan..." class="w-full px-3 py-2 border rounded-lg bg-slate-50">
                 </div>
+                
+                <!-- Bahagian Pilihan Tingkatan (Checkbox) untuk Guru & Subjek -->
+                <div id="modal-container-tingkatan" class="hidden space-y-2">
+                    <label class="font-semibold text-slate-700 block">Tingkatan yang diajar (Sila pilih):</label>
+                    <div id="checkbox-tingkatan-list" class="max-h-32 overflow-y-auto p-3 border rounded-lg bg-slate-50 space-y-2"></div>
+                </div>
+
                 <div id="modal-container-subjects" class="hidden space-y-2">
                     <label class="font-semibold text-slate-700 block">Subjek yang diajar (Sila pilih):</label>
                     <div id="checkbox-subjects-list" class="max-h-40 overflow-y-auto p-3 border rounded-lg bg-slate-50 space-y-2"></div>
@@ -482,8 +489,8 @@
                 let parsed = JSON.parse(data);
                 if(!parsed.senarai_guru) {
                     parsed.senarai_guru = [
-                        { id: 1, name: "Pn. Siti Aisyah Bt Ahmad", code: "SAA", category: "Akademik" },
-                        { id: 2, name: "En. Ahmad Hafiz Bin Salleh", code: "AHS", category: "Arab / Agama" }
+                        { id: 1, name: "Asri b Mohd Zain", code: "Asri", category: "Arab / Agama" },
+                        { id: 2, name: "AHMAD Rosli", code: "Ahmad", category: "Akademik" }
                     ];
                 }
                 return parsed;
@@ -502,12 +509,11 @@
                         { id: 1, name: "Makmal Komputer 1", code: "MK1", category: "Khas" }
                     ],
                     senarai_guru: [
-                        { id: 1, name: "Pn. Siti Aisyah Bt Ahmad", code: "SAA", category: "Akademik" },
-                        { id: 2, name: "En. Ahmad Hafiz Bin Salleh", code: "AHS", category: "Arab / Agama" }
+                        { id: 1, name: "Asri b Mohd Zain", code: "Asri", category: "Arab / Agama" },
+                        { id: 2, name: "AHMAD Rosli", code: "Ahmad", category: "Akademik" }
                     ],
                     guru: [
-                        { id: 1, name: "Pn. Siti Aisyah Bt Ahmad", code: "SAA", category: "Bahasa Melayu, Matematik" },
-                        { id: 2, name: "En. Ahmad Hafiz Bin Salleh", code: "AHS", category: "Matematik, Sains" }
+                        { id: 1, name: "Asri b Mohd Zain", code: "Asri", category: "Tingkatan: Tingkatan 1 - IS | Subjek: Bahasa Melayu, Matematik" }
                     ]
                 };
                 localStorage.setItem('school_database', JSON.stringify(initial));
@@ -645,12 +651,11 @@
                                 cellData = generatedTimetableData[selectTarget][day][slot.label];
                             }
                         } else {
-                            // Cari slot guru
                             for(let cName in generatedTimetableData) {
                                 if(generatedTimetableData[cName][day] && generatedTimetableData[cName][day][slot.label]) {
                                     let dt = generatedTimetableData[cName][day][slot.label];
                                     if(dt.teacherName === selectTarget) {
-                                        cellData = { subjectCode: dt.subjectCode, teacherName: cName }; // Papar nama kelas untuk jadual guru
+                                        cellData = { subjectCode: dt.subjectCode, teacherName: cName };
                                         break;
                                     }
                                 }
@@ -670,7 +675,7 @@
                 tbody.innerHTML += `<tr>${trHTML}</tr>`;
             });
         }
-        // --- Logik Tab Jana Jadual (Auto) & Pautan Data Sebenar ---
+        // --- Logik Tab Jana Jadual (Auto) ---
         function initJanaAutoTab() {
             const selectClass = document.getElementById('auto-select-class');
             if(!selectClass) return;
@@ -727,8 +732,6 @@
                 `;
             });
         }
-
-        // Fungsi Enjin Penjanaan Pintar Sebenar Berdasarkan Data Asas & Blok Waktu
         window.startAutoGeneration = function() {
             let targetClass = document.getElementById('auto-select-class').value;
             let classesToProcess = targetClass === 'Semua' ? (databaseRecords.kelas || []) : (databaseRecords.kelas || []).filter(k => k.name === targetClass);
@@ -762,15 +765,10 @@
                         let slotIndex = 1;
                         learningSlots.forEach(slot => {
                             let slotName = `Waktu ${slotIndex}`;
-                            
-                            // Pilih subjek secara bergilir
                             let sub = subjects[(slotIndex - 1) % subjects.length];
-                            
-                            // Cari guru yang mengajar subjek ini
                             let assignedTeacher = teachers[0] ? teachers[0].name : "Cikgu Umum";
                             let assignedCode = sub ? sub.code : "BM";
 
-                            // Semak sekatan blok waktu guru
                             let isBlocked = blockedTimesData.some(b => {
                                 if(b.teacher === assignedTeacher) {
                                     return (b.blockedList || []).some(bl => bl.day === day && bl.slot === slotName);
@@ -800,7 +798,6 @@
                 }, 300);
             }, 200);
         }
-
         window.janaSingleClass = function(className) {
             let modal = document.getElementById('generation-progress-modal');
             let bar = document.getElementById('progress-bar-fill');
@@ -815,7 +812,7 @@
                 let days = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis'];
                 let learningSlots = timeSlotsData.filter(s => s.type === 'Waktu belajar');
                 let subjects = databaseRecords.subjek || [{name: 'Bahasa Melayu', code: 'BM'}];
-                let teachers = databaseRecords.guru || [{name: 'Cikgu SAA'}];
+                let teachers = databaseRecords.guru || [{name: 'Asri b Mohd Zain'}];
 
                 if(!generatedTimetableData[className]) generatedTimetableData[className] = {};
                 days.forEach(day => {
@@ -825,7 +822,7 @@
                         let sub = subjects[(sIdx - 1) % subjects.length];
                         generatedTimetableData[className][day][slot.label] = {
                             subjectCode: sub.code,
-                            teacherName: teachers[0] ? teachers[0].name : 'Cikgu SAA'
+                            teacherName: teachers[0] ? teachers[0].name : 'Asri b Mohd Zain'
                         };
                         sIdx++;
                     });
@@ -842,7 +839,6 @@
                 }, 300);
             }, 200);
         }
-
         window.resetAllSchedules = function() {
             if(confirm('Adakah anda pasti ingin mengosongkan semua jadual?')) {
                 generatedTimetableData = {};
@@ -974,7 +970,7 @@
             const thCategory = document.getElementById('th-category');
             if(!tbody) return;
             tbody.innerHTML = '';
-            if(currentSubTab === 'guru') { if(thName) thName.innerText = "Nama Guru"; if(thCategory) thCategory.innerText = "Subjek yang diajar"; }
+            if(currentSubTab === 'guru') { if(thName) thName.innerText = "Nama Guru"; if(thCategory) thCategory.innerText = "Tingkatan & Subjek Diajar"; }
             else if(currentSubTab === 'senarai_guru') { if(thName) thName.innerText = "Nama Guru"; if(thCategory) thCategory.innerText = "Jawatan / Butiran"; }
             else if(currentSubTab === 'subjek') { if(thName) thName.innerText = "Nama Subjek"; if(thCategory) thCategory.innerText = "Kategori Subjek"; }
             else if(currentSubTab === 'kelas') { if(thName) thName.innerText = "Nama Kelas"; if(thCategory) thCategory.innerText = "Tingkatan / Aliran"; }
@@ -1017,6 +1013,7 @@
             
             let inputName = document.getElementById('modal-input-name');
             let selectName = document.getElementById('modal-select-name');
+            let tingkatanContainer = document.getElementById('modal-container-tingkatan');
             let subContainer = document.getElementById('modal-container-subjects');
             let catContainer = document.getElementById('modal-container-category');
             
@@ -1025,12 +1022,30 @@
                 if(selectName) {
                     selectName.classList.remove('hidden');
                     selectName.innerHTML = '<option value="">-- Pilih Guru --</option>';
-                    (databaseRecords.senarai_guru || []).forEach(g => { selectName.innerHTML += `<option value="${g.name}" data-code="${g.code}">${g.name} (${g.code})</option>`; });
+                    (databaseRecords.senarai_guru || []).forEach(g => { 
+                        selectName.innerHTML += `<option value="${g.name}" data-code="${g.code}">${g.name} (${g.code})</option>`; 
+                    });
                 }
                 if(modalInputCodeEl) modalInputCodeEl.readOnly = true;
+                if(tingkatanContainer) tingkatanContainer.classList.remove('hidden');
                 if(subContainer) subContainer.classList.remove('hidden');
                 if(catContainer) catContainer.classList.add('hidden');
                 
+                // Jana senarai checkbox Tingkatan berdasarkan tab Kelas
+                let cbTingkatanList = document.getElementById('checkbox-tingkatan-list');
+                if(cbTingkatanList) {
+                    cbTingkatanList.innerHTML = '';
+                    let classList = databaseRecords.kelas || [];
+                    if(classList.length === 0) {
+                        cbTingkatanList.innerHTML = '<span class="text-slate-400 italic">Tiada kelas didaftarkan. Sila daftar di tab Kelas dahulu.</span>';
+                    } else {
+                        classList.forEach(cls => {
+                            cbTingkatanList.innerHTML += `<label class="flex items-center space-x-2 text-xs font-medium text-slate-700 cursor-pointer"><input type="checkbox" name="teacher-tingkatan-checkbox" value="${cls.name}" class="rounded border-slate-300"><span>${cls.name} (${cls.code})</span></label>`;
+                        });
+                    }
+                }
+
+                // Jana senarai checkbox Subjek
                 let cbList = document.getElementById('checkbox-subjects-list');
                 if(cbList) {
                     cbList.innerHTML = '';
@@ -1041,6 +1056,7 @@
             } else {
                 if(inputName) inputName.classList.remove('hidden');
                 if(selectName) selectName.classList.add('hidden');
+                if(tingkatanContainer) tingkatanContainer.classList.add('hidden');
                 if(subContainer) subContainer.classList.add('hidden');
                 if(catContainer) catContainer.classList.remove('hidden');
                 if(currentSubTab === 'senarai_guru') {
@@ -1062,13 +1078,18 @@
             let dataModalEl = document.getElementById('data-modal');
             if(dataModalEl) dataModalEl.classList.remove('hidden');
         }
+
+        // Automasi Singkatan Guru Berdasarkan Senarai Guru
         window.onTeacherDropdownChange = function() {
             let select = document.getElementById('modal-select-name');
             if(!select) return;
             let opt = select.options[select.selectedIndex];
             let codeEl = document.getElementById('modal-input-code');
-            if(codeEl) codeEl.value = opt.getAttribute('data-code') || '';
+            if(codeEl) {
+                codeEl.value = opt.getAttribute('data-code') || '';
+            }
         }
+
         window.closeDataModal = () => document.getElementById('data-modal').classList.add('hidden');
         window.saveModalData = function() {
             let editIdEl = document.getElementById('modal-edit-id');
@@ -1082,9 +1103,14 @@
             
             let categoryValue = '';
             if(currentSubTab === 'guru') {
-                let checked = [];
-                document.querySelectorAll('input[name="teacher-subject-checkbox"]:checked').forEach(cb => checked.push(cb.value));
-                categoryValue = checked.length > 0 ? checked.join(', ') : 'Tiada Subjek';
+                let checkedTingkatan = [];
+                document.querySelectorAll('input[name="teacher-tingkatan-checkbox"]:checked').forEach(cb => checkedTingkatan.push(cb.value));
+                let checkedSubjek = [];
+                document.querySelectorAll('input[name="teacher-subject-checkbox"]:checked').forEach(cb => checkedSubjek.push(cb.value));
+                
+                let tingkatanStr = checkedTingkatan.length > 0 ? checkedTingkatan.join(', ') : 'Tiada Tingkatan';
+                let subjekStr = checkedSubjek.length > 0 ? checkedSubjek.join(', ') : 'Tiada Subjek';
+                categoryValue = `Tingkatan: ${tingkatanStr} | Subjek: ${subjekStr}`;
             } else if(currentSubTab === 'senarai_guru') {
                 let selectCat = document.getElementById('modal-select-category');
                 categoryValue = selectCat ? selectCat.value : '-';
