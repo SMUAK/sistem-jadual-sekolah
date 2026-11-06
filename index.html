@@ -356,38 +356,45 @@
         </div>
     </div>
 
-    <!-- MODAL DATA ASAS (Borang All-in-One Guru) -->
+    <!-- MODAL DATA ASAS (Borang Matriks Interaktif Guru) -->
     <div id="data-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-sm hidden flex items-center justify-center z-50">
-        <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-2xl border space-y-5 max-h-[90vh] overflow-y-auto">
+        <div class="bg-white w-full max-w-2xl p-6 rounded-2xl shadow-2xl border space-y-5 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b pb-3">
-                <h3 id="modal-title" class="text-base font-bold text-[#0b1b3d]">Tambah Rekod</h3>
+                <h3 id="modal-title" class="text-base font-bold text-[#0b1b3d]">Tambah Rekod Guru & Subjek</h3>
                 <button onclick="closeDataModal()" class="text-slate-400 font-bold text-sm">✕</button>
             </div>
             <input type="hidden" id="modal-edit-id" value="">
             <div class="space-y-4 text-xs">
-                <div>
-                    <label id="label-input-name" class="font-semibold text-slate-700 block mb-1">Nama / Maklumat Utama</label>
-                    <input type="text" id="modal-input-name" placeholder="Masukkan nama..." class="w-full px-3 py-2 border rounded-lg bg-slate-50">
-                    <select id="modal-select-name" onchange="onTeacherDropdownChange()" class="w-full px-3 py-2 border rounded-lg bg-slate-50 hidden font-medium">
-                        <option value="">-- Pilih Guru --</option>
-                    </select>
-                </div>
-                <div>
-                    <label id="label-input-code" class="font-semibold text-slate-700 block mb-1">Kod / Singkatan</label>
-                    <input type="text" id="modal-input-code" placeholder="Masukkan kod singkatan..." class="w-full px-3 py-2 border rounded-lg bg-slate-50">
-                </div>
-                
-                <!-- Pilihan Tingkatan (All-in-One Checkbox) -->
-                <div id="modal-container-tingkatan" class="hidden space-y-2">
-                    <label class="font-semibold text-slate-700 block">Tingkatan yang diajar (Sila pilih):</label>
-                    <div id="checkbox-tingkatan-list" class="max-h-32 overflow-y-auto p-3 border rounded-lg bg-slate-50 space-y-2"></div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="font-semibold text-slate-700 block mb-1">Pilih Nama Guru</label>
+                        <select id="modal-select-name" onchange="onTeacherDropdownChange()" class="w-full px-3 py-2 border rounded-lg bg-slate-50 font-medium">
+                            <option value="">-- Pilih Guru --</option>
+                        </select>
+                        <input type="text" id="modal-input-name" placeholder="Masukkan nama..." class="w-full px-3 py-2 border rounded-lg bg-slate-50 hidden">
+                    </div>
+                    <div>
+                        <label class="font-semibold text-slate-700 block mb-1">Kod / Singkatan</label>
+                        <input type="text" id="modal-input-code" placeholder="Singkatan..." readonly class="w-full px-3 py-2 border rounded-lg bg-slate-100 font-bold text-slate-700">
+                    </div>
                 </div>
 
-                <!-- Pilihan Subjek (All-in-One Checkbox) -->
-                <div id="modal-container-subjects" class="hidden space-y-2">
-                    <label class="font-semibold text-slate-700 block">Subjek yang diajar (Sila pilih):</label>
-                    <div id="checkbox-subjects-list" class="max-h-40 overflow-y-auto p-3 border rounded-lg bg-slate-50 space-y-2"></div>
+                <!-- Paparan Matriks Interaktif (Tingkatan vs Subjek) -->
+                <div id="modal-container-matrix" class="space-y-2">
+                    <label class="font-semibold text-slate-700 block">Matriks Pilihan Tingkatan & Subjek Diajar:</label>
+                    <p class="text-[11px] text-slate-500">Tanda (tick) petak persilangan antara Tingkatan dan Subjek yang diajar oleh guru ini dalam sekali buka borang.</p>
+                    <div class="overflow-x-auto border rounded-xl max-h-64">
+                        <table class="w-full border-collapse text-xs text-center bg-white">
+                            <thead>
+                                <tr id="matrix-thead" class="bg-slate-100 text-slate-700 font-bold">
+                                    <th class="border p-2 text-left pl-3">Tingkatan / Kelas</th>
+                                </tr>
+                            </thead>
+                            <tbody id="matrix-tbody"></tbody>
+                        </table>
+                    </div>
                 </div>
+
                 <div id="modal-container-category">
                     <label id="label-input-category" class="font-semibold text-slate-700 block mb-1">Kategori / Butiran Lanjut</label>
                     <input type="text" id="modal-input-category" placeholder="Masukkan butiran..." class="w-full px-3 py-2 border rounded-lg bg-slate-50">
@@ -401,7 +408,7 @@
             </div>
             <div class="flex justify-end space-x-2 pt-3 border-t">
                 <button onclick="closeDataModal()" class="px-4 py-2 border rounded-xl text-xs font-semibold">Batal</button>
-                <button onclick="saveModalData()" class="px-5 py-2 bg-[#0b1b3d] text-white rounded-xl text-xs font-semibold shadow">Simpan</button>
+                <button onclick="saveModalData()" class="px-5 py-2 bg-[#0b1b3d] text-white rounded-xl text-xs font-semibold shadow">Simpan Rekod Guru</button>
             </div>
         </div>
     </div>
@@ -477,13 +484,11 @@
                     subjek: [
                         { id: 1, name: "Bahasa Melayu", code: "BM", category: "Teras" },
                         { id: 2, name: "Matematik", code: "MAT", category: "Teras" },
-                        { id: 3, name: "Sains", code: "SN", category: "Teras" },
-                        { id: 4, name: "Fiqh", code: "FQ", category: "Agama" }
+                        { id: 3, name: "Sains", code: "SN", category: "Teras" }
                     ],
                     kelas: [
                         { id: 1, name: "Tingkatan 1 - IS", code: "1IS", category: "Menengah Rendah" },
-                        { id: 2, name: "Tingkatan 2 - IS", code: "2IS", category: "Menengah Rendah" },
-                        { id: 3, name: "Tingkatan 3", code: "T3", category: "Menengah Rendah" }
+                        { id: 2, name: "Tingkatan 2 - IS", code: "2IS", category: "Menengah Rendah" }
                     ],
                     bilik: [
                         { id: 1, name: "Makmal Komputer 1", code: "MK1", category: "Khas" }
@@ -493,7 +498,7 @@
                         { id: 2, name: "AHMAD Rosli", code: "Ahmad", category: "Akademik" }
                     ],
                     guru: [
-                        { id: 1, name: "Asri b Mohd Zain", code: "Asri", category: "Tingkatan: Tingkatan 1 - IS, Tingkatan 2 - IS | Subjek: Bahasa Melayu, Matematik, Fiqh" }
+                        { id: 1, name: "Asri b Mohd Zain", code: "Asri", category: "Tingkatan 1 - IS [Bahasa Melayu, Matematik]" }
                     ]
                 };
                 localStorage.setItem('school_database', JSON.stringify(initial));
@@ -985,15 +990,11 @@
             let modalSelectNameEl = document.getElementById('modal-select-name');
             if(modalSelectNameEl) modalSelectNameEl.value = '';
             let modalInputCodeEl = document.getElementById('modal-input-code');
-            if(modalInputCodeEl) {
-                modalInputCodeEl.value = '';
-                modalInputCodeEl.readOnly = false;
-            }
+            if(modalInputCodeEl) modalInputCodeEl.value = '';
             
             let inputName = document.getElementById('modal-input-name');
             let selectName = document.getElementById('modal-select-name');
-            let tingkatanContainer = document.getElementById('modal-container-tingkatan');
-            let subContainer = document.getElementById('modal-container-subjects');
+            let matrixContainer = document.getElementById('modal-container-matrix');
             let catContainer = document.getElementById('modal-container-category');
             
             if(currentSubTab === 'guru') {
@@ -1005,38 +1006,14 @@
                         selectName.innerHTML += `<option value="${g.name}" data-code="${g.code}">${g.name} (${g.code})</option>`; 
                     });
                 }
-                if(modalInputCodeEl) modalInputCodeEl.readOnly = true;
-                if(tingkatanContainer) tingkatanContainer.classList.remove('hidden');
-                if(subContainer) subContainer.classList.remove('hidden');
+                if(matrixContainer) matrixContainer.classList.remove('hidden');
                 if(catContainer) catContainer.classList.add('hidden');
                 
-                // Populasikan Pilihan Tingkatan (Checkbox)
-                let cbTingkatanList = document.getElementById('checkbox-tingkatan-list');
-                if(cbTingkatanList) {
-                    cbTingkatanList.innerHTML = '';
-                    let classList = databaseRecords.kelas || [];
-                    if(classList.length === 0) {
-                        cbTingkatanList.innerHTML = '<span class="text-slate-400 italic">Tiada kelas didaftarkan. Sila daftar di tab Kelas dahulu.</span>';
-                    } else {
-                        classList.forEach(cls => {
-                            cbTingkatanList.innerHTML += `<label class="flex items-center space-x-2 text-xs font-medium text-slate-700 cursor-pointer"><input type="checkbox" name="teacher-tingkatan-checkbox" value="${cls.name}" class="rounded border-slate-300"><span>${cls.name} (${cls.code})</span></label>`;
-                        });
-                    }
-                }
-
-                // Populasikan Pilihan Subjek (Checkbox)
-                let cbList = document.getElementById('checkbox-subjects-list');
-                if(cbList) {
-                    cbList.innerHTML = '';
-                    (databaseRecords.subjek || []).forEach(sub => {
-                        cbList.innerHTML += `<label class="flex items-center space-x-2 text-xs font-medium text-slate-700 cursor-pointer"><input type="checkbox" name="teacher-subject-checkbox" value="${sub.name}" class="rounded border-slate-300"><span>${sub.name} (${sub.code})</span></label>`;
-                    });
-                }
+                buildMatrixTable();
             } else {
                 if(inputName) inputName.classList.remove('hidden');
                 if(selectName) selectName.classList.add('hidden');
-                if(tingkatanContainer) tingkatanContainer.classList.add('hidden');
-                if(subContainer) subContainer.classList.add('hidden');
+                if(matrixContainer) matrixContainer.classList.add('hidden');
                 if(catContainer) catContainer.classList.remove('hidden');
                 if(currentSubTab === 'senarai_guru') {
                     let labelCat = document.getElementById('label-input-category');
@@ -1058,7 +1035,41 @@
             if(dataModalEl) dataModalEl.classList.remove('hidden');
         }
 
-        // Auto-Isi Singkatan bila Nama Guru Dipilih
+        // Jana Jadual Matriks Interaktif Dinamik Berdasarkan Kelas & Subjek
+        function buildMatrixTable(selectedDataMap = {}) {
+            let thead = document.getElementById('matrix-thead');
+            let tbody = document.getElementById('matrix-tbody');
+            if(!thead || !tbody) return;
+
+            let kelasList = databaseRecords.kelas || [];
+            let subjekList = databaseRecords.subjek || [];
+
+            if(kelasList.length === 0 || subjekList.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="10" class="p-4 text-slate-400 italic text-center">Sila pastikan anda telah mendaftarkan sekurang-kurangnya satu Kelas dan satu Subjek di tab berkaitan dahulu.</td></tr>`;
+                return;
+            }
+
+            // Bina Header Lajur Subjek
+            let headerHTML = `<th class="border p-2 text-left pl-3 w-40">Tingkatan / Kelas</th>`;
+            subjekList.forEach(sub => {
+                headerHTML += `<th class="border p-2 text-center" title="${sub.name}">${sub.code}</th>`;
+            });
+            thead.innerHTML = headerHTML;
+
+            // Bina Baris Mengikut Kelas
+            let bodyHTML = '';
+            kelasList.forEach(cls => {
+                bodyHTML += `<tr><td class="border p-2 font-bold bg-slate-50 text-slate-700 text-left pl-3">${cls.name}</td>`;
+                subjekList.forEach(sub => {
+                    let isChecked = (selectedDataMap[cls.name] && selectedDataMap[cls.name].includes(sub.name)) ? 'checked' : '';
+                    bodyHTML += `<td class="border p-2 text-center"><input type="checkbox" name="matrix-cb" data-kelas="${cls.name}" data-subjek="${sub.name}" class="w-4 h-4 rounded border-slate-300" ${isChecked}></td>`;
+                });
+                bodyHTML += `</tr>`;
+            });
+            tbody.innerHTML = bodyHTML;
+        }
+
+        // Auto-Isi Singkatan & Tandakan Matriks sedia ada bila Guru Dipilih
         window.onTeacherDropdownChange = function() {
             let select = document.getElementById('modal-select-name');
             if(!select) return;
@@ -1069,30 +1080,28 @@
                 codeEl.value = opt.getAttribute('data-code') || '';
             }
 
-            // Semak jika guru ini sudah mempunyai tetapan terdahulu untuk auto-check semula pada borang
             if(currentSubTab === 'guru' && teacherName) {
                 let existingRecord = databaseRecords['guru'].find(x => x.name.trim().toLowerCase() === teacherName.trim().toLowerCase());
+                let parsedMap = {};
                 if(existingRecord && existingRecord.category) {
-                    let parts = existingRecord.category.split(' | ');
-                    let tingkatanPart = parts[0] ? parts[0].replace('Tingkatan: ', '') : '';
-                    let subjekPart = parts[1] ? parts[1].replace('Subjek: ', '') : '';
-                    
-                    let tingList = tingkatanPart.split(', ').map(s => s.trim());
-                    let subList = subjekPart.split(', ').map(s => s.trim());
-
-                    document.querySelectorAll('input[name="teacher-tingkatan-checkbox"]').forEach(cb => {
-                        cb.checked = tingList.includes(cb.value);
-                    });
-                    document.querySelectorAll('input[name="teacher-subject-checkbox"]').forEach(cb => {
-                        cb.checked = subList.includes(cb.value);
+                    // Format kategori matriks: "Tingkatan 1 - IS [Bahasa Melayu, Matematik] | Tingkatan 2 - IS [Sains]"
+                    let segments = existingRecord.category.split(' | ');
+                    segments.forEach(seg => {
+                        let match = seg.match(/^(.*?) \[(.*?)\]$/);
+                        if(match) {
+                            let cName = match[1].trim();
+                            let sList = match[2].split(', ').map(s => s.trim());
+                            parsedMap[cName] = sList;
+                        }
                     });
                 }
+                buildMatrixTable(parsedMap);
             }
         }
 
         window.closeDataModal = () => document.getElementById('data-modal').classList.add('hidden');
         
-        // Simpan Data Borang All-in-One (1 Guru = 1 Baris)
+        // Simpan Data Matriks Interaktif dalam 1 Baris Sahaja per Guru
         window.saveModalData = function() {
             let editIdEl = document.getElementById('modal-edit-id');
             let editId = editIdEl ? editIdEl.value : '';
@@ -1105,14 +1114,19 @@
             
             let categoryValue = '';
             if(currentSubTab === 'guru') {
-                let checkedTingkatan = [];
-                document.querySelectorAll('input[name="teacher-tingkatan-checkbox"]:checked').forEach(cb => checkedTingkatan.push(cb.value));
-                let checkedSubjek = [];
-                document.querySelectorAll('input[name="teacher-subject-checkbox"]:checked').forEach(cb => checkedSubjek.push(cb.value));
-                
-                let tingkatanStr = checkedTingkatan.length > 0 ? checkedTingkatan.join(', ') : 'Tiada Tingkatan';
-                let subjekStr = checkedSubjek.length > 0 ? checkedSubjek.join(', ') : 'Tiada Subjek';
-                categoryValue = `Tingkatan: ${tingkatanStr} | Subjek: ${subjekStr}`;
+                let matrixMap = {};
+                document.querySelectorAll('input[name="matrix-cb"]:checked').forEach(cb => {
+                    let k = cb.getAttribute('data-kelas');
+                    let s = cb.getAttribute('data-subjek');
+                    if(!matrixMap[k]) matrixMap[k] = [];
+                    matrixMap[k].push(s);
+                });
+
+                let summaryArr = [];
+                for(let k in matrixMap) {
+                    summaryArr.push(`${k} [${matrixMap[k].join(', ')}]`);
+                }
+                categoryValue = summaryArr.length > 0 ? summaryArr.join(' | ') : 'Tiada Opsyen Dipilih';
             } else if(currentSubTab === 'senarai_guru') {
                 let selectCat = document.getElementById('modal-select-category');
                 categoryValue = selectCat ? selectCat.value : '-';
@@ -1125,7 +1139,6 @@
                 let item = databaseRecords[currentSubTab].find(x => x.id == editId);
                 if(item) { item.name = name; item.code = code; item.category = categoryValue; }
             } else {
-                // Pastikan 1 Guru bertindak sebagai 1 Rekod Sahaja
                 if(currentSubTab === 'guru') {
                     let existingTeacherIndex = databaseRecords[currentSubTab].findIndex(x => x.name.trim().toLowerCase() === name.trim().toLowerCase());
                     if(existingTeacherIndex !== -1) {
@@ -1141,7 +1154,7 @@
             saveDatabase();
             closeDataModal();
             renderDataTable();
-            alert('Rekod berjaya disimpan!');
+            alert('Rekod guru berjaya disimpan!');
         }
 
         window.editRecord = function(id) {
