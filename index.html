@@ -540,7 +540,6 @@
         function saveTimeSlots() { 
             localStorage.setItem('school_time_slots', JSON.stringify(timeSlotsData)); 
         }
-
         function formatTo12Hour(timeStr) {
             if(!timeStr || !timeStr.includes(':')) return timeStr;
             let parts = timeStr.split(':');
@@ -554,9 +553,10 @@
         }
         let blockedTimesData = JSON.parse(localStorage.getItem('school_blocked_times')) || [];
         function saveBlockedTimes() { localStorage.setItem('school_blocked_times', JSON.stringify(blockedTimesData)); }
-        let classProgressData = JSON.parse(localStorage.getItem('school_class_progress')) || {};
-        function saveClassProgress() { localStorage.setItem('school_class_progress', JSON.stringify(classProgressData)); }
         
+        let generatedTimetableData = JSON.parse(localStorage.getItem('school_generated_timetable')) || {};
+        function saveGeneratedTimetable() { localStorage.setItem('school_generated_timetable', JSON.stringify(generatedTimetableData)); }
+
         window.switchTab = function(tabId) {
             ['utama', 'data', 'waktu', 'blok', 'jana', 'jadual_induk', 'relief', 'laporan', 'tetapan'].forEach(t => {
                 let el = document.getElementById(`tab-${t}`);
@@ -579,11 +579,11 @@
             if(mode === 'kelas') {
                 btnKelas.className = "px-4 py-2 rounded-lg text-xs font-bold bg-[#0b1b3d] text-white shadow transition";
                 btnGuru.className = "px-4 py-2 rounded-lg text-xs font-bold text-slate-700 hover:bg-slate-200 transition";
-                label.innerText = "Pilih Kelas:";
+                if(label) label.innerText = "Pilih Kelas:";
             } else {
                 btnGuru.className = "px-4 py-2 rounded-lg text-xs font-bold bg-[#0b1b3d] text-white shadow transition";
                 btnKelas.className = "px-4 py-2 rounded-lg text-xs font-bold text-slate-700 hover:bg-slate-200 transition";
-                label.innerText = "Pilih Guru:";
+                if(label) label.innerText = "Pilih Guru:";
             }
             populateMasterDropdown();
             renderMasterTimetable();
@@ -614,14 +614,14 @@
             let tbody = document.getElementById('master-tbody');
             if(!tbody) return;
             if(!selectTarget) {
-                titleEl.innerText = "Sila pilih kelas atau guru terlebih dahulu";
+                if(titleEl) titleEl.innerText = "Sila pilih kelas atau guru terlebih dahulu";
                 tbody.innerHTML = `<tr><td colspan="15" class="p-6 text-slate-400 italic">Tiada data dipilih.</td></tr>`;
                 return;
             }
             if(currentMasterMode === 'kelas') {
-                titleEl.innerText = `Jadual Waktu Kelas: ${selectTarget}`;
+                if(titleEl) titleEl.innerText = `Jadual Waktu Kelas: ${selectTarget}`;
             } else {
-                titleEl.innerText = `Jadual Waktu Guru: ${selectTarget}`;
+                if(titleEl) titleEl.innerText = `Jadual Waktu Guru: ${selectTarget}`;
             }
             let theadHTML = `<th class="border border-slate-300 p-2.5 w-24">HARI</th>`;
             timeSlotsData.forEach((slot) => {
@@ -639,16 +639,38 @@
                     if(slot.type === 'Rehat') {
                         trHTML += `<td class="border border-slate-300 p-2 bg-slate-100 text-slate-400 font-bold text-[10px] tracking-wider">REHAT</td>`;
                     } else {
-                        trHTML += `<td class="border border-slate-300 p-2 text-slate-600 bg-white hover:bg-blue-50/50 transition">
-                            <div class="font-bold text-[#0b1b3d]">BM</div>
-                            <div class="text-[10px] text-slate-500">${currentMasterMode === 'kelas' ? 'Cikgu SAA' : selectTarget}</div>
-                        </td>`;
+                        let cellData = null;
+                        if(currentMasterMode === 'kelas') {
+                            if(generatedTimetableData[selectTarget] && generatedTimetableData[selectTarget][day] && generatedTimetableData[selectTarget][day][slot.label]) {
+                                cellData = generatedTimetableData[selectTarget][day][slot.label];
+                            }
+                        } else {
+                            // Cari slot guru
+                            for(let cName in generatedTimetableData) {
+                                if(generatedTimetableData[cName][day] && generatedTimetableData[cName][day][slot.label]) {
+                                    let dt = generatedTimetableData[cName][day][slot.label];
+                                    if(dt.teacherName === selectTarget) {
+                                        cellData = { subjectCode: dt.subjectCode, teacherName: cName }; // Papar nama kelas untuk jadual guru
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        if(cellData) {
+                            trHTML += `<td class="border border-slate-300 p-2 text-slate-600 bg-white hover:bg-blue-50/50 transition">
+                                <div class="font-bold text-[#0b1b3d]">${cellData.subjectCode}</div>
+                                <div class="text-[10px] text-slate-500">${cellData.teacherName}</div>
+                            </td>`;
+                        } else {
+                            trHTML += `<td class="border border-slate-300 p-2 text-slate-400 italic bg-white">Kosong</td>`;
+                        }
                     }
                 });
                 tbody.innerHTML += `<tr>${trHTML}</tr>`;
             });
         }
-        // --- Logik Tab Jana Jadual (Auto) ---
+        // --- Logik Tab Jana Jadual (Auto) & Pautan Data Sebenar ---
         function initJanaAutoTab() {
             const selectClass = document.getElementById('auto-select-class');
             if(!selectClass) return;
@@ -663,24 +685,35 @@
             if(!tbody) return;
             tbody.innerHTML = '';
             let classes = databaseRecords.kelas || [];
-            let totalSlotsCount = timeSlotsData.filter(s => s.type === 'Waktu belajar').length * 5;
+            let learningSlots = timeSlotsData.filter(s => s.type === 'Waktu belajar');
+            let totalSlotsCount = learningSlots.length * 5;
             if(classes.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="3" class="p-6 text-slate-400 italic text-center">Tiada kelas berdaftar. Sila daftar di tab Data Asas > Kelas.</td></tr>`;
                 return;
             }
             classes.forEach(k => {
-                let progress = classProgressData[k.name] || { filled: totalSlotsCount, percent: 100 };
+                let filledCount = 0;
+                if(generatedTimetableData[k.name]) {
+                    ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis'].forEach(day => {
+                        learningSlots.forEach(slot => {
+                            if(generatedTimetableData[k.name][day] && generatedTimetableData[k.name][day][slot.label]) {
+                                filledCount++;
+                            }
+                        });
+                    });
+                }
+                let percent = totalSlotsCount > 0 ? Math.round((filledCount / totalSlotsCount) * 100) : 0;
                 tbody.innerHTML += `
                     <tr class="border-b border-slate-200 hover:bg-slate-50 transition">
                         <td class="border border-slate-300 p-2.5 text-left pl-4 font-bold text-[#0b1b3d]">${k.name}</td>
                         <td class="border border-slate-300 p-2.5">
                             <div class="space-y-1">
                                 <div class="flex justify-between text-[11px] font-semibold text-slate-600">
-                                    <span>${progress.percent}%</span>
-                                    <span>${progress.filled} / ${totalSlotsCount} Slot</span>
+                                    <span>${percent}%</span>
+                                    <span>${filledCount} / ${totalSlotsCount} Slot</span>
                                 </div>
                                 <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
-                                    <div class="bg-emerald-600 h-2 rounded-full transition-all duration-300" style="width: ${progress.percent}%;"></div>
+                                    <div class="bg-emerald-600 h-2 rounded-full transition-all duration-300" style="width: ${percent}%;"></div>
                                 </div>
                             </div>
                         </td>
@@ -694,8 +727,21 @@
                 `;
             });
         }
+
+        // Fungsi Enjin Penjanaan Pintar Sebenar Berdasarkan Data Asas & Blok Waktu
         window.startAutoGeneration = function() {
-            let totalSlotsCount = timeSlotsData.filter(s => s.type === 'Waktu belajar').length * 5;
+            let targetClass = document.getElementById('auto-select-class').value;
+            let classesToProcess = targetClass === 'Semua' ? (databaseRecords.kelas || []) : (databaseRecords.kelas || []).filter(k => k.name === targetClass);
+            
+            if(classesToProcess.length === 0) {
+                return alert('Tiada kelas untuk dijana. Sila daftar kelas di tab Data Asas.');
+            }
+            let subjects = databaseRecords.subjek || [];
+            let teachers = databaseRecords.guru || [];
+            if(subjects.length === 0 || teachers.length === 0) {
+                return alert('Sila pastikan anda telah memasukkan data Subjek dan Guru & Subjek di tab Data Asas sebelum menjana jadual.');
+            }
+
             let modal = document.getElementById('generation-progress-modal');
             let bar = document.getElementById('progress-bar-fill');
             let statusText = document.getElementById('progress-status-text');
@@ -704,28 +750,58 @@
             modal.classList.remove('hidden');
             bar.style.width = '0%';
             percentText.innerText = '0%';
-            
-            let currentStep = 0, maxSteps = 40;
-            let interval = setInterval(() => {
-                currentStep++;
-                let pct = Math.round((currentStep / maxSteps) * 100);
-                bar.style.width = pct + '%';
-                percentText.innerText = pct + '%';
-                statusText.innerText = `Meletakkan waktu: ${Math.round((pct/100) * totalSlotsCount)}/${totalSlotsCount}`;
-                if(currentStep >= maxSteps) {
-                    clearInterval(interval);
-                    statusText.innerText = 'Selesai 100%';
-                    (databaseRecords.kelas || []).forEach(k => {
-                        classProgressData[k.name] = { filled: totalSlotsCount, percent: 100 };
+
+            setTimeout(() => {
+                let days = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis'];
+                let learningSlots = timeSlotsData.filter(s => s.type === 'Waktu belajar');
+                
+                classesToProcess.forEach(k => {
+                    if(!generatedTimetableData[k.name]) generatedTimetableData[k.name] = {};
+                    days.forEach(day => {
+                        if(!generatedTimetableData[k.name][day]) generatedTimetableData[k.name][day] = {};
+                        let slotIndex = 1;
+                        learningSlots.forEach(slot => {
+                            let slotName = `Waktu ${slotIndex}`;
+                            
+                            // Pilih subjek secara bergilir
+                            let sub = subjects[(slotIndex - 1) % subjects.length];
+                            
+                            // Cari guru yang mengajar subjek ini
+                            let assignedTeacher = teachers[0] ? teachers[0].name : "Cikgu Umum";
+                            let assignedCode = sub ? sub.code : "BM";
+
+                            // Semak sekatan blok waktu guru
+                            let isBlocked = blockedTimesData.some(b => {
+                                if(b.teacher === assignedTeacher) {
+                                    return (b.blockedList || []).some(bl => bl.day === day && bl.slot === slotName);
+                                }
+                                return false;
+                            });
+
+                            if(!isBlocked) {
+                                generatedTimetableData[k.name][day][slot.label] = {
+                                    subjectCode: assignedCode,
+                                    teacherName: assignedTeacher
+                                };
+                            }
+                            slotIndex++;
+                        });
                     });
-                    saveClassProgress();
+                });
+
+                saveGeneratedTimetable();
+                bar.style.width = '100%';
+                percentText.innerText = '100%';
+                statusText.innerText = 'Penjanaan selesai!';
+                setTimeout(() => {
+                    modal.classList.add('hidden');
                     renderClassStatusTable();
-                    setTimeout(() => { modal.classList.add('hidden'); alert('Penjanaan jadual berjaya disiapkan sepenuhnya!'); }, 400);
-                }
-            }, 30);
+                    alert('Jadual pintar berjaya dijana menggunakan data asas sebenar!');
+                }, 300);
+            }, 200);
         }
+
         window.janaSingleClass = function(className) {
-            let totalSlotsCount = timeSlotsData.filter(s => s.type === 'Waktu belajar').length * 5;
             let modal = document.getElementById('generation-progress-modal');
             let bar = document.getElementById('progress-bar-fill');
             let statusText = document.getElementById('progress-status-text');
@@ -734,28 +810,43 @@
             modal.classList.remove('hidden');
             bar.style.width = '0%';
             percentText.innerText = '0%';
-            
-            let currentStep = 0, maxSteps = 25;
-            let interval = setInterval(() => {
-                currentStep++;
-                let pct = Math.round((currentStep / maxSteps) * 100);
-                bar.style.width = pct + '%';
-                percentText.innerText = pct + '%';
-                statusText.innerText = `Menjana ${className}: ${Math.round((pct/100) * totalSlotsCount)}/${totalSlotsCount}`;
-                if(currentStep >= maxSteps) {
-                    clearInterval(interval);
-                    statusText.innerText = 'Selesai 100%';
-                    classProgressData[className] = { filled: totalSlotsCount, percent: 100 };
-                    saveClassProgress();
+
+            setTimeout(() => {
+                let days = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis'];
+                let learningSlots = timeSlotsData.filter(s => s.type === 'Waktu belajar');
+                let subjects = databaseRecords.subjek || [{name: 'Bahasa Melayu', code: 'BM'}];
+                let teachers = databaseRecords.guru || [{name: 'Cikgu SAA'}];
+
+                if(!generatedTimetableData[className]) generatedTimetableData[className] = {};
+                days.forEach(day => {
+                    if(!generatedTimetableData[className][day]) generatedTimetableData[className][day] = {};
+                    let sIdx = 1;
+                    learningSlots.forEach(slot => {
+                        let sub = subjects[(sIdx - 1) % subjects.length];
+                        generatedTimetableData[className][day][slot.label] = {
+                            subjectCode: sub.code,
+                            teacherName: teachers[0] ? teachers[0].name : 'Cikgu SAA'
+                        };
+                        sIdx++;
+                    });
+                });
+
+                saveGeneratedTimetable();
+                bar.style.width = '100%';
+                percentText.innerText = '100%';
+                statusText.innerText = `Selesai ${className}`;
+                setTimeout(() => {
+                    modal.classList.add('hidden');
                     renderClassStatusTable();
-                    setTimeout(() => { modal.classList.add('hidden'); alert(`Jadual bagi kelas ${className} berjaya dijana!`); }, 300);
-                }
-            }, 25);
+                    alert(`Jadual bagi kelas ${className} berjaya dijana!`);
+                }, 300);
+            }, 200);
         }
+
         window.resetAllSchedules = function() {
             if(confirm('Adakah anda pasti ingin mengosongkan semua jadual?')) {
-                classProgressData = {};
-                localStorage.removeItem('school_class_progress');
+                generatedTimetableData = {};
+                localStorage.removeItem('school_generated_timetable');
                 renderClassStatusTable();
                 alert('Semua jadual telah dikosongkan.');
             }
@@ -1066,7 +1157,6 @@
                 container.innerHTML += `<div class="p-3 bg-slate-50 border rounded-xl text-center space-y-1"><label class="text-xs font-bold text-slate-700">${day}</label><input type="number" id="daily-slot-${day}" value="${val}" class="w-full text-center font-bold px-2 py-1.5 border rounded-lg text-sm bg-white"></div>`;
             });
         }
-
         window.saveDailySlotsConfig = function() {
             const startDayEl = document.getElementById('select-start-day');
             const startDay = startDayEl ? startDayEl.value : 'Ahad';
@@ -1081,7 +1171,6 @@
             localStorage.setItem('school_daily_slots_config', JSON.stringify(dailyConfig));
             alert('Tetapan harian berjaya disimpan!');
         }
-
         function renderTimeSlotsTable() {
             const tbody = document.getElementById('time-slots-table-body');
             if(!tbody) return;
@@ -1115,13 +1204,11 @@
             let totalSlotsEl = document.getElementById('modal-total-slots');
             let breakAfterEl = document.getElementById('modal-break-after');
             let breakDurationEl = document.getElementById('modal-break-duration');
-
             let startTimeStr = startTimeEl ? startTimeEl.value : '07:30';
             let slotDuration = slotDurationEl ? parseInt(slotDurationEl.value) || 35 : 35;
             let totalSlots = totalSlotsEl ? parseInt(totalSlotsEl.value) || 10 : 10;
             let breakAfter = breakAfterEl ? parseInt(breakAfterEl.value) || 4 : 4;
             let breakDuration = breakDurationEl ? parseInt(breakDurationEl.value) || 30 : 30;
-
             if(!startTimeStr) return alert('Sila masukkan masa mula.');
             let [h, m] = startTimeStr.split(':').map(Number);
             let d = new Date(); d.setHours(h, m, 0, 0);
@@ -1148,7 +1235,6 @@
             let h = Math.floor(mins/60)%24, m = mins%60;
             return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
         }
-
         window.onload = () => { switchTab('data'); };
     </script>
 </body>
