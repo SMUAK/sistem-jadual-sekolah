@@ -169,19 +169,19 @@
             </div>
         </section>
 
-        <!-- TAB TETAPAN MASA SUBJEK (Baru diletakkan di sini) -->
+        <!-- TAB TETAPAN MASA SUBJEK (Mengikut Guru) -->
         <section id="tab-tetapan_masa_subjek" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
                 <div class="flex flex-wrap justify-between items-center border-b pb-4 gap-4">
                     <div class="flex items-center space-x-3">
                         <div class="bg-[#0b1b3d] text-white p-3 rounded-2xl text-xl font-bold shadow">⚙️</div>
                         <div>
-                            <h3 class="text-lg font-bold text-[#0b1b3d]">Tetapan Masa Subjek (Berangkai & Tunggal)</h3>
-                            <p class="text-xs text-slate-500">Tetapkan corak pengajaran khusus seperti waktu berkembar/berangkai untuk subjek amali (Cth: Sains)</p>
+                            <h3 class="text-lg font-bold text-[#0b1b3d]">Tetapan Masa Subjek Mengikut Guru</h3>
+                            <p class="text-xs text-slate-500">Tetapkan corak waktu berangkai dan tunggal berdasarkan senarai opsyen subjek setiap guru</p>
                         </div>
                     </div>
                     <button onclick="openSubjectTimeConfigModal()" class="bg-[#0b1b3d] hover:bg-[#132d60] text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow transition">
-                        + Tambah Tetapan Subjek
+                        + Tetap Masa Subjek Guru
                     </button>
                 </div>
                 <div class="overflow-x-auto">
@@ -189,15 +189,16 @@
                         <thead>
                             <tr class="bg-slate-100 text-slate-700 font-bold">
                                 <th class="border border-slate-300 p-2.5 w-16">Bil.</th>
-                                <th class="border border-slate-300 p-2.5 text-left pl-4">Subjek</th>
-                                <th class="border border-slate-300 p-2.5">Jumlah Masa Seminggu</th>
-                                <th class="border border-slate-300 p-2.5">Waktu Berangkai (Double)</th>
-                                <th class="border border-slate-300 p-2.5">Waktu Tunggal (Single)</th>
-                                <th class="border border-slate-300 p-2.5 w-32">Tindakan</th>
+                                <th class="border border-slate-300 p-2.5 text-left pl-4">Nama Guru</th>
+                                <th class="border border-slate-300 p-2.5 text-left pl-4">Subjek & Kelas Opsyen</th>
+                                <th class="border border-slate-300 p-2.5">Jumlah Masa</th>
+                                <th class="border border-slate-300 p-2.5">Waktu Berangkai</th>
+                                <th class="border border-slate-300 p-2.5">Waktu Tunggal</th>
+                                <th class="border border-slate-300 p-2.5 w-28">Tindakan</th>
                             </tr>
                         </thead>
                         <tbody id="subject-time-config-tbody" class="font-medium">
-                            <tr><td colspan="6" class="p-6 text-slate-400 italic">Tiada tetapan masa subjek direkodkan lagi.</td></tr>
+                            <tr><td colspan="7" class="p-6 text-slate-400 italic">Tiada tetapan masa subjek guru direkodkan lagi.</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -388,31 +389,37 @@
         </section>
     </main>
 
-    <!-- MODAL TETAPAN MASA SUBJEK -->
+    <!-- MODAL TETAPAN MASA SUBJEK MENGIKUT GURU -->
     <div id="subject-time-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-sm hidden flex items-center justify-center z-50">
-        <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-2xl border space-y-5">
+        <div class="bg-white w-full max-w-lg p-6 rounded-2xl shadow-2xl border space-y-5 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="text-base font-bold text-[#0b1b3d]">Tetap Struktur Masa Subjek</h3>
+                <h3 class="text-base font-bold text-[#0b1b3d]">Tetap Struktur Masa Subjek Mengikut Guru</h3>
                 <button onclick="closeSubjectTimeConfigModal()" class="text-slate-400 font-bold text-sm">✕</button>
             </div>
             <div class="space-y-4 text-xs">
                 <div>
-                    <label class="font-semibold text-slate-700 block mb-1">Pilih Subjek</label>
-                    <select id="config-subjek" class="w-full px-3 py-2 border rounded-lg bg-slate-50 font-medium">
-                        <option value="">-- Sila Pilih Subjek --</option>
+                    <label class="font-semibold text-slate-700 block mb-1">Pilih Nama Guru</label>
+                    <select id="config-select-teacher" onchange="onConfigTeacherChange()" class="w-full px-3 py-2 border rounded-lg bg-slate-50 font-medium">
+                        <option value="">-- Sila Pilih Guru --</option>
                     </select>
                 </div>
                 <div>
-                    <label class="font-semibold text-slate-700 block mb-1">Jumlah Masa Seminggu</label>
-                    <input type="number" id="config-total-masa" value="4" class="w-full px-3 py-2 border rounded-lg bg-slate-50 font-medium">
+                    <label class="font-semibold text-slate-700 block mb-1">Subjek & Kelas Opsyen (Auto dari Data Asas)</label>
+                    <input type="text" id="config-teacher-subjects" readonly placeholder="Pilih guru di atas..." class="w-full px-3 py-2 border rounded-lg bg-slate-100 font-bold text-slate-700">
                 </div>
-                <div>
-                    <label class="font-semibold text-slate-700 block mb-1">Waktu Berangkai (Contoh: 1 slot = 2 masa berturut-turut)</label>
-                    <input type="number" id="config-berangkai" value="1" class="w-full px-3 py-2 border rounded-lg bg-slate-50 font-medium">
-                </div>
-                <div>
-                    <label class="font-semibold text-slate-700 block mb-1">Waktu Tunggal (Contoh: 2 slot masing-masing 1 masa)</label>
-                    <input type="number" id="config-tunggal" value="2" class="w-full px-3 py-2 border rounded-lg bg-slate-50 font-medium">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div>
+                        <label class="font-semibold text-slate-700 block mb-1">Jumlah Masa</label>
+                        <input type="number" id="config-total-masa" value="4" class="w-full px-3 py-2 border rounded-lg bg-slate-50 font-medium">
+                    </div>
+                    <div>
+                        <label class="font-semibold text-slate-700 block mb-1">Waktu Berangkai</label>
+                        <input type="number" id="config-berangkai" value="1" class="w-full px-3 py-2 border rounded-lg bg-slate-50 font-medium">
+                    </div>
+                    <div>
+                        <label class="font-semibold text-slate-700 block mb-1">Waktu Tunggal</label>
+                        <input type="number" id="config-tunggal" value="2" class="w-full px-3 py-2 border rounded-lg bg-slate-50 font-medium">
+                    </div>
                 </div>
             </div>
             <div class="flex justify-end space-x-2 pt-3 border-t">
@@ -631,7 +638,7 @@
         ];
 
         let blockedTimesData = [];
-        let subjectTimeConfigData = []; // Untuk simpan tetapan masa subjek
+        let subjectTimeConfigData = []; // Untuk simpan tetapan masa subjek mengikut guru
         let generatedTimetableData = {};
 
         async function loadDatabaseFromCloud() {
@@ -682,29 +689,49 @@
             }
         }
 
-        // --- Logik Tetapan Masa Subjek ---
+        // --- Logik Tetapan Masa Subjek Mengikut Guru ---
         window.openSubjectTimeConfigModal = function() {
-            let selectSubjek = document.getElementById('config-subjek');
-            selectSubjek.innerHTML = '<option value="">-- Sila Pilih Subjek --</option>';
-            (databaseRecords.subjek || []).forEach(sub => {
-                selectSubjek.innerHTML += `<option value="${sub.name}">${sub.name} (${sub.code})</option>`;
+            let selectTeacher = document.getElementById('config-select-teacher');
+            selectTeacher.innerHTML = '<option value="">-- Sila Pilih Guru --</option>';
+            (databaseRecords.guru || []).forEach(g => {
+                selectTeacher.innerHTML += `<option value="${g.name}">${g.name}</option>`;
             });
+            document.getElementById('config-teacher-subjects').value = '';
             document.getElementById('subject-time-modal').classList.remove('hidden');
         }
+
+        window.onConfigTeacherChange = function() {
+            let teacherName = document.getElementById('config-select-teacher').value;
+            let subField = document.getElementById('config-teacher-subjects');
+            if(!teacherName) {
+                subField.value = '';
+                return;
+            }
+            let guruRecord = (databaseRecords.guru || []).find(g => g.name === teacherName);
+            if(guruRecord && guruRecord.category) {
+                subField.value = guruRecord.category;
+            } else {
+                subField.value = 'Tiada opsyen subjek didaftarkan di Data Asas > Guru & Subjek.';
+            }
+        }
+
         window.closeSubjectTimeConfigModal = function() {
             document.getElementById('subject-time-modal').classList.add('hidden');
         }
+
         window.saveSubjectTimeConfig = function() {
-            let subjek = document.getElementById('config-subjek').value;
+            let teacher = document.getElementById('config-select-teacher').value;
+            let subjectsText = document.getElementById('config-teacher-subjects').value;
             let totalMasa = document.getElementById('config-total-masa').value;
             let berangkai = document.getElementById('config-berangkai').value;
             let tunggal = document.getElementById('config-tunggal').value;
 
-            if(!subjek) return alert('Sila pilih subjek terlebih dahulu.');
+            if(!teacher) return alert('Sila pilih nama guru terlebih dahulu.');
 
             subjectTimeConfigData.push({
                 id: Date.now(),
-                subjek,
+                teacher,
+                subjectsText,
                 totalMasa,
                 berangkai,
                 tunggal
@@ -713,24 +740,26 @@
             saveDatabaseToCloud();
             closeSubjectTimeConfigModal();
             renderSubjectTimeConfigTable();
-            alert('Tetapan masa subjek berjaya disimpan!');
+            alert('Tetapan masa subjek guru berjaya disimpan!');
         }
+
         function renderSubjectTimeConfigTable() {
             let tbody = document.getElementById('subject-time-config-tbody');
             if(!tbody) return;
             tbody.innerHTML = '';
             if(subjectTimeConfigData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-slate-400 italic">Tiada tetapan masa subjek direkodkan lagi.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-slate-400 italic">Tiada tetapan masa subjek guru direkodkan lagi.</td></tr>`;
                 return;
             }
             subjectTimeConfigData.forEach((item, index) => {
                 tbody.innerHTML += `
                     <tr class="border-b hover:bg-slate-50">
                         <td class="border p-2.5 font-bold text-slate-600">${index + 1}</td>
-                        <td class="border p-2.5 text-left pl-4 font-bold text-[#0b1b3d]">${item.subjek}</td>
-                        <td class="border p-2.5">${item.totalMasa} Masa</td>
-                        <td class="border p-2.5 text-indigo-700 font-bold">${item.berangkai} Slot Berangkai</td>
-                        <td class="border p-2.5 text-emerald-700 font-bold">${item.tunggal} Slot Tunggal</td>
+                        <td class="border p-2.5 text-left pl-4 font-bold text-[#0b1b3d]">${item.teacher}</td>
+                        <td class="border p-2.5 text-left pl-4 text-slate-700">${item.subjectsText}</td>
+                        <td class="border p-2.5 font-semibold">${item.totalMasa} Masa</td>
+                        <td class="border p-2.5 text-indigo-700 font-bold">${item.berangkai} Berangkai</td>
+                        <td class="border p-2.5 text-emerald-700 font-bold">${item.tunggal} Tunggal</td>
                         <td class="border p-2.5">
                             <button onclick="deleteSubjectTimeConfig(${item.id})" class="p-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow" title="Padam">🗑️</button>
                         </td>
@@ -738,6 +767,7 @@
                 `;
             });
         }
+
         window.deleteSubjectTimeConfig = function(id) {
             if(confirm('Adakah anda pasti ingin memadam tetapan ini?')) {
                 subjectTimeConfigData = subjectTimeConfigData.filter(x => x.id !== id);
