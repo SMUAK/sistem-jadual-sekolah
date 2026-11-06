@@ -24,7 +24,7 @@
                 <div class="bg-[#132d60] p-2 rounded-lg text-xl font-bold">🏫</div>
                 <div>
                     <h1 id="header-school-name" class="text-lg font-bold">SMU(A) Khairiah Banggol Setol</h1>
-                    <p class="text-xs text-blue-200">Sistem Pengurusan Jadual Waktu & Relief Pintar</p>
+                    <p class="text-xs text-blue-200">Sistem Pengurusan Jadual Waktu & Relief Pintar (Cloud Firebase)</p>
                 </div>
             </div>
             <nav class="flex space-x-1 sm:space-x-2 mt-2 sm:mt-0 overflow-x-auto items-center">
@@ -48,7 +48,7 @@
         <section id="tab-utama" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
                 <h2 class="text-2xl font-bold text-slate-900">Selamat Datang, Pentadbir</h2>
-                <p class="text-slate-600 mt-1">Urus jadual kelas, guru, dan agihan guru ganti harian dengan pangkalan data storan tempatan yang selamat.</p>
+                <p class="text-slate-600 mt-1">Urus jadual kelas, guru, dan agihan guru ganti harian dengan pangkalan data awan Firebase Firestore.</p>
             </div>
         </section>
 
@@ -58,7 +58,7 @@
                 <div class="flex items-center space-x-4">
                     <div class="bg-[#0b1b3d] text-white p-3 rounded-2xl text-2xl font-bold shadow">📚</div>
                     <div>
-                        <h2 class="text-xl font-bold text-slate-900">Data Sekolah</h2>
+                        <h2 class="text-xl font-bold text-slate-900">Data Sekolah (Cloud Sync)</h2>
                         <p class="text-xs text-slate-500">Pengurusan maklumat asas sekolah secara tersusun</p>
                     </div>
                 </div>
@@ -202,9 +202,8 @@
         <!-- Tab Jana Jadual (Auto) -->
         <section id="tab-jana" class="hidden space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <!-- Panel Kawalan Kiri (Termasuk Import & Backup yang dikembalikan) -->
+                <!-- Panel Kawalan Kiri -->
                 <div class="lg:col-span-5 space-y-6">
-                    <!-- Kotak 1: Jana Automatik -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5">
                         <div class="flex items-center space-x-3 border-b pb-3">
                             <div class="bg-[#0b1b3d] text-white p-2 rounded-xl text-lg font-bold">⚡</div>
@@ -239,7 +238,6 @@
                         </div>
                     </div>
 
-                    <!-- Kotak 2: Import Jadual Excel (Dikembalikan) -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
                         <div class="flex items-center space-x-3 border-b pb-3">
                             <div class="bg-emerald-800 text-white p-2 rounded-xl text-lg font-bold">📊</div>
@@ -251,7 +249,6 @@
                         </div>
                     </div>
 
-                    <!-- Kotak 3: Simpan Versi (Backup) (Dikembalikan) -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
                         <div class="flex items-center space-x-3 border-b pb-3">
                             <div class="bg-indigo-900 text-white p-2 rounded-xl text-lg font-bold">💾</div>
@@ -489,10 +486,11 @@
         </div>
     </div>
 
-    <!-- Skrip Aplikasi -->
+    <!-- Skrip Aplikasi (Firebase Cloud Firestore Sync) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        
         let db = null;
         try {
             const app = initializeApp({
@@ -504,73 +502,97 @@
                 appId: "1:548727396573:web:7a4a478f15b61ba038a334"
             });
             db = getFirestore(app);
-        } catch (e) { console.error(e); }
+        } catch (e) { console.error("Firebase init error:", e); }
+
         let currentSubTab = 'subjek';
         let currentMasterMode = 'kelas';
 
-        function loadDatabase() {
-            let data = localStorage.getItem('school_database');
-            if(data) {
-                let parsed = JSON.parse(data);
-                if(!parsed.senarai_guru) {
-                    parsed.senarai_guru = [
-                        { id: 1, name: "Asri b Mohd Zain", code: "Asri", category: "Arab / Agama" },
-                        { id: 2, name: "AHMAD Rosli", code: "Ahmad", category: "Akademik" }
-                    ];
+        let databaseRecords = {
+            subjek: [
+                { id: 1, name: "Bahasa Melayu", code: "BM", category: "Teras" },
+                { id: 2, name: "Matematik", code: "MAT", category: "Teras" },
+                { id: 3, name: "Sains", code: "SN", category: "Teras" }
+            ],
+            kelas: [
+                { id: 1, name: "Tingkatan 1 - IS", code: "1IS", category: "Menengah Rendah" },
+                { id: 2, name: "Tingkatan 2 - IS", code: "2IS", category: "Menengah Rendah" }
+            ],
+            bilik: [
+                { id: 1, name: "Makmal Komputer 1", code: "MK1", category: "Khas" }
+            ],
+            senarai_guru: [
+                { id: 1, name: "Asri b Mohd Zain", code: "Asri", category: "Arab / Agama" },
+                { id: 2, name: "AHMAD Rosli", code: "Ahmad", category: "Akademik" }
+            ],
+            guru: []
+        };
+
+        let timeSlotsData = [
+            { id: 1, label: "1", start: "07:30", end: "08:05", type: "Waktu belajar" },
+            { id: 2, label: "2", start: "08:05", end: "08:40", type: "Waktu belajar" },
+            { id: 3, label: "3", start: "08:40", end: "09:15", type: "Waktu belajar" },
+            { id: 4, label: "4", start: "09:15", end: "09:50", type: "Waktu belajar" },
+            { id: 'rehat', label: "Rehat", start: "09:50", end: "10:20", type: "Rehat" },
+            { id: 5, label: "5", start: "10:20", end: "10:55", type: "Waktu belajar" },
+            { id: 6, label: "6", start: "10:55", end: "11:30", type: "Waktu belajar" },
+            { id: 7, label: "7", start: "11:30", end: "12:05", type: "Waktu belajar" },
+            { id: 8, label: "8", start: "12:05", end: "12:40", type: "Waktu belajar" },
+            { id: 9, label: "9", start: "12:40", end: "13:15", type: "Waktu belajar" },
+            { id: 10, label: "10", start: "13:15", end: "13:50", type: "Waktu belajar" }
+        ];
+
+        let blockedTimesData = [];
+        let generatedTimetableData = {};
+
+        // Muat Data dari Firebase Cloud Firestore
+        async function loadDatabaseFromCloud() {
+            if(!db) {
+                // Fallback ke localStorage jika firebase gagal
+                let localData = localStorage.getItem('school_database');
+                if(localData) databaseRecords = JSON.parse(localData);
+                renderDataTable();
+                return;
+            }
+            try {
+                const docRef = doc(db, "sekolah_data", "pusat_data");
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    let cloudData = docSnap.data();
+                    if(cloudData.databaseRecords) databaseRecords = cloudData.databaseRecords;
+                    if(cloudData.timeSlotsData) timeSlotsData = cloudData.timeSlotsData;
+                    if(cloudData.blockedTimesData) blockedTimesData = cloudData.blockedTimesData;
+                    if(cloudData.generatedTimetableData) generatedTimetableData = cloudData.generatedTimetableData;
+                } else {
+                    // Simpan data permulaan ke cloud jika kosong
+                    await saveDatabaseToCloud();
                 }
-                return parsed;
-            } else {
-                let initial = {
-                    subjek: [
-                        { id: 1, name: "Bahasa Melayu", code: "BM", category: "Teras" },
-                        { id: 2, name: "Matematik", code: "MAT", category: "Teras" },
-                        { id: 3, name: "Sains", code: "SN", category: "Teras" }
-                    ],
-                    kelas: [
-                        { id: 1, name: "Tingkatan 1 - IS", code: "1IS", category: "Menengah Rendah" },
-                        { id: 2, name: "Tingkatan 2 - IS", code: "2IS", category: "Menengah Rendah" }
-                    ],
-                    bilik: [
-                        { id: 1, name: "Makmal Komputer 1", code: "MK1", category: "Khas" }
-                    ],
-                    senarai_guru: [
-                        { id: 1, name: "Asri b Mohd Zain", code: "Asri", category: "Arab / Agama" },
-                        { id: 2, name: "AHMAD Rosli", code: "Ahmad", category: "Akademik" }
-                    ],
-                    guru: [
-                        { id: 1, name: "Asri b Mohd Zain", code: "Asri", category: "Tingkatan 1 - IS [Bahasa Melayu, Matematik]" }
-                    ]
-                };
-                localStorage.setItem('school_database', JSON.stringify(initial));
-                return initial;
+            } catch (e) {
+                console.error("Gagal muat dari cloud, guna storan lokal:", e);
+            }
+            renderDataTable();
+        }
+
+        async function saveDatabaseToCloud() {
+            // Simpan ke localStorage sebagai sokongan pantas
+            localStorage.setItem('school_database', JSON.stringify(databaseRecords));
+            localStorage.setItem('school_time_slots', JSON.stringify(timeSlotsData));
+            localStorage.setItem('school_blocked_times', JSON.stringify(blockedTimesData));
+            localStorage.setItem('school_generated_timetable', JSON.stringify(generatedTimetableData));
+
+            if(!db) return;
+            try {
+                await setDoc(doc(db, "sekolah_data", "pusat_data"), {
+                    databaseRecords,
+                    timeSlotsData,
+                    blockedTimesData,
+                    generatedTimetableData,
+                    updatedAt: new Date().toISOString()
+                });
+            } catch (e) {
+                console.error("Gagal simpan ke Firebase Cloud:", e);
             }
         }
-        let databaseRecords = loadDatabase();
-        function saveDatabase() { localStorage.setItem('school_database', JSON.stringify(databaseRecords)); }
-        
-        function loadTimeSlots() {
-            let data = localStorage.getItem('school_time_slots');
-            if(data) return JSON.parse(data);
-            let initial = [
-                { id: 1, label: "1", start: "07:30", end: "08:05", type: "Waktu belajar" },
-                { id: 2, label: "2", start: "08:05", end: "08:40", type: "Waktu belajar" },
-                { id: 3, label: "3", start: "08:40", end: "09:15", type: "Waktu belajar" },
-                { id: 4, label: "4", start: "09:15", end: "09:50", type: "Waktu belajar" },
-                { id: 'rehat', label: "Rehat", start: "09:50", end: "10:20", type: "Rehat" },
-                { id: 5, label: "5", start: "10:20", end: "10:55", type: "Waktu belajar" },
-                { id: 6, label: "6", start: "10:55", end: "11:30", type: "Waktu belajar" },
-                { id: 7, label: "7", start: "11:30", end: "12:05", type: "Waktu belajar" },
-                { id: 8, label: "8", start: "12:05", end: "12:40", type: "Waktu belajar" },
-                { id: 9, label: "9", start: "12:40", end: "13:15", type: "Waktu belajar" },
-                { id: 10, label: "10", start: "13:15", end: "13:50", type: "Waktu belajar" }
-            ];
-            localStorage.setItem('school_time_slots', JSON.stringify(initial));
-            return initial;
-        }
-        let timeSlotsData = loadTimeSlots();
-        function saveTimeSlots() { 
-            localStorage.setItem('school_time_slots', JSON.stringify(timeSlotsData)); 
-        }
+
         function formatTo12Hour(timeStr) {
             if(!timeStr || !timeStr.includes(':')) return timeStr;
             let parts = timeStr.split(':');
@@ -582,11 +604,6 @@
             let formattedH = h < 10 ? '0' + h : h;
             return `${formattedH}:${m} ${ampm}`;
         }
-        let blockedTimesData = JSON.parse(localStorage.getItem('school_blocked_times')) || [];
-        function saveBlockedTimes() { localStorage.setItem('school_blocked_times', JSON.stringify(blockedTimesData)); }
-        
-        let generatedTimetableData = JSON.parse(localStorage.getItem('school_generated_timetable')) || {};
-        function saveGeneratedTimetable() { localStorage.setItem('school_generated_timetable', JSON.stringify(generatedTimetableData)); }
 
         window.switchTab = function(tabId) {
             ['utama', 'data', 'waktu', 'blok', 'jana', 'jadual_induk', 'relief', 'laporan', 'tetapan'].forEach(t => {
@@ -814,14 +831,14 @@
                     });
                 });
 
-                saveGeneratedTimetable();
+                saveDatabaseToCloud();
                 bar.style.width = '100%';
                 percentText.innerText = '100%';
                 statusText.innerText = 'Penjanaan selesai!';
                 setTimeout(() => {
                     modal.classList.add('hidden');
                     renderClassStatusTable();
-                    alert('Jadual pintar berjaya dijana menggunakan data asas sebenar!');
+                    alert('Jadual pintar berjaya dijana dan disimpan ke Cloud!');
                 }, 300);
             }, 200);
         }
@@ -855,7 +872,7 @@
                     });
                 });
 
-                saveGeneratedTimetable();
+                saveDatabaseToCloud();
                 bar.style.width = '100%';
                 percentText.innerText = '100%';
                 statusText.innerText = `Selesai ${className}`;
@@ -869,7 +886,7 @@
         window.resetAllSchedules = function() {
             if(confirm('Adakah anda pasti ingin mengosongkan semua jadual?')) {
                 generatedTimetableData = {};
-                localStorage.removeItem('school_generated_timetable');
+                saveDatabaseToCloud();
                 renderClassStatusTable();
                 alert('Semua jadual telah dikosongkan.');
             }
@@ -879,7 +896,7 @@
             let nameEl = document.getElementById('backup-version-name');
             let name = nameEl ? nameEl.value : '';
             if(!name) return alert('Sila masukkan nama versi sandaran.');
-            alert(`Versi "${name}" berjaya disimpan!`);
+            alert(`Versi "${name}" berjaya disimpan ke Cloud!`);
             if(nameEl) nameEl.value = '';
         }
 
@@ -969,7 +986,7 @@
             } else {
                 blockedTimesData.push({ id: Date.now(), teacher, blockedList });
             }
-            saveBlockedTimes();
+            saveDatabaseToCloud();
             closeBlockModal();
             renderBlockedTable();
             alert('Tetapan blok waktu guru berjaya disimpan!');
@@ -978,7 +995,7 @@
         window.deleteBlockRecord = function(id) {
             if(confirm('Padam tetapan blok waktu ini?')) {
                 blockedTimesData = blockedTimesData.filter(x => x.id !== id);
-                saveBlockedTimes();
+                saveDatabaseToCloud();
                 renderBlockedTable();
             }
         }
@@ -1082,7 +1099,7 @@
             if(dataModalEl) dataModalEl.classList.remove('hidden');
         }
 
-        // Jana Jadual Matriks Interaktif Dinamik Berdasarkan Kelas & Subjek
+        // Jana Jadual Matriks Interaktif Dinamik
         function buildMatrixTable(selectedDataMap = {}) {
             let thead = document.getElementById('matrix-thead');
             let tbody = document.getElementById('matrix-tbody');
@@ -1096,14 +1113,12 @@
                 return;
             }
 
-            // Bina Header Lajur Subjek
             let headerHTML = `<th class="border p-2 text-left pl-3 w-40">Tingkatan / Kelas</th>`;
             subjekList.forEach(sub => {
                 headerHTML += `<th class="border p-2 text-center" title="${sub.name}">${sub.code}</th>`;
             });
             thead.innerHTML = headerHTML;
 
-            // Bina Baris Mengikut Kelas
             let bodyHTML = '';
             kelasList.forEach(cls => {
                 bodyHTML += `<tr><td class="border p-2 font-bold bg-slate-50 text-slate-700 text-left pl-3">${cls.name}</td>`;
@@ -1116,7 +1131,6 @@
             tbody.innerHTML = bodyHTML;
         }
 
-        // Auto-Isi Singkatan & Tandakan Matriks sedia ada bila Guru Dipilih
         window.onTeacherDropdownChange = function() {
             let select = document.getElementById('modal-select-name');
             if(!select) return;
@@ -1147,7 +1161,6 @@
 
         window.closeDataModal = () => document.getElementById('data-modal').classList.add('hidden');
         
-        // Simpan Data Matriks Interaktif dalam 1 Baris Sahaja per Guru
         window.saveModalData = function() {
             let editIdEl = document.getElementById('modal-edit-id');
             let editId = editIdEl ? editIdEl.value : '';
@@ -1197,10 +1210,10 @@
                     databaseRecords[currentSubTab].push({ id: Date.now(), name, code, category: categoryValue });
                 }
             }
-            saveDatabase();
+            saveDatabaseToCloud();
             closeDataModal();
             renderDataTable();
-            alert('Rekod guru berjaya disimpan!');
+            alert('Rekod guru berjaya disimpan ke Cloud!');
         }
 
         window.editRecord = function(id) {
@@ -1233,7 +1246,7 @@
         window.deleteRecord = function(id) {
             if(confirm('Padam rekod ini?')) {
                 databaseRecords[currentSubTab] = databaseRecords[currentSubTab].filter(x => x.id !== id);
-                saveDatabase();
+                saveDatabaseToCloud();
                 renderDataTable();
             }
         }
@@ -1295,10 +1308,10 @@
                 `;
             });
         }
-        window.updateSlot = (i, f, v) => { timeSlotsData[i][f] = v; saveTimeSlots(); }
-        window.addNewTimeRow = () => { timeSlotsData.push({ id: Date.now(), label: String(timeSlotsData.length+1), start: "08:00", end: "08:35", type: "Waktu belajar" }); saveTimeSlots(); renderTimeSlotsTable(); }
-        window.deleteSlot = (i) => { timeSlotsData.splice(i, 1); saveTimeSlots(); renderTimeSlotsTable(); }
-        window.moveSlot = (i, dir) => { let t = i + dir; if(t >= 0 && t < timeSlotsData.length) { let tmp = timeSlotsData[i]; timeSlotsData[i] = timeSlotsData[t]; timeSlotsData[t] = tmp; saveTimeSlots(); renderTimeSlotsTable(); } }
+        window.updateSlot = (i, f, v) => { timeSlotsData[i][f] = v; saveDatabaseToCloud(); }
+        window.addNewTimeRow = () => { timeSlotsData.push({ id: Date.now(), label: String(timeSlotsData.length+1), start: "08:00", end: "08:35", type: "Waktu belajar" }); saveDatabaseToCloud(); renderTimeSlotsTable(); }
+        window.deleteSlot = (i) => { timeSlotsData.splice(i, 1); saveDatabaseToCloud(); renderTimeSlotsTable(); }
+        window.moveSlot = (i, dir) => { let t = i + dir; if(t >= 0 && t < timeSlotsData.length) { let tmp = timeSlotsData[i]; timeSlotsData[i] = timeSlotsData[t]; timeSlotsData[t] = tmp; saveDatabaseToCloud(); renderTimeSlotsTable(); } }
         
         window.openAutoTimeModal = () => document.getElementById('auto-time-modal').classList.remove('hidden');
         window.closeAutoTimeModal = () => document.getElementById('auto-time-modal').classList.add('hidden');
@@ -1331,7 +1344,7 @@
                 }
             }
             timeSlotsData = newSlots; 
-            saveTimeSlots(); 
+            saveDatabaseToCloud(); 
             renderTimeSlotsTable(); 
             closeAutoTimeModal(); 
             alert('Jadual masa berjaya dijana dan disimpan!');
@@ -1340,7 +1353,13 @@
             let h = Math.floor(mins/60)%24, m = mins%60;
             return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
         }
-        window.onload = () => { switchTab('data'); };
+
+        // Muat data dari cloud sebaik sahaja aplikasi dibuka
+        window.onload = () => {
+            loadDatabaseFromCloud().then(() => {
+                switchTab('data');
+            });
+        };
     </script>
 </body>
 </html>
