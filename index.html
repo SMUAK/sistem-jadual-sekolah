@@ -43,7 +43,6 @@
             </nav>
         </div>
     </header>
-
     <!-- Kandungan Utama -->
     <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-6 space-y-6">
         
@@ -54,7 +53,6 @@
                 <p class="text-slate-600 mt-1">Urus jadual kelas, guru, dan agihan guru ganti harian dengan selamat menggunakan pangkalan data awan Firebase.</p>
             </div>
         </section>
-
         <!-- TAB DATA ASAS -->
         <section id="tab-data" class="space-y-6">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-wrap justify-between items-center gap-4">
@@ -105,7 +103,6 @@
                 </div>
             </div>
         </section>
-
         <!-- Tab Waktu & Rehat -->
         <section id="tab-waktu" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
@@ -169,15 +166,14 @@
                 </div>
             </div>
         </section>
-
-        <!-- TAB GURU MATA PELAJARAN (Dikemaskini daripada Fail 2) -->
+        <!-- TAB GURU MATA PELAJARAN (Dikemaskini Warna Krem & Nama Guru) -->
         <section id="tab-guru_matapelajaran" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                 <div class="flex items-center space-x-3 border-b pb-3 mb-4">
                     <div class="bg-[#0b1b3d] text-white p-2.5 rounded-xl text-xl font-bold">👨‍🏫</div>
                     <div>
                         <h2 class="text-lg font-bold text-[#0b1b3d]">Pengurusan Guru Mata Pelajaran (Matriks Agihan & Agihan Kelas)</h2>
-                        <p class="text-xs text-slate-500">Warna hijau sorotan hanya muncul pada item yang diklik sahaja</p>
+                        <p class="text-xs text-slate-500">Klik subjek pada senarai pokok untuk memaparkan nama guru dan menukar warna latar kepada krem</p>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
@@ -204,7 +200,6 @@
                 </div>
             </div>
         </section>
-
         <!-- Tab Tetapan Masa Subjek -->
         <section id="tab-tetapan_masa_subjek" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
@@ -233,7 +228,6 @@
                 </div>
             </div>
         </section>
-
         <!-- Tab Blok Waktu -->
         <section id="tab-blok" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-wrap justify-between items-center gap-4">
@@ -264,7 +258,6 @@
                 </div>
             </div>
         </section>
-
         <!-- Tab Jana Jadual (Auto) -->
         <section id="tab-jana" class="hidden space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -344,7 +337,6 @@
                 </div>
             </div>
         </section>
-
         <!-- TAB: JADUAL INDUK -->
         <section id="tab-jadual_induk" class="hidden space-y-6">
             <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex flex-wrap justify-between items-center gap-4">
@@ -374,7 +366,6 @@
                 </div>
             </div>
         </section>
-
         <!-- Tab Lain -->
         <section id="tab-relief" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Modul Guru Ganti</div></section>
         <section id="tab-laporan" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Modul Laporan</div></section>
@@ -413,7 +404,6 @@
             </div>
         </section>
     </main>
-
     <!-- MODAL PROGRESS JANA JADUAL -->
     <div id="generation-progress-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-sm hidden flex items-center justify-center z-50">
         <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-2xl border space-y-5">
@@ -432,7 +422,6 @@
             </div>
         </div>
     </div>
-
     <!-- MODAL BLOK WAKTU -->
     <div id="block-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-sm hidden flex items-center justify-center z-50">
         <div class="bg-white w-full max-w-4xl p-6 rounded-2xl shadow-2xl border space-y-5 max-h-[90vh] overflow-y-auto">
@@ -473,7 +462,6 @@
             </div>
         </div>
     </div>
-
     <!-- MODAL DATA ASAS -->
     <div id="data-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-sm hidden flex items-center justify-center z-50">
         <div class="bg-white w-full max-w-3xl p-6 rounded-2xl shadow-2xl border space-y-5 max-h-[90vh] overflow-y-auto">
@@ -527,7 +515,6 @@
             </div>
         </div>
     </div>
-
     <!-- MODAL JANA PANTAS WAKTU -->
     <div id="auto-time-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-sm hidden flex items-center justify-center z-50">
         <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-2xl border space-y-5">
@@ -563,7 +550,6 @@
             </div>
         </div>
     </div>
-
     <!-- Skrip Aplikasi Utama -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -581,7 +567,6 @@
             });
             db = getFirestore(app);
         } catch (e) { console.error("Ralat permulaan Firebase:", e); }
-
         let currentSubTab = 'subjek';
         let currentMasterMode = 'kelas';
         let databaseRecords = {
@@ -631,8 +616,7 @@
         ];
         let blockedTimesData = [];
         let generatedTimetableData = {};
-
-        // Data Struktur Agihan Guru Mata Pelajaran (GMP) dari Fail 2
+        // Data Struktur Agihan Guru Mata Pelajaran (GMP)
         let gmpAllocations = {
             "Tingkatan 1 - IS_BM": "Ahmad",
             "Tingkatan 2 - IS_BM": "Ahmad",
@@ -643,7 +627,6 @@
             "AHMAD ROSLI": true
         };
         let selectedActiveSubItem = null;
-
         async function loadDatabaseFromCloud() {
             if(!db) {
                 let localData = localStorage.getItem('school_database');
@@ -671,7 +654,6 @@
             }
             renderDataTable();
         }
-
         async function saveDatabaseToCloud() {
             localStorage.setItem('school_database', JSON.stringify(databaseRecords));
             localStorage.setItem('school_time_slots', JSON.stringify(timeSlotsData));
@@ -692,7 +674,6 @@
                 console.error("Gagal menyimpan data ke pangkalan data awan:", e);
             }
         }
-
         // Eksport & Import JSON
         window.exportJsonData = function() {
             let backupData = {
@@ -711,7 +692,6 @@
             downloadAnchor.click();
             downloadAnchor.remove();
         }
-
         window.importJsonData = function(event) {
             let file = event.target.files[0];
             if(!file) return;
@@ -735,7 +715,6 @@
             };
             reader.readAsText(file);
         }
-
         function formatTo12Hour(timeStr) {
             if(!timeStr || !timeStr.includes(':')) return timeStr;
             let parts = timeStr.split(':');
@@ -747,7 +726,6 @@
             let formattedH = h < 10 ? '0' + h : h;
             return `${formattedH}:${m} ${ampm}`;
         }
-
         // FUNGSI TUKAR TAB NAVIGASI UTAMA
         window.switchTab = function(tabId) {
             const tabs = ['utama', 'data', 'waktu', 'guru_matapelajaran', 'tetapan_masa_subjek', 'blok', 'jana', 'jadual_induk', 'relief', 'laporan', 'tetapan'];
@@ -775,9 +753,8 @@
             if(tabId === 'jana') initJanaAutoTab();
             if(tabId === 'jadual_induk') initMasterTimetableTab();
         }
-
         // ==========================================
-        // MODUL GURU MATA PELAJARAN (GMP) BERJAYA DARI FAIL 2
+        // MODUL GURU MATA PELAJARAN (GMP) KEMASKINI WARNA KREM & NAMA GURU
         // ==========================================
         function renderGMPMatrix() {
             const thead = document.getElementById('gmp-matrix-thead');
@@ -797,18 +774,29 @@
                     let key = `${cls.name}_${s.code}`;
                     let assignedTeacher = gmpAllocations[key] || '';
                     
+                    // Semak jika item ini dipilih (klik pada pokok sebelah kiri)
                     let isCellActive = selectedActiveSubItem && 
                                        selectedActiveSubItem.kelas.toLowerCase() === cls.name.toLowerCase() && 
                                        selectedActiveSubItem.subjekCode.toLowerCase() === s.code.toLowerCase();
+                    
+                    // Warna krem (bg-amber-150 / #fef08a) apabila aktif
                     let bgCellClass = isCellActive 
-                        ? 'bg-emerald-200 text-emerald-950 font-extrabold border-2 border-dashed border-emerald-600 shadow-sm' 
+                        ? 'bg-[#fef08a] text-slate-950 font-extrabold border-2 border-dashed border-amber-600 shadow-sm' 
                         : 'bg-white text-slate-800 hover:bg-slate-50';
+                    
+                    // Paparkan nama guru jika ada agihan, atau nama pendek guru berdasarkan padanan opsyen
+                    let displayTeacherName = assignedTeacher;
+                    if(!displayTeacherName && isCellActive && selectedActiveSubItem.teacher) {
+                        // Ambil nama pendek / kod guru yang dipilih
+                        let foundG = (databaseRecords.senarai_guru || []).find(g => g.name.toLowerCase() === selectedActiveSubItem.teacher.toLowerCase());
+                        displayTeacherName = foundG ? foundG.code : selectedActiveSubItem.teacher;
+                    }
 
                     bodyHTML += `
                         <td class="border border-slate-300 p-1.5 text-center relative cursor-pointer transition ${bgCellClass}"
                             onclick="onMatrixCellClick(event, '${cls.name}', '${s.code}', '${assignedTeacher}')">
                             <div class="flex items-center justify-center space-x-0.5 font-medium">
-                                ${assignedTeacher ? `<span class="${isCellActive ? 'text-emerald-950 font-extrabold' : 'text-slate-800'} text-[11px] font-bold">${assignedTeacher}</span>` : '<span class="text-slate-300 text-[10px]">-</span>'}
+                                ${displayTeacherName ? `<span class="text-[11px] font-bold">${displayTeacherName}</span>` : '<span class="text-slate-300 text-[10px]">-</span>'}
                             </div>
                         </td>
                     `;
@@ -817,7 +805,6 @@
             });
             tbody.innerHTML = bodyHTML;
         }
-
         function renderGMPTree() {
             const container = document.getElementById('gmp-teacher-tree');
             if(!container) return;
@@ -830,7 +817,6 @@
                 let totalMasa = 0;
                 let subDetailsHTML = '';
                 let isExpanded = expandedTeachersMap[sg.name] !== undefined ? expandedTeachersMap[sg.name] : true;
-
                 if(teacherRecord && teacherRecord.category) {
                     let segments = teacherRecord.category.split(' | ');
                     segments.forEach(seg => {
@@ -843,19 +829,18 @@
                                 let sNameOrCode = subMatch ? subMatch[1].trim() : sd;
                                 let masa = subMatch ? parseInt(subMatch[2]) : 2;
                                 totalMasa += masa;
-
                                 let foundSub = (databaseRecords.subjek || []).find(s => s.name.toLowerCase() === sNameOrCode.toLowerCase() || s.code.toLowerCase() === sNameOrCode.toLowerCase());
                                 let sCode = foundSub ? foundSub.code : sNameOrCode;
-
+                                
                                 let isSubSelected = selectedActiveSubItem && 
                                                     selectedActiveSubItem.teacher.toLowerCase() === sg.name.toLowerCase() &&
                                                     selectedActiveSubItem.kelas.toLowerCase() === cName.toLowerCase() &&
                                                     selectedActiveSubItem.subjekCode.toLowerCase() === sCode.toLowerCase();
                                 
+                                // Gaya warna krem (bg-amber-100) dan sempadan putus-putus apabila item pokok diklik
                                 let itemClass = isSubSelected 
-                                    ? 'bg-emerald-200 text-emerald-950 font-bold px-1.5 py-0.5 rounded border border-dashed border-emerald-600 shadow-sm' 
+                                    ? 'bg-[#fef08a] text-slate-950 font-bold px-1.5 py-0.5 rounded border border-dashed border-amber-600 shadow-sm' 
                                     : 'text-slate-700 hover:bg-slate-200/60 px-1 py-0.5 rounded';
-
                                 subDetailsHTML += `
                                     <div class="tree-line my-0.5">
                                         <span onclick="selectSubTreeItem('${sg.name}', '${cName}', '${sCode}')" class="cursor-pointer inline-block ${itemClass}">
@@ -867,7 +852,6 @@
                         }
                     });
                 }
-
                 container.innerHTML += `
                     <div class="tree-node mb-1">
                         <div class="font-bold text-[#0b1b3d] flex items-center space-x-1 cursor-pointer select-none">
@@ -885,12 +869,10 @@
                 `;
             });
         }
-
         window.toggleTeacherExpand = function(teacherName) {
             expandedTeachersMap[teacherName] = !expandedTeachersMap[teacherName];
             renderGMPTree();
         };
-
         window.selectSubTreeItem = function(teacherName, kelas, subjekCode) {
             if (selectedActiveSubItem && 
                 selectedActiveSubItem.teacher.toLowerCase() === teacherName.toLowerCase() &&
@@ -899,11 +881,15 @@
                 selectedActiveSubItem = null;
             } else {
                 selectedActiveSubItem = { teacher: teacherName, kelas: kelas, subjekCode: subjekCode };
+                // Automatik kemaskini agihan gmpAllocations supaya nama guru terus muncul pada matriks
+                let key = `${kelas}_${subjekCode}`;
+                let foundG = (databaseRecords.senarai_guru || []).find(g => g.name.toLowerCase() === teacherName.toLowerCase());
+                gmpAllocations[key] = foundG ? foundG.code : teacherName;
+                saveDatabaseToCloud();
             }
             renderGMPTree();
             renderGMPMatrix();
         };
-
         window.onMatrixCellClick = function(e, kelas, subjekCode, teacherName) {
             e.preventDefault();
             if(teacherName) {
@@ -923,7 +909,6 @@
             renderGMPTree();
             renderGMPMatrix();
         };
-
         // Tab Tetapan Masa Subjek Mengikut Guru
         function renderSubjectTimeConfigTable() {
             let tbody = document.getElementById('subject-time-config-tbody');
@@ -944,7 +929,6 @@
                 `;
             });
         }
-
         // Modul Jadual Induk
         window.switchMasterTab = function(mode) {
             currentMasterMode = mode;
@@ -963,12 +947,10 @@
             populateMasterDropdown();
             renderMasterTimetable();
         }
-
         function initMasterTimetableTab() {
             populateMasterDropdown();
             renderMasterTimetable();
         }
-
         function populateMasterDropdown() {
             let select = document.getElementById('master-select-target');
             if(!select) return;
@@ -983,7 +965,6 @@
                 });
             }
         }
-
         window.renderMasterTimetable = function() {
             let selectTargetEl = document.getElementById('master-select-target');
             let selectTarget = selectTargetEl ? selectTargetEl.value : '';
@@ -1045,7 +1026,6 @@
                 tbody.innerHTML += `<tr>${trHTML}</tr>`;
             });
         }
-
         // Tab Jana Jadual (Auto)
         function initJanaAutoTab() {
             const selectClass = document.getElementById('auto-select-class');
@@ -1056,7 +1036,6 @@
             });
             renderClassStatusTable();
         }
-
         function renderClassStatusTable() {
             const tbody = document.getElementById('class-status-tbody');
             if(!tbody) return;
@@ -1104,7 +1083,6 @@
                 `;
             });
         }
-
         window.startAutoGeneration = function() {
             let targetClass = document.getElementById('auto-select-class').value;
             let classesToProcess = targetClass === 'Semua' ? (databaseRecords.kelas || []) : (databaseRecords.kelas || []).filter(k => k.name === targetClass);
@@ -1112,7 +1090,6 @@
             let subjects = databaseRecords.subjek || [];
             let teachers = databaseRecords.guru || [];
             if(subjects.length === 0 || teachers.length === 0) return alert('Sila pastikan data Subjek dan Guru diisi.');
-
             let modal = document.getElementById('generation-progress-modal');
             let bar = document.getElementById('progress-bar-fill');
             let statusText = document.getElementById('progress-status-text');
@@ -1152,7 +1129,6 @@
                 }, 300);
             }, 200);
         }
-
         window.janaSingleClass = function(className) {
             let modal = document.getElementById('generation-progress-modal');
             let bar = document.getElementById('progress-bar-fill');
@@ -1185,7 +1161,6 @@
                 }, 300);
             }, 200);
         }
-
         window.resetAllSchedules = function() {
             if(confirm('Adakah anda pasti ingin mengosongkan semua jadual?')) {
                 generatedTimetableData = {};
@@ -1202,7 +1177,6 @@
             alert(`Versi "${name}" berjaya disimpan!`);
             if(nameEl) nameEl.value = '';
         }
-
         // Blok Waktu
         function renderBlockedTable() {
             const tbody = document.getElementById('block-table-body');
@@ -1229,7 +1203,6 @@
                 `;
             });
         }
-
         window.openBlockModal = function(editId = null) {
             let editIdEl = document.getElementById('block-edit-id');
             if(editIdEl) editIdEl.value = editId || '';
@@ -1272,7 +1245,6 @@
             }
             document.getElementById('block-modal').classList.remove('hidden');
         }
-
         window.closeBlockModal = () => document.getElementById('block-modal').classList.add('hidden');
         window.saveBlockRecord = function() {
             let editIdEl = document.getElementById('block-edit-id');
@@ -1296,7 +1268,6 @@
             renderBlockedTable();
             alert('Tetapan blok waktu guru berjaya disimpan!');
         }
-
         window.editBlockRecord = (id) => openBlockModal(id);
         window.deleteBlockRecord = function(id) {
             if(confirm('Adakah anda pasti ingin memadam tetapan blok waktu ini?')) {
@@ -1305,7 +1276,6 @@
                 renderBlockedTable();
             }
         }
-
         // Data Asas
         window.switchDataSubTab = function(subTab) {
             currentSubTab = subTab;
@@ -1315,7 +1285,6 @@
             });
             renderDataTable();
         }
-
         function renderDataTable() {
             const tbody = document.getElementById('data-table-body');
             const totalCountEl = document.getElementById('total-stat-count');
@@ -1348,7 +1317,6 @@
                 `;
             });
         }
-
         window.openAddModal = function() {
             let tabDisplayName = currentSubTab.toUpperCase().replace('_', ' ');
             let modalTitleEl = document.getElementById('modal-title');
@@ -1403,7 +1371,6 @@
             let dataModalEl = document.getElementById('data-modal');
             if(dataModalEl) dataModalEl.classList.remove('hidden');
         }
-
         function buildMatrixTable(selectedDataMap = {}) {
             let thead = document.getElementById('matrix-thead');
             let tbody = document.getElementById('matrix-tbody');
@@ -1439,7 +1406,6 @@
             });
             tbody.innerHTML = bodyHTML;
         }
-
         window.toggleMasaInput = function(cb) {
             let tr = cb.closest('td');
             let masaInput = tr.querySelector('input[name="matrix-masa"]');
@@ -1449,7 +1415,6 @@
                 masaInput.classList.add('hidden');
             }
         }
-
         window.onTeacherDropdownChange = function() {
             let select = document.getElementById('modal-select-name');
             if(!select) return;
@@ -1484,9 +1449,7 @@
                 buildMatrixTable(parsedMap);
             }
         }
-
         window.closeDataModal = () => document.getElementById('data-modal').classList.add('hidden');
-
         window.saveModalData = function() {
             let editIdEl = document.getElementById('modal-edit-id');
             let editId = editIdEl ? editIdEl.value : '';
@@ -1541,7 +1504,6 @@
             renderDataTable();
             alert('Rekod berjaya disimpan ke pangkalan data awan!');
         }
-
         window.editRecord = function(id) {
             let item = databaseRecords[currentSubTab].find(x => x.id == id);
             if(!item) return;
@@ -1568,7 +1530,6 @@
                 }
             }
         }
-
         window.deleteRecord = function(id) {
             if(confirm('Adakah anda pasti ingin memadam rekod ini?')) {
                 databaseRecords[currentSubTab] = databaseRecords[currentSubTab].filter(x => x.id !== id);
@@ -1576,7 +1537,6 @@
                 renderDataTable();
             }
         }
-
         window.filterTableData = function() {
             let searchInput = document.getElementById('search-data-input');
             let q = searchInput ? searchInput.value.toLowerCase() : '';
@@ -1584,7 +1544,6 @@
                 r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none';
             });
         }
-
         // Waktu & Rehat
         window.updateSchoolDaysOrder = function() {
             const startDayEl = document.getElementById('select-start-day');
@@ -1599,7 +1558,6 @@
                 container.innerHTML += `<div class="p-3 bg-slate-50 border rounded-xl text-center space-y-1"><label class="text-xs font-bold text-slate-700">${day}</label><input type="number" id="daily-slot-${day}" value="${val}" class="w-full text-center font-bold px-2 py-1.5 border rounded-lg text-sm bg-white"></div>`;
             });
         }
-
         window.saveDailySlotsConfig = function() {
             const startDayEl = document.getElementById('select-start-day');
             const startDay = startDayEl ? startDayEl.value : 'Ahad';
@@ -1612,7 +1570,6 @@
             localStorage.setItem('school_daily_slots_config', JSON.stringify(dailyConfig));
             alert('Tetapan harian berjaya disimpan!');
         }
-
         function renderTimeSlotsTable() {
             const tbody = document.getElementById('time-slots-table-body');
             if(!tbody) return;
@@ -1632,15 +1589,12 @@
                 `;
             });
         }
-
         window.updateSlot = (i, f, v) => { timeSlotsData[i][f] = v; saveDatabaseToCloud(); }
         window.addNewTimeRow = () => { timeSlotsData.push({ id: Date.now(), label: String(timeSlotsData.length+1), start: "08:00", end: "08:35", type: "Waktu belajar" }); saveDatabaseToCloud(); renderTimeSlotsTable(); }
         window.deleteSlot = (i) => { timeSlotsData.splice(i, 1); saveDatabaseToCloud(); renderTimeSlotsTable(); }
         window.moveSlot = (i, dir) => { let t = i + dir; if(t >= 0 && t < timeSlotsData.length) { let tmp = timeSlotsData[i]; timeSlotsData[i] = timeSlotsData[t]; timeSlotsData[t] = tmp; saveDatabaseToCloud(); renderTimeSlotsTable(); } }
-
         window.openAutoTimeModal = () => document.getElementById('auto-time-modal').classList.remove('hidden');
         window.closeAutoTimeModal = () => document.getElementById('auto-time-modal').classList.add('hidden');
-
         window.generateAutoTimes = function() {
             let startTimeEl = document.getElementById('modal-start-time');
             let slotDurationEl = document.getElementById('modal-slot-duration');
@@ -1674,12 +1628,10 @@
             closeAutoTimeModal();
             alert('Jadual masa berjaya dijana dan disimpan!');
         }
-
         function formatMins(mins) {
             let h = Math.floor(mins/60)%24, m = mins%60;
             return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
         }
-
         window.onload = () => {
             loadDatabaseFromCloud().then(() => {
                 switchTab('guru_matapelajaran');
