@@ -170,14 +170,14 @@
             </div>
         </section>
 
-        <!-- TAB GURU MATA PELAJARAN (Dikemaskini Dinamik Pokok Kiri) -->
+        <!-- TAB GURU MATA PELAJARAN -->
         <section id="tab-guru_matapelajaran" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                 <div class="flex items-center space-x-3 border-b pb-3 mb-4">
                     <div class="bg-[#0b1b3d] text-white p-2.5 rounded-xl text-xl font-bold">👨‍🏫</div>
                     <div>
                         <h2 class="text-lg font-bold text-[#0b1b3d]">Pengurusan Guru Mata Pelajaran (Matriks Agihan & Agihan Kelas)</h2>
-                        <p class="text-xs text-slate-500">Klik petak matriks untuk menukar agihan guru. Pokok beban masa di kiri akan mengikut tetapan terkini secara automatik.</p>
+                        <p class="text-xs text-slate-500">Pengurusan agihan subjek guru diselaraskan automatik bersama paparan beban masa di kiri.</p>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
@@ -878,7 +878,6 @@
                 let subDetailsHTML = '';
                 let isExpanded = expandedTeachersMap[sg.name] !== undefined ? expandedTeachersMap[sg.name] : true;
                 
-                // Semak agihan sebenar daripada gmpAllocations berdasarkan opsyen guru di Data Asas
                 if(teacherRecord && teacherRecord.category) {
                     let segments = teacherRecord.category.split(' | ');
                     segments.forEach(seg => {
@@ -894,17 +893,17 @@
                                 let foundSub = (databaseRecords.subjek || []).find(s => s.name.toLowerCase() === sNameOrCode.toLowerCase() || s.code.toLowerCase() === sNameOrCode.toLowerCase());
                                 let sCode = foundSub ? foundSub.code : sNameOrCode;
                                 
-                                // KUNCI UTAMA: Semak sama ada matrik semasa (gmpAllocations) menugaskan subjek/kelas ini kepada guru ini
                                 let matrixKey = `${cName}_${sCode}`;
-                                let assignedCodeOrName = gmpAllocations[matrixKey] || '';
+                                let assignedCodeOrName = gmpAllocations[matrixKey];
                                 let isAssignedToThisTeacher = false;
                                 
-                                if(assignedCodeOrName) {
-                                    if(assignedCodeOrName.toLowerCase() === sg.code.toLowerCase() || assignedCodeOrName.toLowerCase() === sg.name.toLowerCase()) {
+                                if (assignedCodeOrName !== undefined) {
+                                    if (assignedCodeOrName && (assignedCodeOrName.toLowerCase() === sg.code.toLowerCase() || assignedCodeOrName.toLowerCase() === sg.name.toLowerCase())) {
                                         isAssignedToThisTeacher = true;
+                                    } else {
+                                        isAssignedToThisTeacher = false;
                                     }
                                 } else {
-                                    // Jika tiada dalam gmpAllocations, guna padanan asal opsyen Data Asas
                                     isAssignedToThisTeacher = true;
                                 }
 
@@ -1025,7 +1024,7 @@
                 renderGMPTree();
                 renderGMPMatrix();
             } else if(actionType === 'padam') {
-                delete gmpAllocations[key];
+                gmpAllocations[key] = "";
                 selectedActiveSubItem.teacher = '';
                 saveDatabaseToCloud();
                 renderGMPTree();
@@ -1054,11 +1053,7 @@
             if(!select || !selectedActiveSubItem) return;
             let chosenCode = select.value;
             let key = `${selectedActiveSubItem.kelas}_${selectedActiveSubItem.subjekCode}`;
-            if(chosenCode) {
-                gmpAllocations[key] = chosenCode;
-            } else {
-                delete gmpAllocations[key];
-            }
+            gmpAllocations[key] = chosenCode;
             saveDatabaseToCloud();
             closeSelectTeacherModal();
             renderGMPTree();
