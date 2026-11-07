@@ -342,13 +342,13 @@
 
     <!-- KOTAK POPUP KECIL ACTION (ContextMenu / Click Popup: Tukar, Salin, Tampal, Padam) -->
     <div id="gmp-action-menu" class="fixed hidden bg-white border border-slate-300 rounded-lg shadow-xl z-50 text-xs w-40 overflow-hidden">
-        <button onclick="handleGMPAction('tukar')" class="w-full text-left px-3 py-2 hover:bg-rose-50 flex items-center space-x-2 border-b border-slate-100 text-slate-800 font-semibold">
+        <button onclick="handleGMPAction('tukar')" class="w-full text-left px-3 py-2 hover:bg-emerald-50 flex items-center space-x-2 border-b border-slate-100 text-slate-800 font-semibold">
             <span>✏️</span><span>Tukar</span>
         </button>
-        <button onclick="handleGMPAction('salin')" class="w-full text-left px-3 py-2 hover:bg-rose-50 flex items-center space-x-2 border-b border-slate-100 text-slate-800 font-semibold">
+        <button onclick="handleGMPAction('salin')" class="w-full text-left px-3 py-2 hover:bg-emerald-50 flex items-center space-x-2 border-b border-slate-100 text-slate-800 font-semibold">
             <span>📋</span><span>Salin</span>
         </button>
-        <button onclick="handleGMPAction('tampal')" class="w-full text-left px-3 py-2 hover:bg-rose-50 flex items-center space-x-2 border-b border-slate-100 text-slate-800 font-semibold">
+        <button onclick="handleGMPAction('tampal')" class="w-full text-left px-3 py-2 hover:bg-emerald-50 flex items-center space-x-2 border-b border-slate-100 text-slate-800 font-semibold">
             <span>📥</span><span>Tampal</span>
         </button>
         <button onclick="handleGMPAction('padam')" class="w-full text-left px-3 py-2 hover:bg-rose-50 text-rose-600 flex items-center space-x-2 font-semibold">
@@ -364,7 +364,7 @@
                 <button onclick="closeGMPTeacherModal()" class="text-slate-400 font-bold text-xs">✕</button>
             </div>
             <p class="text-[11px] text-slate-500">Pilih guru/pensyarah:</p>
-            <div class="border rounded-lg max-h-60 overflow-y-auto bg-amber-50/30">
+            <div class="border rounded-lg max-h-60 overflow-y-auto bg-emerald-50/30">
                 <table class="w-full border-collapse text-xs text-left">
                     <thead class="bg-slate-100 border-b font-bold sticky top-0">
                         <tr>
@@ -377,7 +377,7 @@
                 </table>
             </div>
             <div class="flex justify-end space-x-2 pt-2 border-t">
-                <button onclick="confirmGMPTeacherSelection()" class="px-4 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-lg text-xs font-semibold">OK</button>
+                <button onclick="confirmGMPTeacherSelection()" class="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold shadow">OK</button>
                 <button onclick="closeGMPTeacherModal()" class="px-4 py-1.5 border rounded-lg text-xs font-semibold text-slate-600">Batal</button>
             </div>
         </div>
@@ -405,71 +405,49 @@
             subjek: [
                 { id: 1, name: "Bahasa Melayu", code: "BM", category: "Teras" },
                 { id: 2, name: "Matematik", code: "MAT", category: "Teras" },
-                { id: 3, name: "Al-Quran", code: "AK", category: "Agama" },
-                { id: 4, name: "Fiqh", code: "FQ", category: "Agama" },
-                { id: 5, name: "Pendidikan Islam", code: "PI", category: "Agama" },
-                { id: 6, name: "Tauhid", code: "TD", category: "Agama" }
+                { id: 3, name: "Sains", code: "SN", category: "Teras" }
             ],
             kelas: [
-                { id: 1, name: "T1 - IK", code: "1IK", category: "Menengah Rendah" },
-                { id: 2, name: "T1 - TIS", code: "1TIS", category: "Menengah Rendah" },
-                { id: 3, name: "T2 - IK", code: "2IK", category: "Menengah Rendah" },
-                { id: 4, name: "T2 - TIS", code: "2TIS", category: "Menengah Rendah" }
+                { id: 1, name: "Tingkatan 1 - IS", code: "1IS", category: "Menengah Rendah" },
+                { id: 2, name: "Tingkatan 2 - IS", code: "2IS", category: "Menengah Rendah" }
             ],
             senarai_guru: [
                 { id: 1, name: "ASRI B MOHD ZAIN", code: "Asri", category: "Arab / Agama" },
-                { id: 2, name: "AHMAD ROSLI", code: "Ahmad", category: "Akademik" },
-                { id: 3, name: "HAFIPAH BT MAT YUSOF", code: "Hafipah", category: "Arab / Agama" }
+                { id: 2, name: "AHMAD ROSLI", code: "Ahmad", category: "Akademik" }
             ],
             guru: [
                 {
                     id: 1,
-                    name: "HAFIPAH BT MAT YUSOF",
-                    code: "Hafipah",
-                    category: "T1 - IK [AK (1), FQ (2), PI (2), TD (2)] | T1 - TIS [AK (1), FQ (2), PI (2), TD (2)] | T2 - IK [AK (1)] | T2 - TIS [AK (1)]"
+                    name: "ASRI B MOHD ZAIN",
+                    code: "Asri",
+                    category: "Tingkatan 1 - IS [Bahasa Melayu (1 Masa)]"
                 },
                 {
                     id: 2,
-                    name: "ASRI B MOHD ZAIN",
-                    code: "Asri",
-                    category: "T1 - IS [BM (3)] | T2 - IS [BM (2)]"
-                },
-                {
-                    id: 3,
                     name: "AHMAD ROSLI",
                     code: "Ahmad",
-                    category: "T2 - IS [BM (3)]"
+                    category: "Tingkatan 1 - IS [Bahasa Melayu (2 Masa)] | Tingkatan 2 - IS [Bahasa Melayu (3 Masa)]"
                 }
             ]
         };
 
         let gmpAllocations = {
-            "T1 - IK_AK": "Hafipah",
-            "T1 - IK_PI": "Hafipah",
-            "T1 - IK_FQ": "Hafipah",
-            "T1 - IK_TD": "Hafipah",
-            "T1 - TIS_AK": "Hafipah",
-            "T1 - TIS_FQ": "Hafipah",
-            "T1 - TIS_PI": "Hafipah",
-            "T1 - TIS_TD": "Hafipah",
-            "T2 - IK_AK": "Hafipah",
-            "T2 - TIS_AK": "Hafipah"
+            "Tingkatan 1 - IS_BM": "Asri",
+            "Tingkatan 2 - IS_BM": "Ahmad"
         }; 
 
         let timeSlotsData = [];
         let blockedTimesData = [];
         let generatedTimetableData = {};
 
-        // Status Buka/Tutup bagi setiap node guru (State Expand/Collapse)
         let expandedTeachersMap = {
-            "HAFIPAH BT MAT YUSOF": true,
             "ASRI B MOHD ZAIN": true,
-            "AHMAD ROSLI": false
+            "AHMAD ROSLI": true
         };
 
         let selectedActiveSubItem = null; 
         let selectedGMPCell = { kelas: null, subjekCode: null, teacherName: null };
-        let copiedTeacherCode = null; // Pembolehubah menyimpan data Salin (Copy)
+        let copiedTeacherCode = null;
 
         // --- PENGAMBILAN DATA BERTERUSAN SEGERAK DARI CLOUD FIRESTORE ---
         function listenToCloudFirestore() {
@@ -539,7 +517,7 @@
             }
         }
 
-        // Render Pohon Guru dengan Warna Merah Muda Cerah (Light Pink #FFD1DC / #FCE7F3)
+        // Render Pohon Guru dengan Warna Hijau Muda Cerah (Light Green #dcfce7 / #86efac)
         function renderGMPTree() {
             const container = document.getElementById('gmp-teacher-tree');
             if(!container) return;
@@ -569,25 +547,29 @@
                             let sDetails = match[2].split(', ').map(s => s.trim());
                             sDetails.forEach(sd => {
                                 let subMatch = sd.match(/^(.*?)\s*\((\d+)\s*Masa\)$/) || sd.match(/^(.*?)\s*\((\d+)\)$/);
-                                let sCode = subMatch ? subMatch[1].trim() : sd;
+                                let sNameOrCode = subMatch ? subMatch[1].trim() : sd;
                                 let masa = subMatch ? parseInt(subMatch[2]) : 2;
                                 totalMasa += masa;
 
+                                // Padankan kod subjek (contoh: Bahasa Melayu -> BM)
+                                let foundSub = (databaseRecords.subjek || []).find(s => s.name.toLowerCase() === sNameOrCode.toLowerCase() || s.code.toLowerCase() === sNameOrCode.toLowerCase());
+                                let sCode = foundSub ? foundSub.code : sNameOrCode;
+
                                 let isSubSelected = selectedActiveSubItem && 
                                                     selectedActiveSubItem.teacher.toLowerCase() === sg.name.toLowerCase() &&
-                                                    selectedActiveSubItem.kelas === cName &&
-                                                    selectedActiveSubItem.subjekCode === sCode;
+                                                    selectedActiveSubItem.kelas.toLowerCase() === cName.toLowerCase() &&
+                                                    selectedActiveSubItem.subjekCode.toLowerCase() === sCode.toLowerCase();
 
-                                // GAYA WARNA MERAH MUDA CERAH (LIGHT PINK / ROSE) (Gambar 2 & Gambar 3)
+                                // GAYA WARNA HIJAU MUDA CERAH (LIGHT GREEN)
                                 let itemClass = isSubSelected 
-                                    ? 'bg-[#f472b6] text-white font-bold px-1.5 py-0.5 rounded border border-dashed border-rose-900 shadow-sm' 
-                                    : 'text-slate-700 hover:bg-rose-100 px-1 py-0.5 rounded';
+                                    ? 'bg-[#86efac] text-emerald-950 font-bold px-1.5 py-0.5 rounded border border-dashed border-emerald-700 shadow-sm' 
+                                    : 'text-slate-700 hover:bg-emerald-100 px-1 py-0.5 rounded';
 
                                 subDetailsHTML += `
                                     <div class="tree-line my-0.5">
                                         <span onclick="selectSubTreeItem('${sg.name}', '${cName}', '${sCode}')" 
                                               class="cursor-pointer inline-block ${itemClass}">
-                                            .. ${sCode}-${cName}[${masa}]
+                                            .. ${sNameOrCode}-${cName}[${masa}]
                                         </span>
                                     </div>
                                 `;
@@ -602,7 +584,7 @@
                             <span onclick="toggleTeacherExpand('${sg.name}')" class="px-1 bg-slate-200 hover:bg-slate-300 rounded text-slate-700 text-xs font-mono">
                                 [${isExpanded ? '-' : '+'}]
                             </span>
-                            <span onclick="toggleTeacherExpand('${sg.name}')" class="hover:text-rose-600">
+                            <span onclick="toggleTeacherExpand('${sg.name}')" class="hover:text-emerald-700">
                                 ${sg.name.toUpperCase()}[${totalMasa}]
                             </span>
                         </div>
@@ -619,13 +601,21 @@
             renderGMPTree();
         }
 
+        // Pilihan SubTree Memadankan Tepat Sel Matriks Berkenaan
         window.selectSubTreeItem = function(teacherName, kelas, subjekCode) {
             selectedActiveSubItem = { teacher: teacherName, kelas: kelas, subjekCode: subjekCode };
+            
+            // Simpan sel yang aktif
+            let guruRecord = (databaseRecords.senarai_guru || []).find(g => g.name.toLowerCase() === teacherName.toLowerCase());
+            let codeTeacher = guruRecord ? guruRecord.code : teacherName;
+
+            selectedGMPCell = { kelas: kelas, subjekCode: subjekCode, teacherName: codeTeacher };
+
             renderGMPTree();
             renderGMPMatrix();
         }
 
-        // Render Jadual Matriks dengan Warna Merah Muda Cerah (Light Pink)
+        // Render Jadual Matriks dengan Sorotan Hijau Muda Cerah Tepat Mengikut Subjek & Kelas
         function renderGMPMatrix() {
             const thead = document.getElementById('gmp-matrix-thead');
             const tbody = document.getElementById('gmp-matrix-tbody');
@@ -647,21 +637,22 @@
                     let key = `${cls.name}_${s.code}`;
                     let assignedTeacher = gmpAllocations[key] || '';
                     
+                    // Semakan Padanan Penuh: Kelas DAN Subjek mesti sepadan dengan item pohon yang diklik
                     let isCellActive = selectedActiveSubItem && 
-                                       selectedActiveSubItem.kelas === cls.name && 
-                                       selectedActiveSubItem.subjekCode === s.code;
+                                       selectedActiveSubItem.kelas.toLowerCase() === cls.name.toLowerCase() && 
+                                       selectedActiveSubItem.subjekCode.toLowerCase() === s.code.toLowerCase();
 
-                    // GAYA WARNA MERAH MUDA CERAH (LIGHT PINK / ROSE #f472b6)
+                    // GAYA WARNA HIJAU MUDA CERAH (LIGHT GREEN #dcfce7 / #86efac)
                     let bgCellClass = isCellActive 
-                        ? 'bg-[#f472b6] text-white font-bold border-2 border-dashed border-rose-900 shadow-sm' 
-                        : (assignedTeacher ? 'bg-rose-50 hover:bg-rose-100' : 'hover:bg-slate-50');
+                        ? 'bg-[#86efac] text-emerald-950 font-bold border-2 border-dashed border-emerald-800 shadow-sm' 
+                        : (assignedTeacher ? 'bg-emerald-50/60 hover:bg-emerald-100' : 'hover:bg-slate-50');
 
                     bodyHTML += `
                         <td class="border border-slate-300 p-1.5 text-center relative cursor-pointer transition ${bgCellClass}"
                             onclick="onMatrixCellClick(event, '${cls.name}', '${s.code}', '${assignedTeacher}')"
                             oncontextmenu="onMatrixCellClick(event, '${cls.name}', '${s.code}', '${assignedTeacher}'); return false;">
                             <div class="flex items-center justify-center space-x-0.5 font-medium">
-                                ${assignedTeacher ? `<span class="${isCellActive ? 'text-white' : 'text-rose-950'} text-[11px] font-bold">${assignedTeacher}</span>` : '<span class="text-slate-300 text-[10px]">-</span>'}
+                                ${assignedTeacher ? `<span class="${isCellActive ? 'text-emerald-950 font-extrabold' : 'text-emerald-900'} text-[11px] font-bold">${assignedTeacher}</span>` : '<span class="text-slate-300 text-[10px]">-</span>'}
                             </div>
                         </td>
                     `;
@@ -745,7 +736,7 @@
             let senaraiGuru = databaseRecords.senarai_guru || [];
             senaraiGuru.forEach(g => {
                 tbody.innerHTML += `
-                    <tr class="hover:bg-amber-100/60 cursor-pointer font-medium" onclick="selectGMPTeacherRow(this, '${g.code || g.name}')">
+                    <tr class="hover:bg-emerald-100/60 cursor-pointer font-medium" onclick="selectGMPTeacherRow(this, '${g.code || g.name}')">
                         <td class="p-1.5 font-bold text-slate-700 border-r">${g.code || 'GURU'}</td>
                         <td class="p-1.5 text-slate-800">${g.name.toUpperCase()}</td>
                     </tr>
@@ -758,8 +749,8 @@
         window.closeGMPTeacherModal = () => document.getElementById('gmp-select-teacher-modal').classList.add('hidden');
 
         window.selectGMPTeacherRow = function(row, code) {
-            document.querySelectorAll('#gmp-teacher-list-tbody tr').forEach(r => r.classList.remove('bg-amber-200', 'font-bold'));
-            row.classList.add('bg-amber-200', 'font-bold');
+            document.querySelectorAll('#gmp-teacher-list-tbody tr').forEach(r => r.classList.remove('bg-emerald-200', 'font-bold'));
+            row.classList.add('bg-emerald-200', 'font-bold');
             tempSelectedTeacher = code;
         }
 
