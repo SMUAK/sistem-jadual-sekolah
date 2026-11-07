@@ -18,7 +18,7 @@
     </style>
 </head>
 <body class="bg-slate-100 text-slate-900 min-h-screen flex flex-col">
-    <!-- Header & Navigasi Utama Penuh Disimpan Semula -->
+    <!-- Header & Navigasi Utama Penuh -->
     <header class="bg-[#0b1b3d] text-white shadow-md">
         <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
             <div class="flex items-center space-x-3">
@@ -28,7 +28,7 @@
                     <p class="text-xs text-blue-200">Sistem Pengurusan Jadual Waktu & Guru Ganti Pintar (Pangkalan Data Awan)</p>
                 </div>
             </div>
-            <!-- SEMUA MENU NAVIGASI DIKEMBALIKAN -->
+            <!-- BAR NAVIGASI UTAMA DENGAN FUNGSI SWITCH TAB BERJAYA -->
             <nav class="flex space-x-1 sm:space-x-2 mt-2 sm:mt-0 overflow-x-auto items-center">
                 <button onclick="switchTab('utama')" id="nav-btn-utama" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Utama</button>
                 <button onclick="switchTab('data')" id="nav-btn-data" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Data Asas</button>
@@ -48,7 +48,7 @@
     <!-- Kandungan Utama -->
     <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-6 space-y-6">
         
-        <!-- Tab Utama -->
+        <!-- 1. TAB UTAMA -->
         <section id="tab-utama" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
                 <h2 class="text-2xl font-bold text-slate-900">Selamat Datang, Pentadbir</h2>
@@ -56,7 +56,7 @@
             </div>
         </section>
 
-        <!-- TAB DATA ASAS -->
+        <!-- 2. TAB DATA ASAS (Full Functionality) -->
         <section id="tab-data" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-wrap justify-between items-center gap-4">
                 <div class="flex items-center space-x-4">
@@ -94,7 +94,7 @@
                 <div class="overflow-x-auto">
                     <table class="w-full border-collapse border border-slate-200 text-xs">
                         <thead>
-                            <tr class="bg-emerald-50/50 text-slate-700 font-bold text-center">
+                            <tr class="bg-slate-100 text-slate-700 font-bold text-center">
                                 <th class="border border-slate-300 p-2.5 w-16">Bil.</th>
                                 <th id="th-name" class="border border-slate-300 p-2.5 text-left pl-4">Nama / Maklumat Utama</th>
                                 <th class="border border-slate-300 p-2.5 w-36">Kod / Singkatan</th>
@@ -108,7 +108,7 @@
             </div>
         </section>
 
-        <!-- TAB WAKTU & REHAT -->
+        <!-- 3. TAB WAKTU & REHAT -->
         <section id="tab-waktu" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
                 <div class="p-4 bg-blue-50/70 border border-blue-200 rounded-xl flex flex-wrap justify-between items-center gap-4">
@@ -133,25 +133,36 @@
                         </div>
                     </div>
                     <div class="flex space-x-2">
-                        <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow flex items-center space-x-2 transition">
-                            <span>⚡</span><span>Jana Pantas Waktu</span>
-                        </button>
-                        <button class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow flex items-center space-x-2 transition">
-                            <span>+ Tambah Waktu</span>
-                        </button>
+                        <button onclick="openAutoTimeModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow transition">⚡ Jana Pantas Waktu</button>
+                        <button onclick="addNewTimeRow()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow transition">+ Tambah Waktu</button>
                     </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse border border-slate-200 text-xs text-center">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-700 font-bold">
+                                <th class="border border-slate-300 p-2.5 w-16">Bil.</th>
+                                <th class="border border-slate-300 p-2.5 w-36">Label</th>
+                                <th class="border border-slate-300 p-2.5">Mula</th>
+                                <th class="border border-slate-300 p-2.5">Tamat</th>
+                                <th class="border border-slate-300 p-2.5 w-44">Jenis</th>
+                                <th class="border border-slate-300 p-2.5 w-32">Tindakan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="time-slots-table-body" class="font-medium"></tbody>
+                    </table>
                 </div>
             </div>
         </section>
 
-        <!-- TAB GURU MATA PELAJARAN (GMP) -->
+        <!-- 4. TAB GURU MATA PELAJARAN (GMP) -->
         <section id="tab-guru_matapelajaran" class="space-y-6">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                 <div class="flex items-center space-x-3 border-b pb-3 mb-4">
                     <div class="bg-[#0b1b3d] text-white p-2.5 rounded-xl text-xl font-bold">👨‍🏫</div>
                     <div>
                         <h2 class="text-lg font-bold text-[#0b1b3d]">Pengurusan Guru Mata Pelajaran (Matriks Agihan & Agihan Kelas)</h2>
-                        <p class="text-xs text-slate-500">Warna hijau sorotan hanya muncul pada item yang diklik sahaja</p>
+                        <p class="text-xs text-slate-500">Sorotan warna hijau muda HANYA akan aktif pada petak yang diklik pengguna</p>
                     </div>
                 </div>
 
@@ -181,42 +192,113 @@
             </div>
         </section>
 
-        <!-- TAB TETAPAN MASA SUBJEK -->
+        <!-- 5. TAB TETAPAN MASA SUBJEK -->
         <section id="tab-tetapan_masa_subjek" class="hidden space-y-6">
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                <h3 class="text-lg font-bold text-[#0b1b3d]">⚙️ Tetapan Masa Subjek Mengikut Guru</h3>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                <div class="flex items-center space-x-3 border-b pb-3">
+                    <div class="bg-[#0b1b3d] text-white p-2.5 rounded-xl text-xl font-bold">⚙️</div>
+                    <div>
+                        <h3 class="text-lg font-bold text-[#0b1b3d]">Tetapan Masa Subjek Mengikut Guru</h3>
+                        <p class="text-xs text-slate-500">Paparan struktur beban masa mengikut penetapan Data Asas</p>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse border border-slate-200 text-xs text-center">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-700 font-bold">
+                                <th class="border border-slate-300 p-2.5 w-16">Bil.</th>
+                                <th class="border border-slate-300 p-2.5 text-left pl-4">Nama Guru</th>
+                                <th class="border border-slate-300 p-2.5 text-left pl-4">Subjek, Kelas & Jumlah Masa</th>
+                            </tr>
+                        </thead>
+                        <tbody id="subject-time-config-tbody" class="font-medium"></tbody>
+                    </table>
+                </div>
             </div>
         </section>
 
-        <!-- TAB BLOK WAKTU -->
+        <!-- 6. TAB BLOK WAKTU -->
         <section id="tab-blok" class="hidden space-y-6">
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                <h3 class="text-lg font-bold text-[#0b1b3d]">🚫 Blok Waktu Mengajar Guru</h3>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-[#0b1b3d] text-white p-3 rounded-2xl text-2xl font-bold">🚫</div>
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900">Blok Waktu Mengajar Guru</h2>
+                        <p class="text-xs text-slate-500">Tetapkan masa wajib dikosongkan bagi guru tertentu</p>
+                    </div>
+                </div>
+                <button onclick="openBlockModal()" class="bg-[#0b1b3d] hover:bg-[#132d60] text-white px-4 py-2.5 rounded-xl text-xs font-bold transition">+ Tetap Blok Waktu Guru</button>
             </div>
         </section>
 
-        <!-- TAB JANA JADUAL -->
+        <!-- 7. TAB JANA JADUAL AUTOMATIK -->
         <section id="tab-jana" class="hidden space-y-6">
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                <h3 class="text-lg font-bold text-[#0b1b3d]">⚡ Jana Jadual Automatik</h3>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                <div class="flex items-center space-x-3 border-b pb-3">
+                    <div class="bg-[#0b1b3d] text-white p-2.5 rounded-xl text-xl font-bold">⚡</div>
+                    <div>
+                        <h3 class="text-lg font-bold text-[#0b1b3d]">Jana Jadual Automatik</h3>
+                        <p class="text-xs text-slate-500">Penjanaan jadual pintar automatik mengikut syarat sekolah</p>
+                    </div>
+                </div>
+                <button onclick="startAutoGeneration()" class="bg-[#0b1b3d] text-white px-6 py-3 rounded-xl text-xs font-bold shadow">🚀 MULA JANA JADUAL PINTAR</button>
             </div>
         </section>
 
-        <!-- TAB JADUAL INDUK -->
+        <!-- 8. TAB JADUAL INDUK -->
         <section id="tab-jadual_induk" class="hidden space-y-6">
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex justify-between items-center">
+                <div class="flex bg-slate-100 p-1 rounded-xl space-x-1">
+                    <button onclick="switchMasterTab('kelas')" id="master-btn-kelas" class="px-4 py-2 rounded-lg text-xs font-bold bg-[#0b1b3d] text-white shadow">Jadual Mengikut Kelas</button>
+                    <button onclick="switchMasterTab('guru')" id="master-btn-guru" class="px-4 py-2 rounded-lg text-xs font-bold text-slate-700 hover:bg-slate-200">Jadual Mengikut Guru</button>
+                </div>
+                <select id="master-select-target" onchange="renderMasterTimetable()" class="px-3 py-2 border rounded-xl text-xs bg-white font-bold text-[#0b1b3d] min-w-[200px]"></select>
+            </div>
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                <h3 class="text-lg font-bold text-[#0b1b3d]">📅 Jadual Induk Sekelompok / Guru</h3>
+                <table class="w-full border-collapse border border-slate-200 text-xs text-center">
+                    <thead><tr id="master-thead-row" class="bg-slate-100 text-slate-700 font-bold"><th class="border p-2.5 w-24">HARI</th></tr></thead>
+                    <tbody id="master-tbody" class="font-medium"></tbody>
+                </table>
             </div>
         </section>
 
         <!-- TAB LAIN-LAIN -->
-        <section id="tab-relief" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Modul Guru Ganti</div></section>
-        <section id="tab-laporan" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Modul Laporan</div></section>
-        <section id="tab-tetapan" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Tetapan Sistem & Sandaran</div></section>
+        <section id="tab-relief" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Modul Guru Ganti (Relief)</div></section>
+        <section id="tab-laporan" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Modul Laporan & Cetakan</div></section>
+        <section id="tab-tetapan" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Tetapan Sistem & Sandaran JSON</div></section>
 
     </main>
 
-    <!-- Skrip Aplikasi Utama -->
+    <!-- MODAL POPUP DATA ASAS -->
+    <div id="data-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-sm hidden flex items-center justify-center z-50">
+        <div class="bg-white w-full max-w-2xl p-6 rounded-2xl shadow-2xl border space-y-4">
+            <div class="flex justify-between items-center border-b pb-2">
+                <h3 id="modal-title" class="text-sm font-bold text-[#0b1b3d]">Tambah Rekod Baharu</h3>
+                <button onclick="closeDataModal()" class="text-slate-400 font-bold text-xs">✕</button>
+            </div>
+            <input type="hidden" id="modal-edit-id" value="">
+            <div class="space-y-3 text-xs">
+                <div>
+                    <label class="font-semibold text-slate-700 block mb-1">Nama / Maklumat Utama</label>
+                    <input type="text" id="modal-input-name" class="w-full px-3 py-2 border rounded-lg bg-slate-50">
+                </div>
+                <div>
+                    <label class="font-semibold text-slate-700 block mb-1">Kod / Singkatan</label>
+                    <input type="text" id="modal-input-code" class="w-full px-3 py-2 border rounded-lg bg-slate-50 font-bold">
+                </div>
+                <div>
+                    <label class="font-semibold text-slate-700 block mb-1">Kategori / Tingkatan Diajar</label>
+                    <input type="text" id="modal-input-category" class="w-full px-3 py-2 border rounded-lg bg-slate-50">
+                </div>
+            </div>
+            <div class="flex justify-end space-x-2 pt-2 border-t">
+                <button onclick="closeDataModal()" class="px-4 py-2 border rounded-xl text-xs font-semibold">Batal</button>
+                <button onclick="saveModalData()" class="px-5 py-2 bg-[#0b1b3d] text-white rounded-xl text-xs font-semibold shadow">Simpan Rekod</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SKRIP UTAMA APLIKASI LENGKAP -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -234,6 +316,9 @@
             db = getFirestore(app);
         } catch (e) { console.error("Firebase init error:", e); }
 
+        let currentSubTab = 'subjek';
+        let currentMasterMode = 'kelas';
+
         let databaseRecords = {
             subjek: [
                 { id: 1, name: "Bahasa Melayu", code: "BM", category: "Teras" },
@@ -242,6 +327,9 @@
             kelas: [
                 { id: 1, name: "Tingkatan 1 - IS", code: "1IS", category: "Menengah Rendah" },
                 { id: 2, name: "Tingkatan 2 - IS", code: "2IS", category: "Menengah Rendah" }
+            ],
+            bilik: [
+                { id: 1, name: "Makmal Komputer 1", code: "MK1", category: "Khas" }
             ],
             senarai_guru: [
                 { id: 1, name: "ASRI B MOHD ZAIN", code: "Asri", category: "Arab / Agama" },
@@ -269,14 +357,24 @@
             "Tingkatan 1 - IS_MAT": "Asri"
         };
 
+        let timeSlotsData = [
+            { id: 1, label: "1", start: "07:30", end: "08:05", type: "Waktu belajar" },
+            { id: 2, label: "2", start: "08:05", end: "08:40", type: "Waktu belajar" },
+            { id: 3, label: "3", start: "08:40", end: "09:15", type: "Waktu belajar" },
+            { id: 4, label: "4", start: "09:15", end: "09:50", type: "Waktu belajar" },
+            { id: 'rehat', label: "Rehat", start: "09:50", end: "10:20", type: "Rehat" },
+            { id: 5, label: "5", start: "10:20", end: "10:55", type: "Waktu belajar" },
+            { id: 6, label: "6", start: "10:55", end: "11:30", type: "Waktu belajar" }
+        ];
+
         let expandedTeachersMap = {
             "ASRI B MOHD ZAIN": true,
             "AHMAD ROSLI": true
         };
 
-        let selectedActiveSubItem = null; 
+        let selectedActiveSubItem = null;
 
-        // FUNGSI TUKAR TAB NAVIGASI UTAMA
+        // FUNGSI PENUKARAN TAB NAVIGASI UTAMA LENGKAP
         window.switchTab = function(tabId) {
             const tabs = ['utama', 'data', 'waktu', 'guru_matapelajaran', 'tetapan_masa_subjek', 'blok', 'jana', 'jadual_induk', 'relief', 'laporan', 'tetapan'];
             
@@ -299,12 +397,93 @@
                 targetBtn.classList.remove('hover:bg-[#132d60]');
             }
 
+            if (tabId === 'data') renderDataTable();
+            if (tabId === 'waktu') renderTimeSlotsTable();
             if (tabId === 'guru_matapelajaran') {
                 renderGMPTree();
                 renderGMPMatrix();
             }
+            if (tabId === 'tetapan_masa_subjek') renderSubjectTimeConfig();
         };
 
+        // FUNGSI SUBTAB DATA ASAS
+        window.switchDataSubTab = function(subTab) {
+            currentSubTab = subTab;
+            ['subjek', 'kelas', 'bilik', 'senarai_guru', 'guru'].forEach(t => {
+                let btn = document.getElementById(`subtab-btn-${t}`);
+                if(btn) btn.className = (t === subTab) 
+                    ? "px-4 py-2 rounded-xl text-xs font-bold bg-[#0b1b3d] text-white transition shadow" 
+                    : "px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition";
+            });
+            renderDataTable();
+        };
+
+        function renderDataTable() {
+            const tbody = document.getElementById('data-table-body');
+            const totalCountEl = document.getElementById('total-stat-count');
+            if(!tbody) return;
+            tbody.innerHTML = '';
+
+            let records = databaseRecords[currentSubTab] || [];
+            if(totalCountEl) totalCountEl.innerText = records.length;
+
+            if(records.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-slate-400 italic">Tiada rekod dijumpai.</td></tr>`;
+                return;
+            }
+
+            records.forEach((item, index) => {
+                tbody.innerHTML += `
+                    <tr class="border-b border-slate-200 hover:bg-slate-50 transition">
+                        <td class="border border-slate-300 p-2.5 font-bold text-slate-600">${index + 1}</td>
+                        <td class="border border-slate-300 p-2.5 text-left pl-4 font-bold text-[#0b1b3d]">${item.name}</td>
+                        <td class="border border-slate-300 p-2.5 font-semibold text-slate-700">${item.code || '-'}</td>
+                        <td class="border border-slate-300 p-2.5 text-slate-600 text-left pl-3">${item.category || '-'}</td>
+                        <td class="border border-slate-300 p-2.5">
+                            <div class="flex justify-center space-x-1.5">
+                                <button onclick="editRecord(${item.id})" class="p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow">✏️</button>
+                                <button onclick="deleteRecord(${item.id})" class="p-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow">🗑️</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function renderTimeSlotsTable() {
+            const tbody = document.getElementById('time-slots-table-body');
+            if(!tbody) return;
+            tbody.innerHTML = '';
+            timeSlotsData.forEach((slot, index) => {
+                tbody.innerHTML += `
+                    <tr class="border-b border-slate-200">
+                        <td class="border p-2 font-bold">${index + 1}</td>
+                        <td class="border p-2 font-bold text-[#0b1b3d]">${slot.label}</td>
+                        <td class="border p-2">${slot.start}</td>
+                        <td class="border p-2">${slot.end}</td>
+                        <td class="border p-2 font-semibold ${slot.type==='Rehat'?'text-amber-600':'text-emerald-700'}">${slot.type}</td>
+                        <td class="border p-2"><button class="p-1 bg-red-600 text-white rounded">🗑️</button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function renderSubjectTimeConfig() {
+            const tbody = document.getElementById('subject-time-config-tbody');
+            if(!tbody) return;
+            tbody.innerHTML = '';
+            (databaseRecords.guru || []).forEach((g, idx) => {
+                tbody.innerHTML += `
+                    <tr class="border-b border-slate-200">
+                        <td class="border p-2 font-bold">${idx+1}</td>
+                        <td class="border p-2 text-left pl-4 font-bold text-[#0b1b3d]">${g.name}</td>
+                        <td class="border p-2 text-left pl-4 text-slate-600">${g.category || '-'}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        // FUNGSI RENDER GMP MATRIKS & POHON (Sorotan Hijau Muda Mengikut Klik)
         function renderGMPMatrix() {
             const thead = document.getElementById('gmp-matrix-thead');
             const tbody = document.getElementById('gmp-matrix-tbody');
@@ -330,6 +509,7 @@
                                        selectedActiveSubItem.kelas.toLowerCase() === cls.name.toLowerCase() && 
                                        selectedActiveSubItem.subjekCode.toLowerCase() === s.code.toLowerCase();
 
+                    // LOGIK WARNA: Putih jika tidak diklik, Hijau Muda Cerah (bg-emerald-200) jika diklik
                     let bgCellClass = isCellActive 
                         ? 'bg-emerald-200 text-emerald-950 font-extrabold border-2 border-dashed border-emerald-600 shadow-sm' 
                         : 'bg-white text-slate-800 hover:bg-slate-50';
@@ -457,9 +637,9 @@
             renderGMPMatrix();
         };
 
+        // DIJALANKAN KETIKA HALAMAN DIMUATKAN
         window.onload = () => {
-            renderGMPTree();
-            renderGMPMatrix();
+            switchTab('guru_matapelajaran');
         };
     </script>
 </body>
