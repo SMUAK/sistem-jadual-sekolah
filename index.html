@@ -9,129 +9,41 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
-        @media print {
-            body * { visibility: hidden; }
-            #printable-area, #printable-area * { visibility: visible; }
-            #printable-area { position: absolute; left: 0; top: 0; width: 100%; }
-        }
         .tree-line { border-left: 1px dotted #cbd5e1; margin-left: 1rem; padding-left: 0.75rem; }
     </style>
 </head>
 <body class="bg-slate-100 text-slate-900 min-h-screen flex flex-col">
-    <!-- Header / Navigasi Utama -->
+    <!-- Header -->
     <header class="bg-[#0b1b3d] text-white shadow-md">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
-            <div class="flex items-center space-x-3">
-                <div class="bg-[#132d60] p-2 rounded-lg text-xl font-bold">🏫</div>
-                <div>
-                    <h1 id="header-school-name" class="text-lg font-bold">SMU(A) Khairiah Banggol Setol</h1>
-                    <p class="text-xs text-blue-200">Sistem Pengurusan Jadual Waktu & Guru Ganti Pintar (Pangkalan Data Awan)</p>
-                </div>
-            </div>
-            <nav class="flex space-x-1 sm:space-x-2 mt-2 sm:mt-0 overflow-x-auto items-center">
-                <button onclick="switchTab('utama')" id="nav-btn-utama" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Utama</button>
-                <button onclick="switchTab('data')" id="nav-btn-data" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Data Asas</button>
-                <button onclick="switchTab('waktu')" id="nav-btn-waktu" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">⏱️ Waktu & Rehat</button>
-                <button onclick="switchTab('guru_matapelajaran')" id="nav-btn-guru_matapelajaran" class="px-3 py-1.5 rounded-lg text-sm font-medium bg-[#132d60] transition">👨‍🏫 Guru Mata Pelajaran</button>
-                <button onclick="switchTab('tetapan_masa_subjek')" id="nav-btn-tetapan_masa_subjek" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">⚙️ Tetapan Masa Subjek</button>
-                <button onclick="switchTab('blok')" id="nav-btn-blok" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">🚫 Blok Waktu</button>
-                <button onclick="switchTab('jana')" id="nav-btn-[#132d60]" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">⚡ Jana Jadual</button>
-                <button onclick="switchTab('jadual_induk')" id="nav-btn-jadual_induk" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">📅 Jadual Induk</button>
-                <button onclick="switchTab('relief')" id="nav-btn-relief" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Guru Ganti</button>
-                <button onclick="switchTab('laporan')" id="nav-btn-laporan" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">📊 Laporan</button>
-                <button onclick="switchTab('tetapan')" id="nav-btn-tetapan" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Tetapan</button>
-            </nav>
+        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+            <h1 class="text-lg font-bold">SMU(A) Khairiah Banggol Setol - Modul GMP Interaktif</h1>
         </div>
     </header>
 
     <!-- Kandungan Utama -->
     <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-6 space-y-6">
-        
-        <!-- Tab Utama -->
-        <section id="tab-utama" class="hidden space-y-6">
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-                <h2 class="text-2xl font-bold text-slate-900">Selamat Datang, Pentadbir</h2>
-                <p class="text-slate-600 mt-1">Urus jadual kelas, guru, dan agihan guru ganti harian dengan selamat menggunakan pangkalan data awan Firebase.</p>
-            </div>
-        </section>
-
-        <!-- TAB DATA ASAS -->
-        <section id="tab-data" class="hidden space-y-6">
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-wrap justify-between items-center gap-4">
-                <div class="flex items-center space-x-4">
-                    <div class="bg-[#0b1b3d] text-white p-3 rounded-2xl text-2xl font-bold shadow">📚</div>
-                    <div>
-                        <h2 class="text-xl font-bold text-slate-900">Data Sekolah (Segerak Firestore)</h2>
-                        <p class="text-xs text-slate-500">Pengurusan maklumat asas sekolah secara tersusun dan bersepadu</p>
-                    </div>
-                </div>
-                <div class="flex items-center space-x-3 bg-slate-50 px-5 py-3 rounded-2xl border border-slate-200">
-                    <div>
-                        <div id="total-stat-count" class="text-2xl font-bold text-[#0b1b3d] text-right">0</div>
-                        <div class="text-xs text-slate-500 font-semibold">Jumlah Rekod</div>
-                    </div>
-                    <div class="text-xl">👥</div>
-                </div>
-            </div>
-
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
-                <div class="flex flex-wrap gap-2 border-b pb-4">
-                    <button onclick="switchDataSubTab('subjek')" id="subtab-btn-subjek" class="px-4 py-2 rounded-xl text-xs font-bold bg-[#0b1b3d] text-white transition shadow">📖 Subjek</button>
-                    <button onclick="switchDataSubTab('kelas')" id="subtab-btn-kelas" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">🏫 Kelas</button>
-                    <button onclick="switchDataSubTab('bilik')" id="subtab-btn-bilik" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">🚪 Bilik Khas</button>
-                    <button onclick="switchDataSubTab('senarai_guru')" id="subtab-btn-senarai_guru" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">📋 Senarai Guru</button>
-                    <button onclick="switchDataSubTab('guru')" id="subtab-btn-guru" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">👨‍🏫 Guru & Subjek</button>
-                </div>
-                <div class="flex flex-wrap justify-between items-center gap-4">
-                    <button onclick="openAddModal()" class="bg-[#0b1b3d] hover:bg-[#132d60] text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow flex items-center space-x-2 transition">
-                        <span>+ Tambah Rekod Baharu</span>
-                    </button>
-                    <div class="flex items-center space-x-2 w-full sm:w-72">
-                        <input type="text" id="search-data-input" onkeyup="filterTableData()" placeholder="Cari rekod..." class="w-full px-3 py-2 border rounded-xl text-xs bg-slate-50 focus:bg-white">
-                    </div>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full border-collapse border border-slate-200 text-xs">
-                        <thead>
-                            <tr class="bg-emerald-50/50 text-slate-700 font-bold text-center">
-                                <th class="border border-slate-300 p-2.5 w-16">Bil.</th>
-                                <th id="th-name" class="border border-slate-300 p-2.5 text-left pl-4">Nama / Maklumat Utama</th>
-                                <th class="border border-slate-300 p-2.5 w-36">Kod / Singkatan</th>
-                                <th id="th-category" class="border border-slate-300 p-2.5 w-56">Tingkatan & Subjek Diajar</th>
-                                <th class="border border-slate-300 p-2.5 w-32">Tindakan</th>
-                            </tr>
-                        </thead>
-                        <tbody id="data-table-body" class="font-medium text-center"></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- TAB GURU MATA PELAJARAN (GMP) -->
         <section id="tab-guru_matapelajaran" class="space-y-6">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                 <div class="flex items-center space-x-3 border-b pb-3 mb-4">
                     <div class="bg-[#0b1b3d] text-white p-2.5 rounded-xl text-xl font-bold">👨‍🏫</div>
                     <div>
                         <h2 class="text-lg font-bold text-[#0b1b3d]">Pengurusan Guru Mata Pelajaran (Matriks Agihan & Agihan Kelas)</h2>
-                        <p class="text-xs text-slate-500">Struktur pohon interaktif di sebelah kiri dan jadual matriks agihan subjek di sebelah kanan</p>
+                        <p class="text-xs text-slate-500">Warna hijau sorotan hanya muncul pada item yang diklik sahaja</p>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
-                    <!-- Panel Kiri: Pohon Senarai Guru (Interactive Tree Structure with [+] / [-]) -->
+                    <!-- Pohon Senarai Guru (Kiri) -->
                     <div class="md:col-span-4 bg-slate-50 border border-slate-200 p-4 rounded-xl overflow-y-auto max-h-[600px] text-xs">
                         <h3 class="font-bold text-[#0b1b3d] mb-3 border-b pb-2">Senarai Guru & Beban Masa</h3>
-                        <div id="gmp-teacher-tree" class="space-y-2 font-mono">
-                            <!-- Kandungan Pohon Guru di-render melalui JavaScript -->
-                        </div>
+                        <div id="gmp-teacher-tree" class="space-y-2 font-mono"></div>
                     </div>
 
-                    <!-- Panel Kanan: Jadual Matriks Agihan Kelas & Subjek -->
+                    <!-- Jadual Matriks Agihan (Kanan) -->
                     <div class="md:col-span-8 bg-white border border-slate-200 p-4 rounded-xl overflow-x-auto max-h-[600px] relative text-xs">
                         <div class="flex justify-between items-center mb-3">
                             <h3 class="font-bold text-[#0b1b3d]">Jadual Matriks Agihan Subjek / Kelas</h3>
-                            <span class="text-[11px] text-slate-500">Klik kanan atau klik cell untuk menu tindakan</span>
+                            <span class="text-[11px] text-slate-500">Klik item untuk sorotan aktif</span>
                         </div>
                         <table class="w-full border-collapse border border-slate-300 text-center text-xs">
                             <thead>
@@ -139,78 +51,16 @@
                                     <th class="border border-slate-300 p-2 min-w-[120px] text-left">Kelas/Program</th>
                                 </tr>
                             </thead>
-                            <tbody id="gmp-matrix-tbody">
-                                <!-- Row matriks di-render melalui JavaScript -->
-                            </tbody>
+                            <tbody id="gmp-matrix-tbody"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </section>
-
     </main>
-
-    <!-- KOTAK POPUP KECIL ACTION -->
-    <div id="gmp-action-menu" class="fixed hidden bg-white border border-slate-300 rounded-lg shadow-xl z-50 text-xs w-40 overflow-hidden">
-        <button onclick="handleGMPAction('tukar')" class="w-full text-left px-3 py-2 hover:bg-emerald-50 flex items-center space-x-2 border-b border-slate-100 text-slate-800 font-semibold">
-            <span>✏️</span><span>Tukar</span>
-        </button>
-        <button onclick="handleGMPAction('salin')" class="w-full text-left px-3 py-2 hover:bg-emerald-50 flex items-center space-x-2 border-b border-slate-100 text-slate-800 font-semibold">
-            <span>📋</span><span>Salin</span>
-        </button>
-        <button onclick="handleGMPAction('tampal')" class="w-full text-left px-3 py-2 hover:bg-emerald-50 flex items-center space-x-2 border-b border-slate-100 text-slate-800 font-semibold">
-            <span>📥</span><span>Tampal</span>
-        </button>
-        <button onclick="handleGMPAction('padam')" class="w-full text-left px-3 py-2 hover:bg-rose-50 text-rose-600 flex items-center space-x-2 font-semibold">
-            <span>❌</span><span>Padam</span>
-        </button>
-    </div>
-
-    <!-- MODAL PILIH GURU/PENSYARAH -->
-    <div id="gmp-select-teacher-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-sm hidden flex items-center justify-center z-50">
-        <div class="bg-white w-full max-w-sm p-4 rounded-xl shadow-2xl border space-y-4">
-            <div class="flex justify-between items-center border-b pb-2">
-                <h3 class="text-xs font-bold text-[#0b1b3d]">Pilih guru/pensyarah</h3>
-                <button onclick="closeGMPTeacherModal()" class="text-slate-400 font-bold text-xs">✕</button>
-            </div>
-            <p class="text-[11px] text-slate-500">Pilih guru/pensyarah:</p>
-            <div class="border rounded-lg max-h-60 overflow-y-auto bg-emerald-50/20">
-                <table class="w-full border-collapse text-xs text-left">
-                    <thead class="bg-slate-100 border-b font-bold sticky top-0">
-                        <tr>
-                            <th class="p-1.5 w-20 border-r">Kod</th>
-                            <th class="p-1.5">Nama</th>
-                        </tr>
-                    </thead>
-                    <tbody id="gmp-teacher-list-tbody" class="divide-y divide-slate-200">
-                    </tbody>
-                </table>
-            </div>
-            <div class="flex justify-end space-x-2 pt-2 border-t">
-                <button onclick="confirmGMPTeacherSelection()" class="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold shadow">OK</button>
-                <button onclick="closeGMPTeacherModal()" class="px-4 py-1.5 border rounded-lg text-xs font-semibold text-slate-600">Batal</button>
-            </div>
-        </div>
-    </div>
 
     <!-- Skrip Aplikasi -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        
-        let db = null;
-        try {
-            const app = initializeApp({
-                apiKey: "AIzaSyDOJ3y4_vK3cVBTX8TmG_9DmDFvZ25MBkc",
-                authDomain: "sistem-jadual-sekolah.firebaseapp.com",
-                projectId: "sistem-jadual-sekolah",
-                storageBucket: "sistem-jadual-sekolah.firebasestorage.app",
-                messagingSenderId: "548727396573",
-                appId: "1:548727396573:web:7a4a478f15b61ba038a334"
-            });
-            db = getFirestore(app);
-        } catch (e) { console.error("Firebase init error:", e); }
-
         let databaseRecords = {
             subjek: [
                 { id: 1, name: "Bahasa Melayu", code: "BM", category: "Teras" },
@@ -240,11 +90,10 @@
             ]
         };
 
-        // KUNCI AGIHAN GMP: Automatik sinkronasikan rekod opsyen Guru & Subjek secara automatik ke dalam matriks!
         let gmpAllocations = {
             "Tingkatan 1 - IS_BM": "Ahmad",
             "Tingkatan 2 - IS_BM": "Ahmad",
-            "Tingkatan 1 - IS_MAT": "Asri"  // <-- DIKEMASKINI DENGAN TEPAT MENGIKUT DATA ASAS (Gambar 1)
+            "Tingkatan 1 - IS_MAT": "Asri"
         };
 
         let expandedTeachersMap = {
@@ -252,43 +101,11 @@
             "AHMAD ROSLI": true
         };
 
-        let selectedActiveSubItem = null;
-        let selectedGMPCell = { kelas: null, subjekCode: null, teacherName: null };
+        // NULL SECARA DEFAULT: TIADA ITEM DIPILIH SEHINGGA DIKLIK OLEH PENGGUNA!
+        let selectedActiveSubItem = null; 
 
-        // --- PENYELARASAN AUTOMATIK DARI DATA ASAS GURU & SUBJEK KE GMP MATRIKS ---
-        function syncGuruSubjekToGMPAllocations() {
-            let guruList = databaseRecords.guru || [];
-            guruList.forEach(g => {
-                let codeTeacher = g.code || g.name;
-                if (g.category) {
-                    let segments = g.category.split(' | ');
-                    segments.forEach(seg => {
-                        let match = seg.match(/^(.*?) \[(.*?)\]$/);
-                        if (match) {
-                            let cName = match[1].trim();
-                            let sDetails = match[2].split(', ').map(s => s.trim());
-                            sDetails.forEach(sd => {
-                                let subMatch = sd.match(/^(.*?)\s*\((\d+)\s*Masa\)$/) || sd.match(/^(.*?)\s*\((\d+)\)$/);
-                                let sNameOrCode = subMatch ? subMatch[1].trim() : sd;
-                                
-                                let foundSub = (databaseRecords.subjek || []).find(s => s.name.toLowerCase() === sNameOrCode.toLowerCase() || s.code.toLowerCase() === sNameOrCode.toLowerCase());
-                                let sCode = foundSub ? foundSub.code : sNameOrCode;
-
-                                // Auto-assign jika belum wujud
-                                let key = `${cName}_${sCode}`;
-                                if (!gmpAllocations[key]) {
-                                    gmpAllocations[key] = codeTeacher;
-                                }
-                            });
-                        }
-                    });
-                }
-            });
-        }
-
-        // RENDER JADUAL MATRIKS AGIHAN (WARNA HIJAU MUDA SOFT DIGUNAKAN: bg-emerald-100/60 & bg-emerald-200/80)
+        // RENDER JADUAL MATRIKS AGIHAN (DEFAULT PETAK PUTIH / WARNA HIJAU HANYA PADA ITEM AKTIF)
         function renderGMPMatrix() {
-            syncGuruSubjekToGMPAllocations();
             const thead = document.getElementById('gmp-matrix-thead');
             const tbody = document.getElementById('gmp-matrix-tbody');
             if(!thead || !tbody) return;
@@ -309,21 +126,23 @@
                     let key = `${cls.name}_${s.code}`;
                     let assignedTeacher = gmpAllocations[key] || '';
                     
+                    // SEMAK ADAKAH PETAK INI SEDANG DIKLIK PENGGUNA
                     let isCellActive = selectedActiveSubItem && 
                                        selectedActiveSubItem.kelas.toLowerCase() === cls.name.toLowerCase() && 
                                        selectedActiveSubItem.subjekCode.toLowerCase() === s.code.toLowerCase();
 
-                    // PEMBETULAN WARNA HIJAU LEBIH MUDA (bg-emerald-100/70 & bg-emerald-200/80)
+                    // LOGIK WARNA TERKINI:
+                    // Jika diklik (isCellActive): Warna hijau muda cerah berserta bingkai garis (bg-emerald-200)
+                    // Jika TIDAK diklik: Kekal warna latar PUTIH bersih (bg-white hover:bg-slate-50)
                     let bgCellClass = isCellActive 
-                        ? 'bg-emerald-200 text-emerald-950 font-bold border-2 border-dashed border-emerald-600 shadow-sm' 
-                        : (assignedTeacher ? 'bg-emerald-100/60 hover:bg-emerald-200/80' : 'hover:bg-slate-50');
+                        ? 'bg-emerald-200 text-emerald-950 font-extrabold border-2 border-dashed border-emerald-600 shadow-sm' 
+                        : 'bg-white text-slate-800 hover:bg-slate-50';
 
                     bodyHTML += `
                         <td class="border border-slate-300 p-1.5 text-center relative cursor-pointer transition ${bgCellClass}"
-                            onclick="onMatrixCellClick(event, '${cls.name}', '${s.code}', '${assignedTeacher}')"
-                            oncontextmenu="onMatrixCellClick(event, '${cls.name}', '${s.code}', '${assignedTeacher}'); return false;">
+                            onclick="onMatrixCellClick(event, '${cls.name}', '${s.code}', '${assignedTeacher}')">
                             <div class="flex items-center justify-center space-x-0.5 font-medium">
-                                ${assignedTeacher ? `<span class="${isCellActive ? 'text-emerald-950 font-extrabold' : 'text-emerald-900'} text-[11px] font-bold">${assignedTeacher}</span>` : '<span class="text-slate-300 text-[10px]">-</span>'}
+                                ${assignedTeacher ? `<span class="${isCellActive ? 'text-emerald-950 font-extrabold' : 'text-slate-800'} text-[11px] font-bold">${assignedTeacher}</span>` : '<span class="text-slate-300 text-[10px]">-</span>'}
                             </div>
                         </td>
                     `;
@@ -333,7 +152,7 @@
             tbody.innerHTML = bodyHTML;
         }
 
-        // RENDER POHON GURU (WARNA HIJAU MUDA SOFT MEMADANI MATRIKS)
+        // RENDER POHON GURU (DEFAULT WARNA PUTIH / WARNA HIJAU HANYA APABILA DIKLIK)
         function renderGMPTree() {
             const container = document.getElementById('gmp-teacher-tree');
             if(!container) return;
@@ -369,10 +188,10 @@
                                                     selectedActiveSubItem.kelas.toLowerCase() === cName.toLowerCase() &&
                                                     selectedActiveSubItem.subjekCode.toLowerCase() === sCode.toLowerCase();
 
-                                // HIJAU MUDA SOFT PADA POHON GURU
+                                // HIJAU MUDA HANYA APABILA SUB-ITEM PADA POHON GURU DIKLIK
                                 let itemClass = isSubSelected 
                                     ? 'bg-emerald-200 text-emerald-950 font-bold px-1.5 py-0.5 rounded border border-dashed border-emerald-600 shadow-sm' 
-                                    : 'text-slate-700 hover:bg-emerald-100/70 px-1 py-0.5 rounded';
+                                    : 'text-slate-700 hover:bg-slate-200/60 px-1 py-0.5 rounded';
 
                                 subDetailsHTML += `
                                     <div class="tree-line my-0.5">
@@ -402,6 +221,48 @@
                     </div>
                 `;
             });
+        }
+
+        window.toggleTeacherExpand = function(teacherName) {
+            expandedTeachersMap[teacherName] = !expandedTeachersMap[teacherName];
+            renderGMPTree();
+        }
+
+        // APABILA USER KLIK PADA ITEM POHON (CONTOH: Matematik-Tingkatan 1 - IS[2])
+        window.selectSubTreeItem = function(teacherName, kelas, subjekCode) {
+            // JIKA DIKLIK ITEM YANG SAMA: TOGGLE MATIKAN WARNA (BILA KLIK SEKALI LAGIIA KEMBALI PUTIH)
+            if (selectedActiveSubItem && 
+                selectedActiveSubItem.teacher.toLowerCase() === teacherName.toLowerCase() &&
+                selectedActiveSubItem.kelas.toLowerCase() === kelas.toLowerCase() &&
+                selectedActiveSubItem.subjekCode.toLowerCase() === subjekCode.toLowerCase()) {
+                selectedActiveSubItem = null;
+            } else {
+                selectedActiveSubItem = { teacher: teacherName, kelas: kelas, subjekCode: subjekCode };
+            }
+
+            renderGMPTree();
+            renderGMPMatrix();
+        }
+
+        window.onMatrixCellClick = function(e, kelas, subjekCode, teacherName) {
+            e.preventDefault();
+            if(teacherName) {
+                let guruRecord = databaseRecords.senarai_guru.find(g => g.code.toLowerCase() === teacherName.toLowerCase() || g.name.toLowerCase().includes(teacherName.toLowerCase()));
+                let fullTeacherName = guruRecord ? guruRecord.name : teacherName;
+                
+                if (selectedActiveSubItem && 
+                    selectedActiveSubItem.kelas.toLowerCase() === kelas.toLowerCase() && 
+                    selectedActiveSubItem.subjekCode.toLowerCase() === subjekCode.toLowerCase()) {
+                    selectedActiveSubItem = null;
+                } else {
+                    selectedActiveSubItem = { teacher: fullTeacherName, kelas: kelas, subjekCode: subjekCode };
+                }
+            } else {
+                selectedActiveSubItem = { teacher: '', kelas: kelas, subjekCode: subjekCode };
+            }
+
+            renderGMPTree();
+            renderGMPMatrix();
         }
 
         window.onload = () => {
