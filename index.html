@@ -170,14 +170,14 @@
             </div>
         </section>
 
-        <!-- TAB GURU MATA PELAJARAN (Dilengkapi Popup Context Menu) -->
+        <!-- TAB GURU MATA PELAJARAN (Dikemaskini Dinamik Pokok Kiri) -->
         <section id="tab-guru_matapelajaran" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                 <div class="flex items-center space-x-3 border-b pb-3 mb-4">
                     <div class="bg-[#0b1b3d] text-white p-2.5 rounded-xl text-xl font-bold">👨‍🏫</div>
                     <div>
                         <h2 class="text-lg font-bold text-[#0b1b3d]">Pengurusan Guru Mata Pelajaran (Matriks Agihan & Agihan Kelas)</h2>
-                        <p class="text-xs text-slate-500">Klik subjek pada senarai pokok atau klik petak matriks untuk menggunakan menu tindakan (Tukar, Salin, Tampal, Padam)</p>
+                        <p class="text-xs text-slate-500">Klik petak matriks untuk menukar agihan guru. Pokok beban masa di kiri akan mengikut tetapan terkini secara automatik.</p>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
@@ -190,7 +190,7 @@
                     <div class="md:col-span-8 bg-white border border-slate-200 p-4 rounded-xl overflow-x-auto max-h-[600px] relative text-xs">
                         <div class="flex justify-between items-center mb-3">
                             <h3 class="font-bold text-[#0b1b3d]">Jadual Matriks Agihan Subjek / Kelas</h3>
-                            <span class="text-[11px] text-slate-500">Klik item untuk sorotan aktif & menu pilihan</span>
+                            <span class="text-[11px] text-slate-500">Klik petak untuk menu tindakan (Tukar, Salin, Tampal, Padam)</span>
                         </div>
                         <table class="w-full border-collapse border border-slate-300 text-center text-xs">
                             <thead>
@@ -379,7 +379,7 @@
         <section id="tab-relief" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Modul Guru Ganti</div></section>
         <section id="tab-laporan" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Modul Laporan</div></section>
         
-        <!-- TAB TETAPAN (Dilengkapi Modul Sandaran JSON) -->
+        <!-- TAB TETAPAN -->
         <section id="tab-tetapan" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6 max-w-xl">
                 <div class="flex items-center space-x-3 border-b pb-3">
@@ -389,7 +389,6 @@
                         <p class="text-xs text-slate-500">Urus sandaran data dan konfigurasi sistem</p>
                     </div>
                 </div>
-                <!-- Modul Sandaran JSON -->
                 <div class="bg-slate-50 border border-slate-200 p-5 rounded-2xl space-y-4">
                     <div class="flex items-center space-x-3">
                         <div class="bg-indigo-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shadow">5</div>
@@ -818,7 +817,7 @@
         }
 
         // ==========================================
-        // MODUL GURU MATA PELAJARAN (GMP) & CONTEXT MENU
+        // MODUL GURU MATA PELAJARAN (GMP) & POKOK DINAMIK KIRI
         // ==========================================
         function renderGMPMatrix() {
             const thead = document.getElementById('gmp-matrix-thead');
@@ -872,11 +871,14 @@
             
             let guruList = databaseRecords.guru || [];
             let senaraiGuru = databaseRecords.senarai_guru || [];
+            
             senaraiGuru.forEach(sg => {
                 let teacherRecord = guruList.find(g => g.name.trim().toLowerCase() === sg.name.trim().toLowerCase());
                 let totalMasa = 0;
                 let subDetailsHTML = '';
                 let isExpanded = expandedTeachersMap[sg.name] !== undefined ? expandedTeachersMap[sg.name] : true;
+                
+                // Semak agihan sebenar daripada gmpAllocations berdasarkan opsyen guru di Data Asas
                 if(teacherRecord && teacherRecord.category) {
                     let segments = teacherRecord.category.split(' | ');
                     segments.forEach(seg => {
@@ -888,29 +890,48 @@
                                 let subMatch = sd.match(/^(.*?)\s*\((\d+)\s*Masa\)$/) || sd.match(/^(.*?)\s*\((\d+)\)$/);
                                 let sNameOrCode = subMatch ? subMatch[1].trim() : sd;
                                 let masa = subMatch ? parseInt(subMatch[2]) : 2;
-                                totalMasa += masa;
+                                
                                 let foundSub = (databaseRecords.subjek || []).find(s => s.name.toLowerCase() === sNameOrCode.toLowerCase() || s.code.toLowerCase() === sNameOrCode.toLowerCase());
                                 let sCode = foundSub ? foundSub.code : sNameOrCode;
                                 
-                                let isSubSelected = selectedActiveSubItem && 
-                                                    selectedActiveSubItem.teacher.toLowerCase() === sg.name.toLowerCase() &&
-                                                    selectedActiveSubItem.kelas.toLowerCase() === cName.toLowerCase() &&
-                                                    selectedActiveSubItem.subjekCode.toLowerCase() === sCode.toLowerCase();
+                                // KUNCI UTAMA: Semak sama ada matrik semasa (gmpAllocations) menugaskan subjek/kelas ini kepada guru ini
+                                let matrixKey = `${cName}_${sCode}`;
+                                let assignedCodeOrName = gmpAllocations[matrixKey] || '';
+                                let isAssignedToThisTeacher = false;
                                 
-                                let itemClass = isSubSelected 
-                                    ? 'bg-[#fef08a] text-slate-950 font-bold px-1.5 py-0.5 rounded border border-dashed border-amber-600 shadow-sm' 
-                                    : 'text-slate-700 hover:bg-slate-200/60 px-1 py-0.5 rounded';
-                                subDetailsHTML += `
-                                    <div class="tree-line my-0.5">
-                                        <span onclick="selectSubTreeItem('${sg.name}', '${cName}', '${sCode}')" class="cursor-pointer inline-block ${itemClass}">
-                                            .. ${sNameOrCode}-${cName}[${masa}]
-                                        </span>
-                                    </div>
-                                `;
+                                if(assignedCodeOrName) {
+                                    if(assignedCodeOrName.toLowerCase() === sg.code.toLowerCase() || assignedCodeOrName.toLowerCase() === sg.name.toLowerCase()) {
+                                        isAssignedToThisTeacher = true;
+                                    }
+                                } else {
+                                    // Jika tiada dalam gmpAllocations, guna padanan asal opsyen Data Asas
+                                    isAssignedToThisTeacher = true;
+                                }
+
+                                if(isAssignedToThisTeacher) {
+                                    totalMasa += masa;
+                                    let isSubSelected = selectedActiveSubItem && 
+                                                        selectedActiveSubItem.teacher.toLowerCase() === sg.name.toLowerCase() &&
+                                                        selectedActiveSubItem.kelas.toLowerCase() === cName.toLowerCase() &&
+                                                        selectedActiveSubItem.subjekCode.toLowerCase() === sCode.toLowerCase();
+                                    
+                                    let itemClass = isSubSelected 
+                                        ? 'bg-[#fef08a] text-slate-950 font-bold px-1.5 py-0.5 rounded border border-dashed border-amber-600 shadow-sm' 
+                                        : 'text-slate-700 hover:bg-slate-200/60 px-1 py-0.5 rounded';
+                                        
+                                    subDetailsHTML += `
+                                        <div class="tree-line my-0.5">
+                                            <span onclick="selectSubTreeItem('${sg.name}', '${cName}', '${sCode}')" class="cursor-pointer inline-block ${itemClass}">
+                                                .. ${sNameOrCode}-${cName}[${masa}]
+                                            </span>
+                                        </div>
+                                    `;
+                                }
                             });
                         }
                     });
                 }
+                
                 container.innerHTML += `
                     <div class="tree-node mb-1">
                         <div class="font-bold text-[#0b1b3d] flex items-center space-x-1 cursor-pointer select-none">
