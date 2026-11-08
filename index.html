@@ -59,7 +59,7 @@
                 <div class="flex items-center space-x-4">
                     <div class="bg-[#0b1b3d] text-white p-3 rounded-2xl text-2xl font-bold shadow">📚</div>
                     <div>
-                        <h2 class="text-xl font-bold text-slate-900">Data Sekolah (Segerak Awan)</h2>
+                        <h2 class="text-xl font-bold text-slate-900">Data Asas Jadual</h2>
                         <p class="text-xs text-slate-500">Pengurusan maklumat asas sekolah secara tersusun dan bersepadu</p>
                     </div>
                 </div>
@@ -74,14 +74,14 @@
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
                 <div class="flex flex-wrap gap-2 border-b pb-4">
                     <button onclick="switchDataSubTab('subjek')" id="subtab-btn-subjek" class="px-4 py-2 rounded-xl text-xs font-bold bg-[#0b1b3d] text-white transition shadow">📖 Mata Pelajaran</button>
-                    <button onclick="switchDataSubTab('agihan_waktu')" id="subtab-btn-agihan_waktu" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">⏰ Agihan Waktu Matapelajaran</button>
+                    <button onclick="switchDataSubTab('agihan_waktu')" id="subtab-btn-agihan_waktu" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">⏰ Agihan waktu Mata Pelajaran</button>
                     <button onclick="switchDataSubTab('kelas')" id="subtab-btn-kelas" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">🏫 Kelas</button>
                     <button onclick="switchDataSubTab('bilik')" id="subtab-btn-bilik" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">🚪 Bilik Khas</button>
                     <button onclick="switchDataSubTab('senarai_guru')" id="subtab-btn-senarai_guru" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">📋 Guru</button>
                     <button onclick="switchDataSubTab('guru')" id="subtab-btn-guru" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">👨‍🏫 Guru & Subjek</button>
                 </div>
                 
-                <!-- Kandungan Sub-tab: Agihan Waktu Matapelajaran -->
+                <!-- Kandungan Sub-tab: Agihan Waktu Mata Pelajaran -->
                 <div id="subtab-content-agihan_waktu" class="hidden space-y-4">
                     <div class="flex flex-wrap justify-between items-center bg-slate-50 p-4 rounded-xl border border-slate-200 gap-4">
                         <div class="flex items-center space-x-3">
@@ -210,7 +210,7 @@
                     <div class="bg-[#0b1b3d] text-white p-2.5 rounded-xl text-xl font-bold">👨‍🏫</div>
                     <div>
                         <h2 class="text-lg font-bold text-[#0b1b3d]">Pengurusan Guru Mata Pelajaran (Matriks Agihan & Agihan Kelas)</h2>
-                        <p class="text-xs text-slate-500">Klik subjek pada senarai pokok untuk memaparkan nama guru dan menukar warna latar kepada krem</p>
+                        <p class="text-xs text-slate-500">Klik kanan pada petak matriks untuk membuka menu pilihan (Tukar, Salin, Tampal, Padam)</p>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
@@ -221,7 +221,7 @@
                     <div class="md:col-span-8 bg-white border border-slate-200 p-4 rounded-xl overflow-x-auto max-h-[600px] relative text-xs">
                         <div class="flex justify-between items-center mb-3">
                             <h3 class="font-bold text-[#0b1b3d]">Jadual Matriks Agihan Subjek / Kelas</h3>
-                            <span class="text-[11px] text-slate-500">Klik item untuk sorotan aktif</span>
+                            <span class="text-[11px] text-slate-500">Klik kanan pada petak untuk menu</span>
                         </div>
                         <table class="w-full border-collapse border border-slate-300 text-center text-xs">
                             <thead>
@@ -436,6 +436,24 @@
             </div>
         </section>
     </main>
+
+    <!-- MENU KLIK KANAN KUSTOM (CONTEXT MENU) UNTUK MATRIKS -->
+    <div id="custom-context-menu" class="fixed hidden bg-white shadow-xl border border-slate-200 rounded-xl py-1.5 z-50 min-w-[150px] text-xs font-medium">
+        <button onclick="handleContextAction('tukar')" class="w-full text-left px-4 py-2 hover:bg-slate-100 flex items-center space-x-2 text-slate-700">
+            <span>✏️</span><span>Tukar</span>
+        </button>
+        <button onclick="handleContextAction('salin')" class="w-full text-left px-4 py-2 hover:bg-slate-100 flex items-center space-x-2 text-slate-700">
+            <span>📋</span><span>Salin</span>
+        </button>
+        <button onclick="handleContextAction('tampal')" class="w-full text-left px-4 py-2 hover:bg-slate-100 flex items-center space-x-2 text-slate-700">
+            <span>📑</span><span>Tampal</span>
+        </button>
+        <div class="border-t my-1"></div>
+        <button onclick="handleContextAction('padam')" class="w-full text-left px-4 py-2 hover:bg-rose-50 flex items-center space-x-2 text-rose-600 font-semibold">
+            <span>❌</span><span>Padam</span>
+        </button>
+    </div>
+
     <!-- MODAL PROGRESS JANA JADUAL -->
     <div id="generation-progress-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-sm hidden flex items-center justify-center z-50">
         <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-2xl border space-y-5">
@@ -459,7 +477,7 @@
         <div class="bg-white w-full max-w-5xl p-6 rounded-2xl shadow-2xl border space-y-5 max-h-[95vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b pb-3">
                 <h3 class="text-base font-bold text-[#0b1b3d]">Menghadagang jadual</h3>
-                <button onclick="closeBlockModal()" class="text-slate-400 font-bold text-sm">✕</button>
+                <button onclick="closeBlockModal()" class="w-8 h-8 rounded-full bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-sm flex items-center justify-center shadow-md transition transform active:scale-95" style="box-shadow: 0 4px 6px -1px rgba(225, 29, 72, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.2);">✕</button>
             </div>
             <input type="hidden" id="block-edit-id" value="">
             <div class="space-y-4 text-xs">
@@ -499,7 +517,7 @@
         <div class="bg-white w-full max-w-3xl p-6 rounded-2xl shadow-2xl border space-y-5 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b pb-3">
                 <h3 id="modal-title" class="text-base font-bold text-[#0b1b3d]">Tambah Rekod Guru & Subjek</h3>
-                <button onclick="closeDataModal()" class="text-slate-400 font-bold text-sm">✕</button>
+                <button onclick="closeDataModal()" class="w-8 h-8 rounded-full bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-sm flex items-center justify-center shadow-md transition transform active:scale-95" style="box-shadow: 0 4px 6px -1px rgba(225, 29, 72, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.2);">✕</button>
             </div>
             <input type="hidden" id="modal-edit-id" value="">
             <div class="space-y-4 text-xs">
@@ -513,7 +531,7 @@
                     </div>
                     <div>
                         <label class="font-semibold text-slate-700 block mb-1">Kod / Singkatan</label>
-                        <input type="text" id="modal-input-code" placeholder="Singkatan..." readonly class="w-full px-3 py-2 border rounded-lg bg-slate-100 font-bold text-slate-700">
+                        <input type="text" id="modal-input-code" placeholder="Taip singkatan..." class="w-full px-3 py-2 border rounded-lg bg-white font-bold text-slate-800 focus:ring-2 focus:ring-[#0b1b3d] outline-none">
                     </div>
                 </div>
                 <div id="modal-container-matrix" class="space-y-2">
@@ -552,7 +570,7 @@
         <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-2xl border space-y-5">
             <div class="flex justify-between items-center border-b pb-3">
                 <h3 class="text-base font-bold text-[#0b1b3d]">Jana Pantas Waktu</h3>
-                <button onclick="closeAutoTimeModal()" class="text-slate-400 font-bold text-sm">✕</button>
+                <button onclick="closeAutoTimeModal()" class="w-8 h-8 rounded-full bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-sm flex items-center justify-center shadow-md transition transform active:scale-95" style="box-shadow: 0 4px 6px -1px rgba(225, 29, 72, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.2);">✕</button>
             </div>
             <div class="space-y-4 text-xs">
                 <div>
@@ -659,6 +677,8 @@
             "AHMAD ROSLI": true
         };
         let selectedActiveSubItem = null;
+        let contextMenuTarget = null; // Menyimpan maklumat sel yang diklik kanan
+
         async function loadDatabaseFromCloud() {
             if(!db) {
                 let localData = localStorage.getItem('school_database');
@@ -821,6 +841,7 @@
                     }
                     bodyHTML += `
                         <td class="border border-slate-300 p-1.5 text-center relative cursor-pointer transition ${bgCellClass}"
+                            oncontextmenu="onMatrixCellContextMenu(event, '${cls.name}', '${s.code}')"
                             onclick="onMatrixCellClick(event, '${cls.name}', '${s.code}', '${assignedTeacher}')">
                             <div class="flex items-center justify-center space-x-0.5 font-medium">
                                 ${displayTeacherName ? `<span class="text-[11px] font-bold">${displayTeacherName}</span>` : '<span class="text-slate-300 text-[10px]">-</span>'}
@@ -832,6 +853,63 @@
             });
             tbody.innerHTML = bodyHTML;
         }
+
+        // Fungsi Klik Kanan (Context Menu) pada Matriks
+        window.onMatrixCellContextMenu = function(e, kelas, subjekCode) {
+            e.preventDefault(); // Halang menu klik kanan asal pelayar
+            contextMenuTarget = { kelas, subjekCode };
+            let menu = document.getElementById('custom-context-menu');
+            if(menu) {
+                menu.style.top = `${e.pageY}px`;
+                menu.style.left = `${e.pageX}px`;
+                menu.classList.remove('hidden');
+            }
+        };
+
+        // Tutup menu klik kanan bila klik di tempat lain
+        window.addEventListener('click', function(e) {
+            let menu = document.getElementById('custom-context-menu');
+            if(menu && !menu.contains(e.target)) {
+                menu.classList.add('hidden');
+            }
+        });
+
+        // Tindakan Pilihan dari Menu Klik Kanan
+        window.handleContextAction = function(action) {
+            let menu = document.getElementById('custom-context-menu');
+            if(menu) menu.classList.add('hidden');
+            if(!contextMenuTarget) return;
+
+            let { kelas, subjekCode } = contextMenuTarget;
+            let key = `${kelas}_${subjekCode}`;
+
+            if(action === 'tukar') {
+                let newTeacher = prompt(`Masukkan nama/singkatan guru baharu untuk ${subjekCode} (${kelas}):`, gmpAllocations[key] || '');
+                if(newTeacher !== null) {
+                    gmpAllocations[key] = newTeacher.trim();
+                    saveDatabaseToCloud();
+                    renderGMPMatrix();
+                    renderGMPTree();
+                }
+            } else if(action === 'salin') {
+                localStorage.setItem('copied_gmp_cell', gmpAllocations[key] || '');
+                alert(`Data sel (${subjekCode} - ${kelas}) telah disalin.`);
+            } else if(action === 'tampal') {
+                let copiedValue = localStorage.getItem('copied_gmp_cell') || '';
+                gmpAllocations[key] = copiedValue;
+                saveDatabaseToCloud();
+                renderGMPMatrix();
+                renderGMPTree();
+            } else if(action === 'padam') {
+                if(confirm(`Adakah anda pasti ingin memadam agihan guru untuk ${subjekCode} di kelas ${kelas}?`)) {
+                    delete gmpAllocations[key];
+                    saveDatabaseToCloud();
+                    renderGMPMatrix();
+                    renderGMPTree();
+                }
+            }
+        };
+
         function renderGMPTree() {
             const container = document.getElementById('gmp-teacher-tree');
             if(!container) return;
@@ -1537,7 +1615,14 @@
             let labelInputName = document.getElementById('label-input-name');
             let matrixContainer = document.getElementById('modal-container-matrix');
             let catContainer = document.getElementById('modal-container-category');
+            let inputCode = document.getElementById('modal-input-code');
             
+            if(inputCode) {
+                inputCode.removeAttribute('readonly');
+                inputCode.classList.remove('bg-slate-100');
+                inputCode.classList.add('bg-white');
+            }
+
             if(currentSubTab === 'guru') {
                 if(labelInputName) labelInputName.innerText = 'Pilih Nama Guru';
                 if(inputName) inputName.classList.add('hidden');
@@ -1557,7 +1642,7 @@
                     if(inputName) inputName.classList.remove('hidden');
                     if(selectName) selectName.classList.add('hidden');
                     if(matrixContainer) matrixContainer.classList.add('hidden');
-                    if(catContainer) catContainer.classList.add('hidden'); // Dibuang terus
+                    if(catContainer) catContainer.classList.add('hidden');
                 } else {
                     if(labelInputName) labelInputName.innerText = 'Nama / Maklumat Utama';
                     if(inputName) inputName.classList.remove('hidden');
@@ -1681,7 +1766,7 @@
                 }
                 categoryValue = summaryArr.length > 0 ? summaryArr.join(' | ') : 'Tiada Opsyen Dipilih';
             } else if(currentSubTab === 'senarai_guru') {
-                categoryValue = ''; // Tiada jawatan/butiran
+                categoryValue = '';
             } else {
                 let inputCat = document.getElementById('modal-input-category');
                 categoryValue = inputCat ? inputCat.value : '-';
@@ -1834,7 +1919,7 @@
         }
         window.onload = () => {
             loadDatabaseFromCloud().then(() => {
-                switchTab('data');
+                switchTab('guru_matapelajaran');
             });
         };
     </script>
