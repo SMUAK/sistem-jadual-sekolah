@@ -998,18 +998,18 @@
             let key = `${kelas}_${subjekCode}`;
 
             if(action === 'tukar') {
-                // Memaparkan semua senarai nama guru yang ada dalam data asas jadual (senarai_guru)
-                let allTeachers = (databaseRecords.senarai_guru || []).map(g => g.name);
-                if(allTeachers.length === 0) allTeachers = ["ASRI B MOHD ZAIN", "AHMAD ROSLI", "SHOLIHIN YUSOFF"];
+                // Memaparkan nama singkatan guru (kod) daripada senarai_guru dalam data asas
+                let allTeacherCodes = (databaseRecords.senarai_guru || []).map(g => g.code);
+                if(allTeacherCodes.length === 0) allTeacherCodes = ["Asri", "Ahmad", "Sholihin"];
                 
-                showCustomPrompt(`Pilih atau masukkan nama guru baharu untuk ${subjekCode} (${kelas}):`, gmpAllocations[key] || allTeachers[0], function(newTeacher) {
-                    if(newTeacher !== null && newTeacher !== undefined) {
-                        gmpAllocations[key] = newTeacher.trim();
+                showCustomPrompt(`Pilih atau masukkan kod/singkatan guru baharu untuk ${subjekCode} (${kelas}):`, gmpAllocations[key] || allTeacherCodes[0], function(newTeacherCode) {
+                    if(newTeacherCode !== null && newTeacherCode !== undefined) {
+                        gmpAllocations[key] = newTeacherCode.trim();
                         saveDatabaseToCloud();
                         renderGMPMatrix();
                         renderGMPTree();
                     }
-                }, allTeachers);
+                }, allTeacherCodes);
 
             } else if(action === 'salin') {
                 localStorage.setItem('copied_gmp_cell', gmpAllocations[key] || '');
@@ -1906,7 +1906,17 @@
             }
             if(editId) {
                 let item = databaseRecords[currentSubTab].find(x => x.id == editId);
-                if(item) { item.name = name; item.code = code; item.category = categoryValue; }
+                if(item) { 
+                    let oldName = item.name;
+                    item.name = name; 
+                    item.code = code; 
+                    item.category = categoryValue; 
+                    // Sinkronisasi dua hala: Jika senarai_guru berubah, kemaskini juga pangkalan data guru & subjek
+                    if(currentSubTab === 'senarai_guru' && databaseRecords['guru']) {
+                        let gItem = databaseRecords['guru'].find(g => g.name.trim().toLowerCase() === oldName.trim().toLowerCase());
+                        if(gItem) { gItem.name = name; gItem.code = code; }
+                    }
+                }
             } else {
                 if(currentSubTab === 'guru') {
                     let existingTeacherIndex = databaseRecords[currentSubTab].findIndex(x => x.name.trim().toLowerCase() === name.trim().toLowerCase());
