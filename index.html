@@ -337,7 +337,7 @@
                         </div>
                         <div class="space-y-3 text-xs">
                             <p class="text-slate-600">Sudah mempunyai jadual waktu? Muat turun templat dan semak fail jadual melalui menu Import Excel Sekolah.</p>
-                            <button onclick="alert('Fungsi Import Excel sedang dikemaskini.')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-semibold shadow transition">Buka Import Jadual Excel</button>
+                            <button onclick="showCustomAlert('Fungsi Import Excel sedang dikemaskini.')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-semibold shadow transition">Buka Import Jadual Excel</button>
                         </div>
                     </div>
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
@@ -436,6 +436,22 @@
             </div>
         </section>
     </main>
+
+    <!-- MODAL KUSTOM: PENGESAHAN & PROMPT KUSTOM -->
+    <div id="custom-modal-dialog" class="fixed inset-0 bg-slate-900/65 backdrop-blur-sm hidden flex items-center justify-center z-50">
+        <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-2xl border space-y-4">
+            <h3 id="custom-modal-title" class="text-base font-bold text-[#0b1b3d]">Pengesahan Sistem</h3>
+            <p id="custom-modal-message" class="text-xs text-slate-600 leading-relaxed"></p>
+            <div id="custom-modal-input-container" class="hidden pt-2">
+                <select id="custom-modal-select" class="w-full px-3 py-2 border rounded-xl bg-slate-50 text-xs font-bold text-[#0b1b3d] mb-2 hidden"></select>
+                <input type="text" id="custom-modal-input" class="w-full px-3 py-2 border rounded-xl text-xs bg-slate-50">
+            </div>
+            <div class="flex justify-end space-x-2 pt-3 border-t">
+                <button id="custom-modal-btn-cancel" onclick="closeCustomModal(false)" class="px-4 py-2 border rounded-xl text-xs font-semibold hover:bg-slate-50 transition">Batal</button>
+                <button id="custom-modal-btn-ok" onclick="closeCustomModal(true)" class="px-5 py-2 bg-[#0b1b3d] hover:bg-[#132d60] text-white rounded-xl text-xs font-semibold shadow transition">Teruskan</button>
+            </div>
+        </div>
+    </div>
 
     <!-- MENU KLIK KANAN KUSTOM (CONTEXT MENU) UNTUK MATRIKS -->
     <div id="custom-context-menu" class="fixed hidden bg-white shadow-xl border border-slate-200 rounded-xl py-1.5 z-50 min-w-[150px] text-xs font-medium">
@@ -677,7 +693,107 @@
             "AHMAD ROSLI": true
         };
         let selectedActiveSubItem = null;
-        let contextMenuTarget = null; // Menyimpan maklumat sel yang diklik kanan
+        let contextMenuTarget = null;
+        let customModalCallback = null;
+
+        // Modul Kotak Pengesahan & Prompt Kustom (Menggantikan browser confirm/prompt)
+        window.showCustomConfirm = function(message, callback) {
+            let modal = document.getElementById('custom-modal-dialog');
+            let titleEl = document.getElementById('custom-modal-title');
+            let msgEl = document.getElementById('custom-modal-message');
+            let inputContainer = document.getElementById('custom-modal-input-container');
+            let inputEl = document.getElementById('custom-modal-input');
+            let selectEl = document.getElementById('custom-modal-select');
+            let btnOk = document.getElementById('custom-modal-btn-ok');
+            
+            if(titleEl) titleEl.innerText = "Pengesahan Sistem";
+            if(msgEl) msgEl.innerText = message;
+            if(inputContainer) inputContainer.classList.add('hidden');
+            if(inputEl) inputEl.classList.add('hidden');
+            if(selectEl) selectEl.classList.add('hidden');
+            if(btnOk) btnOk.innerText = "Teruskan";
+            
+            customModalCallback = callback;
+            if(modal) modal.classList.remove('hidden');
+        };
+
+        window.showCustomPrompt = function(message, defaultValue, callback, optionsList = null) {
+            let modal = document.getElementById('custom-modal-dialog');
+            let titleEl = document.getElementById('custom-modal-title');
+            let msgEl = document.getElementById('custom-modal-message');
+            let inputContainer = document.getElementById('custom-modal-input-container');
+            let inputEl = document.getElementById('custom-modal-input');
+            let selectEl = document.getElementById('custom-modal-select');
+            let btnOk = document.getElementById('custom-modal-btn-ok');
+            
+            if(titleEl) titleEl.innerText = "Maklumat Masukan";
+            if(msgEl) msgEl.innerText = message;
+            if(inputContainer) inputContainer.classList.remove('hidden');
+            if(btnOk) btnOk.innerText = "Simpan";
+            
+            if(optionsList && optionsList.length > 0) {
+                if(selectEl) {
+                    selectEl.classList.remove('hidden');
+                    selectEl.innerHTML = '';
+                    optionsList.forEach(opt => {
+                        let isSel = (opt === defaultValue) ? 'selected' : '';
+                        selectEl.innerHTML += `<option value="${opt}" ${isSel}>${opt}</option>`;
+                    });
+                }
+                if(inputEl) inputEl.classList.add('hidden');
+            } else {
+                if(selectEl) selectEl.classList.add('hidden');
+                if(inputEl) {
+                    inputEl.classList.remove('hidden');
+                    inputEl.value = defaultValue || '';
+                }
+            }
+            
+            customModalCallback = callback;
+            if(modal) modal.classList.remove('hidden');
+            if(!optionsList && inputEl) { inputEl.focus(); inputEl.select(); }
+        };
+
+        window.showCustomAlert = function(message) {
+            let modal = document.getElementById('custom-modal-dialog');
+            let titleEl = document.getElementById('custom-modal-title');
+            let msgEl = document.getElementById('custom-modal-message');
+            let inputContainer = document.getElementById('custom-modal-input-container');
+            let btnOk = document.getElementById('custom-modal-btn-ok');
+            let btnCancel = document.getElementById('custom-modal-btn-cancel');
+            
+            if(titleEl) titleEl.innerText = "Notifikasi Sistem";
+            if(msgEl) msgEl.innerText = message;
+            if(inputContainer) inputContainer.classList.add('hidden');
+            if(btnOk) btnOk.innerText = "Tutup";
+            if(btnCancel) btnCancel.classList.add('hidden');
+            
+            customModalCallback = (res) => { if(btnCancel) btnCancel.classList.remove('hidden'); };
+            if(modal) modal.classList.remove('hidden');
+        };
+
+        window.closeCustomModal = function(isOk) {
+            let modal = document.getElementById('custom-modal-dialog');
+            let inputEl = document.getElementById('custom-modal-input');
+            let selectEl = document.getElementById('custom-modal-select');
+            let btnCancel = document.getElementById('custom-modal-btn-cancel');
+            if(btnCancel) btnCancel.classList.remove('hidden');
+            if(modal) modal.classList.add('hidden');
+            
+            if(customModalCallback) {
+                let val = null;
+                if(!selectEl.classList.contains('hidden')) {
+                    val = selectEl.value;
+                } else if(!inputEl.classList.contains('hidden')) {
+                    val = inputEl.value;
+                } else {
+                    val = isOk;
+                }
+                let cb = customModalCallback;
+                customModalCallback = null;
+                cb(val);
+            }
+        };
 
         async function loadDatabaseFromCloud() {
             if(!db) {
@@ -764,10 +880,10 @@
                     if(imported.agihanWaktuData) agihanWaktuData = imported.agihanWaktuData;
                     
                     await saveDatabaseToCloud();
-                    alert('Fail sandaran JSON berjaya diimport dan diselaraskan ke sistem!');
+                    showCustomAlert('Fail sandaran JSON berjaya diimport dan diselaraskan ke sistem!');
                     renderDataTable();
                 } catch(err) {
-                    alert('Ralat membaca fail JSON. Sila pastikan format fail adalah sah.');
+                    showCustomAlert('Ralat membaca fail JSON. Sila pastikan format fail adalah sah.');
                     console.error(err);
                 }
             };
@@ -854,9 +970,8 @@
             tbody.innerHTML = bodyHTML;
         }
 
-        // Fungsi Klik Kanan (Context Menu) pada Matriks
         window.onMatrixCellContextMenu = function(e, kelas, subjekCode) {
-            e.preventDefault(); // Halang menu klik kanan asal pelayar
+            e.preventDefault();
             contextMenuTarget = { kelas, subjekCode };
             let menu = document.getElementById('custom-context-menu');
             if(menu) {
@@ -866,7 +981,6 @@
             }
         };
 
-        // Tutup menu klik kanan bila klik di tempat lain
         window.addEventListener('click', function(e) {
             let menu = document.getElementById('custom-context-menu');
             if(menu && !menu.contains(e.target)) {
@@ -874,7 +988,6 @@
             }
         });
 
-        // Tindakan Pilihan dari Menu Klik Kanan
         window.handleContextAction = function(action) {
             let menu = document.getElementById('custom-context-menu');
             if(menu) menu.classList.add('hidden');
@@ -884,16 +997,22 @@
             let key = `${kelas}_${subjekCode}`;
 
             if(action === 'tukar') {
-                let newTeacher = prompt(`Masukkan nama/singkatan guru baharu untuk ${subjekCode} (${kelas}):`, gmpAllocations[key] || '');
-                if(newTeacher !== null) {
-                    gmpAllocations[key] = newTeacher.trim();
-                    saveDatabaseToCloud();
-                    renderGMPMatrix();
-                    renderGMPTree();
-                }
+                // Memaparkan semua senarai nama guru yang ada dalam data asas jadual (senarai_guru)
+                let allTeachers = (databaseRecords.senarai_guru || []).map(g => g.name);
+                if(allTeachers.length === 0) allTeachers = ["ASRI B MOHD ZAIN", "AHMAD ROSLI"];
+                
+                showCustomPrompt(`Pilih atau masukkan nama guru baharu untuk ${subjekCode} (${kelas}):`, gmpAllocations[key] || allTeachers[0], function(newTeacher) {
+                    if(newTeacher !== null && newTeacher !== undefined) {
+                        gmpAllocations[key] = newTeacher.trim();
+                        saveDatabaseToCloud();
+                        renderGMPMatrix();
+                        renderGMPTree();
+                    }
+                }, allTeachers);
+
             } else if(action === 'salin') {
                 localStorage.setItem('copied_gmp_cell', gmpAllocations[key] || '');
-                alert(`Data sel (${subjekCode} - ${kelas}) telah disalin.`);
+                showCustomAlert(`Data sel (${subjekCode} - ${kelas}) telah disalin.`);
             } else if(action === 'tampal') {
                 let copiedValue = localStorage.getItem('copied_gmp_cell') || '';
                 gmpAllocations[key] = copiedValue;
@@ -901,12 +1020,14 @@
                 renderGMPMatrix();
                 renderGMPTree();
             } else if(action === 'padam') {
-                if(confirm(`Adakah anda pasti ingin memadam agihan guru untuk ${subjekCode} di kelas ${kelas}?`)) {
-                    delete gmpAllocations[key];
-                    saveDatabaseToCloud();
-                    renderGMPMatrix();
-                    renderGMPTree();
-                }
+                showCustomConfirm(`Adakah anda pasti ingin memadam agihan guru untuk ${subjekCode} di kelas ${kelas}?`, function(confirmed) {
+                    if(confirmed) {
+                        delete gmpAllocations[key];
+                        saveDatabaseToCloud();
+                        renderGMPMatrix();
+                        renderGMPTree();
+                    }
+                });
             }
         };
 
@@ -1184,10 +1305,10 @@
         window.startAutoGeneration = function() {
             let targetClass = document.getElementById('auto-select-class').value;
             let classesToProcess = targetClass === 'Semua' ? (databaseRecords.kelas || []) : (databaseRecords.kelas || []).filter(k => k.name === targetClass);
-            if(classesToProcess.length === 0) return alert('Tiada kelas untuk dijana.');
+            if(classesToProcess.length === 0) return showCustomAlert('Tiada kelas untuk dijana.');
             let subjects = databaseRecords.subjek || [];
             let teachers = databaseRecords.guru || [];
-            if(subjects.length === 0 || teachers.length === 0) return alert('Sila pastikan data Subjek dan Guru diisi.');
+            if(subjects.length === 0 || teachers.length === 0) return showCustomAlert('Sila pastikan data Subjek dan Guru diisi.');
             let modal = document.getElementById('generation-progress-modal');
             let bar = document.getElementById('progress-bar-fill');
             let statusText = document.getElementById('progress-status-text');
@@ -1222,7 +1343,7 @@
                 setTimeout(() => {
                     modal.classList.add('hidden');
                     renderClassStatusTable();
-                    alert('Jadual pintar berjaya dijana!');
+                    showCustomAlert('Jadual pintar berjaya dijana!');
                 }, 300);
             }, 200);
         }
@@ -1254,24 +1375,26 @@
                 setTimeout(() => {
                     modal.classList.add('hidden');
                     renderClassStatusTable();
-                    alert(`Jadual bagi kelas ${className} berjaya dijana!`);
+                    showCustomAlert(`Jadual bagi kelas ${className} berjaya dijana!`);
                 }, 300);
             }, 200);
         }
         window.resetAllSchedules = function() {
-            if(confirm('Adakah anda pasti ingin mengosongkan semua jadual?')) {
-                generatedTimetableData = {};
-                saveDatabaseToCloud();
-                renderClassStatusTable();
-                alert('Semua jadual telah dikosongkan.');
-            }
+            showCustomConfirm('Adakah anda pasti ingin mengosongkan semua jadual?', function(confirmed) {
+                if(confirmed) {
+                    generatedTimetableData = {};
+                    saveDatabaseToCloud();
+                    renderClassStatusTable();
+                    showCustomAlert('Semua jadual telah dikosongkan.');
+                }
+            });
         }
         window.cancelGeneration = () => document.getElementById('generation-progress-modal').classList.add('hidden');
         window.saveBackupVersion = function() {
             let nameEl = document.getElementById('backup-version-name');
             let name = nameEl ? nameEl.value : '';
-            if(!name) return alert('Sila masukkan nama versi sandaran.');
-            alert(`Versi "${name}" berjaya disimpan!`);
+            if(!name) return showCustomAlert('Sila masukkan nama versi sandaran.');
+            showCustomAlert(`Versi "${name}" berjaya disimpan!`);
             if(nameEl) nameEl.value = '';
         }
         
@@ -1368,7 +1491,7 @@
         window.saveBlockRecord = function() {
             let labelTeacher = document.getElementById('modal-block-teacher-label').innerText;
             let teacherName = labelTeacher.replace('Guru: ', '').trim();
-            if(!teacherName || teacherName === '-') return alert('Ralat nama guru.');
+            if(!teacherName || teacherName === '-') return showCustomAlert('Ralat nama guru.');
             
             let blockedList = [];
             let days = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat', 'Sabtu'];
@@ -1403,14 +1526,16 @@
             saveDatabaseToCloud();
             closeBlockModal();
             renderDataTable();
-            alert('Tetapan had masa guru berjaya disimpan!');
+            showCustomAlert('Tetapan had masa guru berjaya disimpan!');
         }
         window.deleteBlockRecord = function(id) {
-            if(confirm('Adakah anda pasti ingin memadam tetapan had masa ini?')) {
-                blockedTimesData = blockedTimesData.filter(x => x.id !== id);
-                saveDatabaseToCloud();
-                renderDataTable();
-            }
+            showCustomConfirm('Adakah anda pasti ingin memadam tetapan had masa ini?', function(confirmed) {
+                if(confirmed) {
+                    blockedTimesData = blockedTimesData.filter(x => x.id !== id);
+                    saveDatabaseToCloud();
+                    renderDataTable();
+                }
+            });
         }
         
         window.switchDataSubTab = function(subTab) {
@@ -1523,7 +1648,7 @@
                 }
             });
             saveDatabaseToCloud();
-            alert(`Tetapan agihan waktu bagi ${tingkatan} berjaya disimpan!`);
+            showCustomAlert(`Tetapan agihan waktu bagi ${tingkatan} berjaya disimpan!`);
         }
         function renderDataTable() {
             const tbody = document.getElementById('data-table-body');
@@ -1540,7 +1665,7 @@
                         <th class="border border-slate-300 p-2.5 w-16">#</th>
                         <th class="border border-slate-300 p-2.5 w-36">Kod</th>
                         <th class="border border-slate-300 p-2.5 text-left pl-4">Nama Guru</th>
-                        <th class="border border-slate-300 p-2.5 w-32 bg-rose-50/70 text-rose-800">Had Masa</th>
+                        <th class="border border-slate-300 p-2.5 w-44 bg-rose-50/70 text-rose-800">Had Masa</th>
                     `;
                 }
                 let records = databaseRecords['senarai_guru'] || [];
@@ -1553,7 +1678,10 @@
                             <td class="border border-slate-300 p-2.5 font-semibold text-slate-700">${item.code}</td>
                             <td class="border border-slate-300 p-2.5 text-left pl-4 font-bold text-[#0b1b3d]">${item.name}</td>
                             <td class="border border-slate-300 p-2.5 bg-rose-50/30">
-                                <button onclick="openBlockModalForTeacher('${item.name}')" class="px-3 py-1 bg-rose-100 hover:bg-rose-200 text-rose-800 rounded-lg shadow-sm text-xs font-bold transition border border-rose-200">Had Masa</button>
+                                <div class="flex justify-center items-center space-x-2">
+                                    <button onclick="openBlockModalForTeacher('${item.name}')" class="px-3 py-1 bg-rose-100 hover:bg-rose-200 text-rose-800 rounded-lg shadow-sm text-xs font-bold transition border border-rose-200">Had Masa</button>
+                                    <button onclick="openBlockModalForTeacher('${item.name}')" class="p-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-lg shadow transition" title="Kemaskini Had Masa">✏️</button>
+                                </div>
                             </td>
                         </tr>
                     `;
@@ -1747,7 +1875,7 @@
             let name = currentSubTab === 'guru' ? (selectNameEl ? selectNameEl.value : '') : (inputNameEl ? inputNameEl.value : '');
             let codeEl = document.getElementById('modal-input-code');
             let code = codeEl ? codeEl.value : '';
-            if(!name) return alert('Sila masukkan atau pilih nama terlebih dahulu.');
+            if(!name) return showCustomAlert('Sila masukkan atau pilih nama terlebih dahulu.');
             
             let categoryValue = '';
             if(currentSubTab === 'guru') {
@@ -1790,7 +1918,7 @@
             saveDatabaseToCloud();
             closeDataModal();
             renderDataTable();
-            alert('Rekod berjaya disimpan ke pangkalan data awan!');
+            showCustomAlert('Rekod berjaya disimpan ke pangkalan data awan!');
         }
         window.editRecord = function(id) {
             let item = databaseRecords[currentSubTab].find(x => x.id == id);
@@ -1816,11 +1944,13 @@
             }
         }
         window.deleteRecord = function(id) {
-            if(confirm('Adakah anda pasti ingin memadam rekod ini?')) {
-                databaseRecords[currentSubTab] = databaseRecords[currentSubTab].filter(x => x.id !== id);
-                saveDatabaseToCloud();
-                renderDataTable();
-            }
+            showCustomConfirm('Adakah anda pasti ingin memadam rekod ini?', function(confirmed) {
+                if(confirmed) {
+                    databaseRecords[currentSubTab] = databaseRecords[currentSubTab].filter(x => x.id !== id);
+                    saveDatabaseToCloud();
+                    renderDataTable();
+                }
+            });
         }
         window.filterTableData = function() {
             let searchInput = document.getElementById('search-data-input');
@@ -1853,7 +1983,7 @@
                 if(input) dailyConfig[day] = parseInt(input.value) || 8;
             });
             localStorage.setItem('school_daily_slots_config', JSON.stringify(dailyConfig));
-            alert('Tetapan harian berjaya disimpan!');
+            showCustomAlert('Tetapan harian berjaya disimpan!');
         }
         function renderTimeSlotsTable() {
             const tbody = document.getElementById('time-slots-table-body');
@@ -1891,7 +2021,7 @@
             let totalSlots = totalSlotsEl ? parseInt(totalSlotsEl.value) || 10 : 10;
             let breakAfter = breakAfterEl ? parseInt(breakAfterEl.value) || 4 : 4;
             let breakDuration = breakDurationEl ? parseInt(breakDurationEl.value) || 30 : 30;
-            if(!startTimeStr) return alert('Sila masukkan masa mula.');
+            if(!startTimeStr) return showCustomAlert('Sila masukkan masa mula.');
             let [h, m] = startTimeStr.split(':').map(Number);
             let d = new Date(); d.setHours(h, m, 0, 0);
             let newSlots = [], lessonNum = 1;
@@ -1911,7 +2041,7 @@
             saveDatabaseToCloud();
             renderTimeSlotsTable();
             closeAutoTimeModal();
-            alert('Jadual masa berjaya dijana dan disimpan!');
+            showCustomAlert('Jadual masa berjaya dijana dan disimpan!');
         }
         function formatMins(mins) {
             let h = Math.floor(mins/60)%24, m = mins%60;
