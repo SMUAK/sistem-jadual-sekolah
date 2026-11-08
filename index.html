@@ -109,6 +109,7 @@
                                 </tr>
                             </thead>
                             <tbody id="agihan-waktu-tbody" class="font-medium"></tbody>
+                            <tfoot id="agihan-waktu-tfoot" class="font-bold bg-slate-50 text-[#0b1b3d]"></tfoot>
                         </table>
                     </div>
                 </div>
@@ -1323,8 +1324,11 @@
             let selectTing = document.getElementById('agihan-select-tingkatan');
             let tingkatan = selectTing ? selectTing.value : 'TINGKATAN 1';
             let tbody = document.getElementById('agihan-waktu-tbody');
+            let tfoot = document.getElementById('agihan-waktu-tfoot');
             if(!tbody) return;
             tbody.innerHTML = '';
+            if(tfoot) tfoot.innerHTML = '';
+
             let subjekList = databaseRecords.subjek || [];
             if(subjekList.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-slate-400 italic">Tiada mata pelajaran didaftarkan. Sila daftar di menu Mata Pelajaran dahulu.</td></tr>`;
@@ -1340,30 +1344,59 @@
                         <td class="border border-slate-300 p-2.5 text-left pl-4 font-bold text-[#0b1b3d]">${s.name}</td>
                         <td class="border border-slate-300 p-2.5 font-bold text-slate-700">${s.code}</td>
                         <td class="border border-slate-300 p-2 text-center">
-                            <input type="number" min="0" max="10" value="${currentVals.single}" data-ting="${tingkatan}" data-code="${s.code}" data-type="single" oninput="calculateAgihanTotal(this)" class="w-16 px-2 py-1 border rounded text-center font-bold text-xs bg-white agihan-input">
+                            <input type="number" min="0" max="10" value="${currentVals.single}" data-ting="${tingkatan}" data-code="${s.code}" data-type="single" oninput="calculateAgihanTotals()" class="w-16 px-2 py-1 border rounded text-center font-bold text-xs bg-white agihan-input-single">
                         </td>
                         <td class="border border-slate-300 p-2 text-center">
-                            <input type="number" min="0" max="10" value="${currentVals.double}" data-ting="${tingkatan}" data-code="${s.code}" data-type="double" oninput="calculateAgihanTotal(this)" class="w-16 px-2 py-1 border rounded text-center font-bold text-xs bg-white agihan-input">
+                            <input type="number" min="0" max="10" value="${currentVals.double}" data-ting="${tingkatan}" data-code="${s.code}" data-type="double" oninput="calculateAgihanTotals()" class="w-16 px-2 py-1 border rounded text-center font-bold text-xs bg-white agihan-input-double">
                         </td>
                         <td class="border border-slate-300 p-2 text-center">
-                            <input type="number" min="0" max="10" value="${currentVals.triple}" data-ting="${tingkatan}" data-code="${s.code}" data-type="triple" oninput="calculateAgihanTotal(this)" class="w-16 px-2 py-1 border rounded text-center font-bold text-xs bg-white agihan-input">
+                            <input type="number" min="0" max="10" value="${currentVals.triple}" data-ting="${tingkatan}" data-code="${s.code}" data-type="triple" oninput="calculateAgihanTotals()" class="w-16 px-2 py-1 border rounded text-center font-bold text-xs bg-white agihan-input-triple">
                         </td>
-                        <td class="border border-slate-300 p-2 text-center font-extrabold text-[#0b1b3d] bg-slate-50 agihan-total-cell">
+                        <td class="border border-slate-300 p-2 text-center font-extrabold text-[#0b1b3d] bg-slate-50 agihan-row-total">
                             ${totalMasa}
                         </td>
                     </tr>
                 `;
             });
+
+            calculateAgihanTotals();
         }
 
-        window.calculateAgihanTotal = function(input) {
-            let row = input.closest('tr');
-            let single = parseInt(row.querySelector('data-type="single"')?.value || row.querySelector('input[data-type="single"]')?.value) || 0;
-            let double = parseInt(row.querySelector('data-type="double"')?.value || row.querySelector('input[data-type="double"]')?.value) || 0;
-            let triple = parseInt(row.querySelector('data-type="triple"')?.value || row.querySelector('input[data-type="triple"]')?.value) || 0;
-            let total = (single * 1) + (double * 2) + (triple * 3);
-            let totalCell = row.querySelector('.agihan-total-cell');
-            if(totalCell) totalCell.innerText = total;
+        window.calculateAgihanTotals = function() {
+            let rows = document.querySelectorAll('#agihan-waktu-tbody tr');
+            let sumSingle = 0, sumDouble = 0, sumTriple = 0, sumTotal = 0;
+
+            rows.forEach(row => {
+                let singleInput = row.querySelector('.agihan-input-single');
+                let doubleInput = row.querySelector('.agihan-input-double');
+                let tripleInput = row.querySelector('.agihan-input-triple');
+                let rowTotalCell = row.querySelector('.agihan-row-total');
+
+                let sVal = parseInt(singleInput?.value) || 0;
+                let dVal = parseInt(doubleInput?.value) || 0;
+                let tVal = parseInt(tripleInput?.value) || 0;
+                let rowTotal = (sVal * 1) + (dVal * 2) + (tVal * 3);
+
+                if(rowTotalCell) rowTotalCell.innerText = rowTotal;
+
+                sumSingle += sVal;
+                sumDouble += dVal;
+                sumTriple += tVal;
+                sumTotal += rowTotal;
+            });
+
+            let tfoot = document.getElementById('agihan-waktu-tfoot');
+            if(tfoot) {
+                tfoot.innerHTML = `
+                    <tr>
+                        <td colspan="2" class="border border-slate-300 p-2.5 text-right pr-4 uppercase">JUMLAH KESELURUHAN</td>
+                        <td class="border border-slate-300 p-2.5 text-center text-[#0b1b3d]" id="col-sum-single">${sumSingle}</td>
+                        <td class="border border-slate-300 p-2.5 text-center text-[#0b1b3d]" id="col-sum-double">${sumDouble}</td>
+                        <td class="border border-slate-300 p-2.5 text-center text-[#0b1b3d]" id="col-sum-triple">${sumTriple}</td>
+                        <td class="border border-slate-300 p-2.5 text-center bg-slate-100 text-[#0b1b3d]" id="col-sum-grand">${sumTotal}</td>
+                    </tr>
+                `;
+            }
         }
 
         window.saveAgihanWaktuData = function() {
@@ -1371,12 +1404,18 @@
             let tingkatan = selectTing ? selectTing.value : 'TINGKATAN 1';
             if(!agihanWaktuData[tingkatan]) agihanWaktuData[tingkatan] = {};
 
-            document.querySelectorAll('.agihan-input').forEach(input => {
-                let code = input.getAttribute('data-code');
-                let type = input.getAttribute('data-type');
-                let val = parseInt(input.value) || 0;
-                if(!agihanWaktuData[tingkatan][code]) agihanWaktuData[tingkatan][code] = { single: 1, double: 0, triple: 0 };
-                agihanWaktuData[tingkatan][code][type] = val;
+            document.querySelectorAll('#agihan-waktu-tbody tr').forEach(row => {
+                let singleInput = row.querySelector('.agihan-input-single');
+                let doubleInput = row.querySelector('.agihan-input-double');
+                let tripleInput = row.querySelector('.agihan-input-triple');
+                if(singleInput) {
+                    let code = singleInput.getAttribute('data-code');
+                    agihanWaktuData[tingkatan][code] = {
+                        single: parseInt(singleInput.value) || 0,
+                        double: parseInt(doubleInput.value) || 0,
+                        triple: parseInt(tripleInput.value) || 0
+                    };
+                }
             });
             saveDatabaseToCloud();
             alert(`Tetapan agihan waktu bagi ${tingkatan} berjaya disimpan!`);
