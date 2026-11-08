@@ -804,6 +804,7 @@
                 if(localGMP) gmpAllocations = JSON.parse(localGMP);
                 let localAgihan = localStorage.getItem('school_agihan_waktu');
                 if(localAgihan) agihanWaktuData = JSON.parse(localAgihan);
+                syncGMPAllocationsToGuruData();
                 renderDataTable();
                 return;
             }
@@ -818,6 +819,7 @@
                     if(cloudData.generatedTimetableData) generatedTimetableData = cloudData.generatedTimetableData;
                     if(cloudData.gmpAllocations) gmpAllocations = cloudData.gmpAllocations;
                     if(cloudData.agihanWaktuData) agihanWaktuData = cloudData.agihanWaktuData;
+                    syncGMPAllocationsToGuruData();
                 } else {
                     await saveDatabaseToCloud();
                 }
@@ -826,7 +828,56 @@
             }
             renderDataTable();
         }
+
+        // Fungsi Penyelarasan Dua Hala (Sinkronisasi Antara Matriks GMP dan Tab Guru & Subjek)
+        function syncGMPAllocationsToGuruData() {
+            let teacherMap = {};
+            // Kumpulkan semula agihan daripada gmpAllocations mengikut guru
+            for(let key in gmpAllocations) {
+                let tCode = gmpAllocations[key];
+                if(!tCode) continue;
+                let parts = key.split('_');
+                let kelas = parts[0];
+                let subCode = parts[1];
+                
+                // Cari nama penuh guru berdasarkan kod singkatannya
+                let foundG = (databaseRecords.senarai_guru || []).find(g => g.code.toLowerCase() === tCode.toLowerCase() || g.name.toLowerCase().includes(tCode.toLowerCase()));
+                let fullTeacherName = foundG ? foundG.name : tCode;
+                
+                if(!teacherMap[fullTeacherName]) teacherMap[fullTeacherName] = {};
+                if(!teacherMap[fullTeacherName][kelas]) teacherMap[fullTeacherName][kelas] = [];
+                teacherMap[fullTeacherName][kelas].push(`${subCode} (2 Masa)`);
+            }
+
+            // Kemaskini databaseRecords.guru secara automatik
+            if(!databaseRecords.guru) databaseRecords.guru = [];
+            for(let tName in teacherMap) {
+                let summaryArr = [];
+                for(let k in teacherMap[tName]) {
+                    summaryArr.push(`${k} [${teacherMap[tName][k].join(', ')}]`);
+                }
+                let catStr = summaryArr.join(' | ');
+                
+                let existingG = databaseRecords.guru.find(g => g.name.trim().toLowerCase() === tName.trim().toLowerCase());
+                let foundSenarai = (databaseRecords.senarai_guru || []).find(g => g.name.trim().toLowerCase() === tName.trim().toLowerCase());
+                let tCode = foundSenarai ? foundSenarai.code : tName;
+
+                if(existingG) {
+                    existingG.category = catStr;
+                    existingG.code = tCode;
+                } else {
+                    databaseRecords.guru.push({
+                        id: Date.now() + Math.random(),
+                        name: tName,
+                        code: tCode,
+                        category: catStr
+                    });
+                }
+            }
+        }
+
         async function saveDatabaseToCloud() {
+            syncGMPAllocationsToGuruData();
             localStorage.setItem('school_database', JSON.stringify(databaseRecords));
             localStorage.setItem('school_time_slots', JSON.stringify(timeSlotsData));
             localStorage.setItem('school_blocked_times', JSON.stringify(blockedTimesData));
@@ -880,6 +931,7 @@
                     if(imported.gmpAllocations) gmpAllocations = imported.gmpAllocations;
                     if(imported.agihanWaktuData) agihanWaktuData = imported.agihanWaktuData;
                     
+                    syncGMPAllocationsToGuruData();
                     await saveDatabaseToCloud();
                     showCustomAlert('Fail sandaran JSON berjaya diimport dan diselaraskan ke sistem!');
                     renderDataTable();
@@ -1911,7 +1963,6 @@
                     item.name = name; 
                     item.code = code; 
                     item.category = categoryValue; 
-                    // Sinkronisasi dua hala: Jika senarai_guru berubah, kemaskini juga pangkalan data guru & subjek
                     if(currentSubTab === 'senarai_guru' && databaseRecords['guru']) {
                         let gItem = databaseRecords['guru'].find(g => g.name.trim().toLowerCase() === oldName.trim().toLowerCase());
                         if(gItem) { gItem.name = name; gItem.code = code; }
