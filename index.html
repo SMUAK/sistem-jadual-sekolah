@@ -505,7 +505,7 @@
             <div class="space-y-4 text-xs">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label class="font-semibold text-slate-700 block mb-1">Pilih Nama Guru</label>
+                        <label id="label-input-name" class="font-semibold text-slate-700 block mb-1">Isi Nama Guru</label>
                         <select id="modal-select-name" onchange="onTeacherDropdownChange()" class="w-full px-3 py-2 border rounded-lg bg-slate-50 font-medium">
                             <option value="">-- Sila Pilih Guru --</option>
                         </select>
@@ -615,8 +615,8 @@
                 { id: 1, name: "Makmal Komputer 1", code: "MK1", category: "Khas" }
             ],
             senarai_guru: [
-                { id: 1, name: "ASRI B MOHD ZAIN", code: "Asri", category: "Arab / Agama" },
-                { id: 2, name: "AHMAD ROSLI", code: "Ahmad", category: "Akademik" }
+                { id: 1, name: "ASRI B MOHD ZAIN", code: "Asri", category: "" },
+                { id: 2, name: "AHMAD ROSLI", code: "Ahmad", category: "" }
             ],
             guru: [
                 {
@@ -1290,7 +1290,7 @@
         window.saveBlockRecord = function() {
             let labelTeacher = document.getElementById('modal-block-teacher-label').innerText;
             let teacherName = labelTeacher.replace('Guru: ', '').trim();
-            if(!teacherName || teacherName === '-') return alertâmara('Ralat nama guru.');
+            if(!teacherName || teacherName === '-') return alert('Ralat nama guru.');
             
             let blockedList = [];
             let days = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat', 'Sabtu'];
@@ -1534,10 +1534,12 @@
             
             let inputName = document.getElementById('modal-input-name');
             let selectName = document.getElementById('modal-select-name');
+            let labelInputName = document.getElementById('label-input-name');
             let matrixContainer = document.getElementById('modal-container-matrix');
             let catContainer = document.getElementById('modal-container-category');
             
             if(currentSubTab === 'guru') {
+                if(labelInputName) labelInputName.innerText = 'Pilih Nama Guru';
                 if(inputName) inputName.classList.add('hidden');
                 if(selectName) {
                     selectName.classList.remove('hidden');
@@ -1550,18 +1552,18 @@
                 if(catContainer) catContainer.classList.add('hidden');
                 buildMatrixTable();
             } else {
-                if(inputName) inputName.classList.remove('hidden');
-                if(selectName) selectName.classList.add('hidden');
-                if(matrixContainer) matrixContainer.classList.add('hidden');
-                if(catContainer) catContainer.classList.remove('hidden');
                 if(currentSubTab === 'senarai_guru') {
-                    let labelCat = document.getElementById('label-input-category');
-                    if(labelCat) labelCat.innerText = 'Jawatan / Butiran Guru';
-                    let inputCat = document.getElementById('modal-input-category');
-                    if(inputCat) inputCat.classList.add('hidden');
-                    let selectCat = document.getElementById('modal-select-category');
-                    if(selectCat) selectCat.classList.remove('hidden');
+                    if(labelInputName) labelInputName.innerText = 'Isi Nama Guru';
+                    if(inputName) inputName.classList.remove('hidden');
+                    if(selectName) selectName.classList.add('hidden');
+                    if(matrixContainer) matrixContainer.classList.add('hidden');
+                    if(catContainer) catContainer.classList.add('hidden'); // Dibuang terus
                 } else {
+                    if(labelInputName) labelInputName.innerText = 'Nama / Maklumat Utama';
+                    if(inputName) inputName.classList.remove('hidden');
+                    if(selectName) selectName.classList.add('hidden');
+                    if(matrixContainer) matrixContainer.classList.add('hidden');
+                    if(catContainer) catContainer.classList.remove('hidden');
                     let labelCat = document.getElementById('label-input-category');
                     if(labelCat) labelCat.innerText = 'Butiran Lanjut / Kategori';
                     let inputCat = document.getElementById('modal-input-category');
@@ -1679,8 +1681,7 @@
                 }
                 categoryValue = summaryArr.length > 0 ? summaryArr.join(' | ') : 'Tiada Opsyen Dipilih';
             } else if(currentSubTab === 'senarai_guru') {
-                let selectCat = document.getElementById('modal-select-category');
-                categoryValue = selectCat ? selectCat.value : '-';
+                categoryValue = ''; // Tiada jawatan/butiran
             } else {
                 let inputCat = document.getElementById('modal-input-category');
                 categoryValue = inputCat ? inputCat.value : '-';
@@ -1723,10 +1724,7 @@
             } else {
                 let inputNameEl = document.getElementById('modal-input-name');
                 if(inputNameEl) inputNameEl.value = item.name;
-                if(currentSubTab === 'senarai_guru') {
-                    let selectCat = document.getElementById('modal-select-category');
-                    if(selectCat) selectCat.value = item.category;
-                } else {
+                if(currentSubTab !== 'senarai_guru') {
                     let inputCat = document.getElementById('modal-input-category');
                     if(inputCat) inputCat.value = item.category;
                 }
