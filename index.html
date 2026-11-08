@@ -77,7 +77,7 @@
                     <button onclick="switchDataSubTab('agihan_waktu')" id="subtab-btn-agihan_waktu" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">⏰ Agihan Waktu Matapelajaran</button>
                     <button onclick="switchDataSubTab('kelas')" id="subtab-btn-kelas" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">🏫 Kelas</button>
                     <button onclick="switchDataSubTab('bilik')" id="subtab-btn-bilik" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">🚪 Bilik Khas</button>
-                    <button onclick="switchDataSubTab('senarai_guru')" id="subtab-btn-senarai_guru" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">📋 Senarai Guru</button>
+                    <button onclick="switchDataSubTab('senarai_guru')" id="subtab-btn-senarai_guru" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">📋 Guru</button>
                     <button onclick="switchDataSubTab('guru')" id="subtab-btn-guru" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">👨‍🏫 Guru & Subjek</button>
                 </div>
                 
@@ -102,9 +102,10 @@
                                 <tr class="bg-slate-100 text-slate-800 font-bold">
                                     <th class="border border-slate-300 p-2.5 text-left pl-4">Matapelajaran</th>
                                     <th class="border border-slate-300 p-2.5 w-28">Kod</th>
-                                    <th class="border border-slate-300 p-2.5 w-32">Single</th>
-                                    <th class="border border-slate-300 p-2.5 w-32">Double</th>
-                                    <th class="border border-slate-300 p-2.5 w-32">Triple</th>
+                                    <th class="border border-slate-300 p-2.5 w-28">Tunggal</th>
+                                    <th class="border border-slate-300 p-2.5 w-28">Berganda</th>
+                                    <th class="border border-slate-300 p-2.5 w-28">Tiga Waktu</th>
+                                    <th class="border border-slate-300 p-2.5 w-28 bg-slate-200 text-[#0b1b3d]">Jumlah</th>
                                 </tr>
                             </thead>
                             <tbody id="agihan-waktu-tbody" class="font-medium"></tbody>
@@ -112,7 +113,7 @@
                     </div>
                 </div>
 
-                <!-- Kandungan Sub-tab Standard (Subjek, Kelas, dll) -->
+                <!-- Kandungan Sub-tab Standard -->
                 <div id="standard-data-section" class="space-y-4">
                     <div class="flex flex-wrap justify-between items-center gap-4">
                         <button onclick="openAddModal()" class="bg-[#0b1b3d] hover:bg-[#132d60] text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow flex items-center space-x-2 transition">
@@ -213,12 +214,10 @@
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
-                    <!-- Pohon Senarai Guru (Kiri) -->
                     <div class="md:col-span-4 bg-slate-50 border border-slate-200 p-4 rounded-xl overflow-y-auto max-h-[600px] text-xs">
                         <h3 class="font-bold text-[#0b1b3d] mb-3 border-b pb-2">Senarai Guru & Beban Masa</h3>
                         <div id="gmp-teacher-tree" class="space-y-2 font-mono"></div>
                     </div>
-                    <!-- Jadual Matriks Agihan (Kanan) -->
                     <div class="md:col-span-8 bg-white border border-slate-200 p-4 rounded-xl overflow-x-auto max-h-[600px] relative text-xs">
                         <div class="flex justify-between items-center mb-3">
                             <h3 class="font-bold text-[#0b1b3d]">Jadual Matriks Agihan Subjek / Kelas</h3>
@@ -297,7 +296,6 @@
         <!-- Tab Jana Jadual (Auto) -->
         <section id="tab-jana" class="hidden space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <!-- Panel Kawalan Kiri -->
                 <div class="lg:col-span-5 space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5">
                         <div class="flex items-center space-x-3 border-b pb-3">
@@ -353,7 +351,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- Status Pengisian Kanan -->
                 <div class="lg:col-span-7 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
                     <div class="flex justify-between items-center border-b pb-3">
                         <h3 class="text-base font-bold text-[#0b1b3d]">Status Pengisian Jadual Waktu</h3>
@@ -416,7 +413,6 @@
                         <p class="text-xs text-slate-500">Urus sandaran data dan konfigurasi sistem</p>
                     </div>
                 </div>
-                <!-- Modul Sandaran JSON -->
                 <div class="bg-slate-50 border border-slate-200 p-5 rounded-2xl space-y-4">
                     <div class="flex items-center space-x-3">
                         <div class="bg-indigo-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shadow">5</div>
@@ -796,7 +792,6 @@
             if(tabId === 'jadual_induk') initMasterTimetableTab();
         }
         
-        // MODUL GURU MATA PELAJARAN
         function renderGMPMatrix() {
             const thead = document.getElementById('gmp-matrix-thead');
             const tbody = document.getElementById('gmp-matrix-tbody');
@@ -1303,7 +1298,6 @@
             }
         }
         
-        // Data Asas & Agihan Waktu Matapelajaran
         window.switchDataSubTab = function(subTab) {
             currentSubTab = subTab;
             ['subjek', 'agihan_waktu', 'kelas', 'bilik', 'senarai_guru', 'guru'].forEach(t => {
@@ -1333,29 +1327,43 @@
             tbody.innerHTML = '';
             let subjekList = databaseRecords.subjek || [];
             if(subjekList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-slate-400 italic">Tiada mata pelajaran didaftarkan. Sila daftar di menu Mata Pelajaran dahulu.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-slate-400 italic">Tiada mata pelajaran didaftarkan. Sila daftar di menu Mata Pelajaran dahulu.</td></tr>`;
                 return;
             }
             if(!agihanWaktuData[tingkatan]) agihanWaktuData[tingkatan] = {};
 
             subjekList.forEach(s => {
                 let currentVals = agihanWaktuData[tingkatan][s.code] || { single: 1, double: 0, triple: 0 };
+                let totalMasa = (parseInt(currentVals.single) || 0) * 1 + (parseInt(currentVals.double) || 0) * 2 + (parseInt(currentVals.triple) || 0) * 3;
                 tbody.innerHTML += `
                     <tr class="border-b border-slate-200 hover:bg-slate-50">
                         <td class="border border-slate-300 p-2.5 text-left pl-4 font-bold text-[#0b1b3d]">${s.name}</td>
                         <td class="border border-slate-300 p-2.5 font-bold text-slate-700">${s.code}</td>
                         <td class="border border-slate-300 p-2 text-center">
-                            <input type="number" min="0" max="10" value="${currentVals.single}" data-ting="${tingkatan}" data-code="${s.code}" data-type="single" class="w-16 px-2 py-1 border rounded text-center font-bold text-xs bg-white agihan-input">
+                            <input type="number" min="0" max="10" value="${currentVals.single}" data-ting="${tingkatan}" data-code="${s.code}" data-type="single" oninput="calculateAgihanTotal(this)" class="w-16 px-2 py-1 border rounded text-center font-bold text-xs bg-white agihan-input">
                         </td>
                         <td class="border border-slate-300 p-2 text-center">
-                            <input type="number" min="0" max="10" value="${currentVals.double}" data-ting="${tingkatan}" data-code="${s.code}" data-type="double" class="w-16 px-2 py-1 border rounded text-center font-bold text-xs bg-white agihan-input">
+                            <input type="number" min="0" max="10" value="${currentVals.double}" data-ting="${tingkatan}" data-code="${s.code}" data-type="double" oninput="calculateAgihanTotal(this)" class="w-16 px-2 py-1 border rounded text-center font-bold text-xs bg-white agihan-input">
                         </td>
                         <td class="border border-slate-300 p-2 text-center">
-                            <input type="number" min="0" max="10" value="${currentVals.triple}" data-ting="${tingkatan}" data-code="${s.code}" data-type="triple" class="w-16 px-2 py-1 border rounded text-center font-bold text-xs bg-white agihan-input">
+                            <input type="number" min="0" max="10" value="${currentVals.triple}" data-ting="${tingkatan}" data-code="${s.code}" data-type="triple" oninput="calculateAgihanTotal(this)" class="w-16 px-2 py-1 border rounded text-center font-bold text-xs bg-white agihan-input">
+                        </td>
+                        <td class="border border-slate-300 p-2 text-center font-extrabold text-[#0b1b3d] bg-slate-50 agihan-total-cell">
+                            ${totalMasa}
                         </td>
                     </tr>
                 `;
             });
+        }
+
+        window.calculateAgihanTotal = function(input) {
+            let row = input.closest('tr');
+            let single = parseInt(row.querySelector('data-type="single"')?.value || row.querySelector('input[data-type="single"]')?.value) || 0;
+            let double = parseInt(row.querySelector('data-type="double"')?.value || row.querySelector('input[data-type="double"]')?.value) || 0;
+            let triple = parseInt(row.querySelector('data-type="triple"')?.value || row.querySelector('input[data-type="triple"]')?.value) || 0;
+            let total = (single * 1) + (double * 2) + (triple * 3);
+            let totalCell = row.querySelector('.agihan-total-cell');
+            if(totalCell) totalCell.innerText = total;
         }
 
         window.saveAgihanWaktuData = function() {
@@ -1635,7 +1643,6 @@
             });
         }
         
-        // Waktu & Rehat
         window.updateSchoolDaysOrder = function() {
             const startDayEl = document.getElementById('select-start-day');
             const startDay = startDayEl ? startDayEl.value : 'Ahad';
