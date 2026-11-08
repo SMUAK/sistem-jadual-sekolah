@@ -1364,7 +1364,7 @@
 
         window.calculateAgihanTotals = function() {
             let rows = document.querySelectorAll('#agihan-waktu-tbody tr');
-            let sumSingle = 0, sumDouble = 0, sumTriple = 0, sumTotal = 0;
+            let sumSingleMasa = 0, sumDoubleMasa = 0, sumTripleMasa = 0, sumTotal = 0;
 
             rows.forEach(row => {
                 let singleInput = row.querySelector('.agihan-input-single');
@@ -1375,13 +1375,17 @@
                 let sVal = parseInt(singleInput?.value) || 0;
                 let dVal = parseInt(doubleInput?.value) || 0;
                 let tVal = parseInt(tripleInput?.value) || 0;
-                let rowTotal = (sVal * 1) + (dVal * 2) + (tVal * 3);
+
+                let sMasa = sVal * 1;
+                let dMasa = dVal * 2;
+                let tMasa = tVal * 3;
+                let rowTotal = sMasa + dMasa + tMasa;
 
                 if(rowTotalCell) rowTotalCell.innerText = rowTotal;
 
-                sumSingle += sVal;
-                sumDouble += dVal;
-                sumTriple += tVal;
+                sumSingleMasa += sMasa;
+                sumDoubleMasa += dMasa;
+                sumTripleMasa += tMasa;
                 sumTotal += rowTotal;
             });
 
@@ -1390,9 +1394,9 @@
                 tfoot.innerHTML = `
                     <tr>
                         <td colspan="2" class="border border-slate-300 p-2.5 text-right pr-4 uppercase">JUMLAH KESELURUHAN</td>
-                        <td class="border border-slate-300 p-2.5 text-center text-[#0b1b3d]" id="col-sum-single">${sumSingle}</td>
-                        <td class="border border-slate-300 p-2.5 text-center text-[#0b1b3d]" id="col-sum-double">${sumDouble}</td>
-                        <td class="border border-slate-300 p-2.5 text-center text-[#0b1b3d]" id="col-sum-triple">${sumTriple}</td>
+                        <td class="border border-slate-300 p-2.5 text-center text-[#0b1b3d]" id="col-sum-single">${sumSingleMasa}</td>
+                        <td class="border border-slate-300 p-2.5 text-center text-[#0b1b3d]" id="col-sum-double">${sumDoubleMasa}</td>
+                        <td class="border border-slate-300 p-2.5 text-center text-[#0b1b3d]" id="col-sum-triple">${sumTripleMasa}</td>
                         <td class="border border-slate-300 p-2.5 text-center bg-slate-100 text-[#0b1b3d]" id="col-sum-grand">${sumTotal}</td>
                     </tr>
                 `;
