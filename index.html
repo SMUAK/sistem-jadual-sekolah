@@ -113,7 +113,6 @@
                         </table>
                     </div>
                 </div>
-
                 <!-- Kandungan Sub-tab Standard -->
                 <div id="standard-data-section" class="space-y-4">
                     <div class="flex flex-wrap justify-between items-center gap-4">
@@ -127,7 +126,7 @@
                     <div class="overflow-x-auto">
                         <table class="w-full border-collapse border border-slate-200 text-xs">
                             <thead>
-                                <tr class="bg-emerald-50/70 text-slate-700 font-bold text-center">
+                                <tr id="table-head-row" class="bg-emerald-50/70 text-slate-700 font-bold text-center">
                                     <th class="border border-slate-300 p-2.5 w-16">Bil.</th>
                                     <th id="th-name" class="border border-slate-300 p-2.5 text-left pl-4">Nama / Maklumat Utama</th>
                                     <th class="border border-slate-300 p-2.5 w-36">Kod / Singkatan</th>
@@ -455,43 +454,43 @@
             </div>
         </div>
     </div>
-    <!-- MODAL BLOK WAKTU -->
+    <!-- MODAL "MENGHADAGANG JADUAL" (HAD MASA) -->
     <div id="block-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-sm hidden flex items-center justify-center z-50">
-        <div class="bg-white w-full max-w-4xl p-6 rounded-2xl shadow-2xl border space-y-5 max-h-[90vh] overflow-y-auto">
+        <div class="bg-white w-full max-w-5xl p-6 rounded-2xl shadow-2xl border space-y-5 max-h-[95vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="text-base font-bold text-[#0b1b3d]">Tetap Blok Waktu Mengajar Guru</h3>
+                <h3 class="text-base font-bold text-[#0b1b3d]">Menghadagang jadual</h3>
                 <button onclick="closeBlockModal()" class="text-slate-400 font-bold text-sm">✕</button>
             </div>
             <input type="hidden" id="block-edit-id" value="">
             <div class="space-y-4 text-xs">
-                <div>
-                    <label class="font-semibold text-slate-700 block mb-1">Pilih Nama Guru</label>
-                    <select id="block-select-teacher" class="w-full sm:w-72 px-3 py-2 border rounded-lg bg-slate-50 font-medium">
-                        <option value="">-- Sila Pilih Guru --</option>
-                    </select>
+                <div class="flex flex-wrap items-center justify-between gap-4 bg-slate-50 p-3 rounded-xl border">
+                    <div class="font-bold text-[#0b1b3d]" id="modal-block-teacher-label">Guru: -</div>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-slate-600 font-semibold">Minggu:</span>
+                        <select class="px-2 py-1 border rounded bg-white text-xs font-bold">
+                            <option value="1">1</option>
+                        </select>
+                    </div>
                 </div>
                 <div>
-                    <label class="font-semibold text-slate-700 block mb-2">Tandakan petak masa yang ingin di-blok (Dikosongkan):</label>
-                    <div class="overflow-x-auto border rounded-xl">
+                    <div class="overflow-x-auto border rounded-xl bg-white shadow-sm">
                         <table class="w-full border-collapse text-xs text-center">
                             <thead>
-                                <tr class="bg-slate-100 text-slate-700 font-bold">
-                                    <th class="border p-2 w-32">Waktu</th>
-                                    <th class="border p-2">Ahad</th>
-                                    <th class="border p-2">Isnin</th>
-                                    <th class="border p-2">Selasa</th>
-                                    <th class="border p-2">Rabu</th>
-                                    <th class="border p-2">Khamis</th>
+                                <tr id="had-masa-thead" class="bg-slate-100 text-slate-700 font-bold">
+                                    <th class="border p-2.5 w-24">WAKTU</th>
                                 </tr>
                             </thead>
-                            <tbody id="block-matrix-tbody"></tbody>
+                            <tbody id="had-masa-tbody"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
-            <div class="flex justify-end space-x-2 pt-3 border-t">
-                <button onclick="closeBlockModal()" class="px-4 py-2 border rounded-xl text-xs font-semibold">Batal</button>
-                <button onclick="saveBlockRecord()" class="px-5 py-2 bg-[#0b1b3d] text-white rounded-xl text-xs font-semibold shadow">Simpan Blok</button>
+            <div class="flex justify-between items-center pt-3 border-t">
+                <div class="flex space-x-2">
+                    <button onclick="clearAllHadMasa()" class="px-4 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-xl text-xs font-semibold transition">Padam</button>
+                    <button onclick="saveBlockRecord()" class="px-5 py-2 bg-[#0b1b3d] hover:bg-[#132d60] text-white rounded-xl text-xs font-semibold shadow transition">Simpan</button>
+                </div>
+                <button onclick="closeBlockModal()" class="px-5 py-2 border rounded-xl text-xs font-semibold hover:bg-slate-50 transition">Tutup</button>
             </div>
         </div>
     </div>
@@ -660,7 +659,6 @@
             "AHMAD ROSLI": true
         };
         let selectedActiveSubItem = null;
-
         async function loadDatabaseFromCloud() {
             if(!db) {
                 let localData = localStorage.getItem('school_database');
@@ -932,7 +930,6 @@
             renderGMPTree();
             renderGMPMatrix();
         };
-
         function renderSubjectTimeConfigTable() {
             let tbody = document.getElementById('subject-time-config-tbody');
             if(!tbody) return;
@@ -1205,7 +1202,7 @@
             if(!tbody) return;
             tbody.innerHTML = '';
             if(blockedTimesData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-slate-400 italic">Tiada rekod blok waktu dijumpai.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-slate-400 italic">Tiada rekod had masa guru dijumpai.</td></tr>`;
                 return;
             }
             blockedTimesData.forEach((item, index) => {
@@ -1217,7 +1214,7 @@
                         <td class="border border-slate-300 p-2.5 text-indigo-700 font-bold">${formattedSlots}</td>
                         <td class="border border-slate-300 p-2.5">
                             <div class="flex justify-center space-x-1.5">
-                                <button onclick="editBlockRecord(${item.id})" class="p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow" title="Kemaskini">✏️</button>
+                                <button onclick="openBlockModalForTeacher('${item.teacher}')" class="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded-lg shadow text-[11px] font-bold">Had Masa</button>
                                 <button onclick="deleteBlockRecord(${item.id})" class="p-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow" title="Padam">🗑️</button>
                             </div>
                         </td>
@@ -1225,77 +1222,116 @@
                 `;
             });
         }
-        window.openBlockModal = function(editId = null) {
+        window.openBlockModalForTeacher = function(teacherName) {
             let editIdEl = document.getElementById('block-edit-id');
-            if(editIdEl) editIdEl.value = editId || '';
-            const selectTeacher = document.getElementById('block-select-teacher');
-            if(!selectTeacher) return;
-            selectTeacher.innerHTML = '<option value="">-- Sila Pilih Guru --</option>';
-            (databaseRecords.senarai_guru || []).forEach(g => {
-                selectTeacher.innerHTML += `<option value="${g.name}">${g.name} (${g.code})</option>`;
+            let existingData = blockedTimesData.find(x => x.teacher.toLowerCase() === teacherName.toLowerCase());
+            if(editIdEl) editIdEl.value = existingData ? existingData.id : '';
+            
+            let labelTeacher = document.getElementById('modal-block-teacher-label');
+            if(labelTeacher) labelTeacher.innerText = `Guru: ${teacherName.toUpperCase()}`;
+
+            let thead = document.getElementById('had-masa-thead');
+            let tbody = document.getElementById('had-masa-tbody');
+            if(!thead || !tbody) return;
+
+            let learningSlots = timeSlotsData.filter(s => s.type === 'Waktu belajar');
+            let headHTML = `<th class="border p-2.5 w-24 bg-slate-100">HARI</th>`;
+            learningSlots.forEach((slot, idx) => {
+                headHTML += `<th class="border p-2 text-center w-14 font-bold">${idx + 1}</th>`;
             });
-            let existingData = editId ? blockedTimesData.find(x => x.id == editId) : null;
-            if(existingData) selectTeacher.value = existingData.teacher;
-            const matrixTbody = document.getElementById('block-matrix-tbody');
-            if(!matrixTbody) return;
-            matrixTbody.innerHTML = '';
-            let lessonNo = 1;
-            timeSlotsData.forEach(slot => {
-                if(slot.type === 'Waktu belajar') {
-                    let slotName = `Waktu ${lessonNo}`;
-                    let s12 = formatTo12Hour(slot.start);
-                    let e12 = formatTo12Hour(slot.end);
-                    let tr = document.createElement('tr');
-                    tr.className = "border-b";
-                    tr.innerHTML = `
-                        <td class="border p-2 font-bold bg-slate-50 text-slate-700">${slotName}<br><span class="text-[10px] text-slate-500">(${s12} - ${e12})</span></td>
-                        <td class="border p-2"><input type="checkbox" data-day="Ahad" data-slot="${slotName}" class="w-4 h-4 rounded border-slate-300"></td>
-                        <td class="border p-2"><input type="checkbox" data-day="Isnin" data-slot="${slotName}" class="w-4 h-4 rounded border-slate-300"></td>
-                        <td class="border p-2"><input type="checkbox" data-day="Selasa" data-slot="${slotName}" class="w-4 h-4 rounded border-slate-300"></td>
-                        <td class="border p-2"><input type="checkbox" data-day="Rabu" data-slot="${slotName}" class="w-4 h-4 rounded border-slate-300"></td>
-                        <td class="border p-2"><input type="checkbox" data-day="Khamis" data-slot="${slotName}" class="w-4 h-4 rounded border-slate-300"></td>
+            thead.innerHTML = headHTML;
+
+            let days = ['Aha', 'Isn', 'Sel', 'Rab', 'Kha', 'Jum', 'Sab'];
+            let fullDaysMap = { 'Aha': 'Ahad', 'Isn': 'Isnin', 'Sel': 'Selasa', 'Rab': 'Rabu', 'Kha': 'Khamis', 'Jum': 'Jumaat', 'Sab': 'Sabtu' };
+            let bodyHTML = '';
+
+            days.forEach(dayShort => {
+                let dayFull = fullDaysMap[dayShort];
+                bodyHTML += `<tr><td class="border p-2.5 font-bold bg-slate-50 text-slate-700">${dayShort}</td>`;
+                learningSlots.forEach((slot, idx) => {
+                    let slotName = `Waktu ${idx + 1}`;
+                    let isBlocked = existingData && existingData.blockedList && existingData.blockedList.some(b => b.day === dayFull && b.slot === slotName);
+                    let cellBg = isBlocked ? 'bg-rose-50' : 'bg-white';
+                    bodyHTML += `
+                        <td class="border p-2 text-center cursor-pointer transition ${cellBg}" onclick="toggleHadMasaCell(this, '${dayFull}', '${slotName}')">
+                            <div class="flex items-center justify-center h-8">
+                                ${isBlocked ? '<span class="text-rose-600 font-extrabold text-lg select-none" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.15);">✕</span>' : '<span class="text-slate-200 text-xs">·</span>'}
+                            </div>
+                        </td>
                     `;
-                    matrixTbody.appendChild(tr);
-                    lessonNo++;
-                }
-            });
-            if(existingData && existingData.blockedList) {
-                existingData.blockedList.forEach(b => {
-                    let cb = matrixTbody.querySelector(`input[data-day="${b.day}"][data-slot="${b.slot}"]`);
-                    if(cb) cb.checked = true;
                 });
-            }
+                bodyHTML += `</tr>`;
+            });
+            tbody.innerHTML = bodyHTML;
             document.getElementById('block-modal').classList.remove('hidden');
+        }
+        window.toggleHadMasaCell = function(td, day, slot) {
+            let span = td.querySelector('span');
+            let isCurrentlyBlocked = span.classList.contains('text-rose-600');
+            if(isCurrentlyBlocked) {
+                td.className = "border p-2 text-center cursor-pointer transition bg-white";
+                span.className = "text-slate-200 text-xs";
+                span.innerText = "·";
+            } else {
+                td.className = "border p-2 text-center cursor-pointer transition bg-rose-50";
+                span.className = "text-rose-600 font-extrabold text-lg select-none";
+                span.style.textShadow = "1px 1px 2px rgba(0,0,0,0.15)";
+                span.innerText = "✕";
+            }
+        }
+        window.clearAllHadMasa = function() {
+            document.querySelectorAll('#had-masa-tbody td').forEach(td => {
+                td.className = "border p-2 text-center cursor-pointer transition bg-white";
+                let span = td.querySelector('span');
+                if(span) { span.className = "text-slate-200 text-xs"; span.innerText = "·"; }
+            });
         }
         window.closeBlockModal = () => document.getElementById('block-modal').classList.add('hidden');
         window.saveBlockRecord = function() {
-            let editIdEl = document.getElementById('block-edit-id');
-            const editId = editIdEl ? editIdEl.value : '';
-            const selectTeacherEl = document.getElementById('block-select-teacher');
-            const teacher = selectTeacherEl ? selectTeacherEl.value : '';
-            if(!teacher) return alert('Sila pilih nama guru terlebih dahulu.');
+            let labelTeacher = document.getElementById('modal-block-teacher-label').innerText;
+            let teacherName = labelTeacher.replace('Guru: ', '').trim();
+            if(!teacherName || teacherName === '-') return alertâmara('Ralat nama guru.');
+            
             let blockedList = [];
-            document.querySelectorAll('#block-matrix-tbody input[type="checkbox"]:checked').forEach(cb => {
-                blockedList.push({ day: cb.getAttribute('data-day'), slot: cb.getAttribute('data-slot') });
+            let days = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat', 'Sabtu'];
+            let rows = document.querySelectorAll('#had-masa-tbody tr');
+            
+            rows.forEach((row, rIdx) => {
+                let dayFull = days[rIdx];
+                let cells = row.querySelectorAll('td');
+                cells.forEach((cell, cIdx) => {
+                    if(cIdx > 0) {
+                        let span = cell.querySelector('span');
+                        if(span && span.classList.contains('text-rose-600')) {
+                            blockedList.push({ day: dayFull, slot: `Waktu ${cIdx}` });
+                        }
+                    }
+                });
             });
-            if(blockedList.length === 0) return alert('Sila tandakan sekurang-kurangnya satu petak masa.');
+
+            let editIdEl = document.getElementById('block-edit-id');
+            let editId = editIdEl ? editIdEl.value : '';
             if(editId) {
                 let item = blockedTimesData.find(x => x.id == editId);
-                if(item) { item.teacher = teacher; item.blockedList = blockedList; }
+                if(item) { item.teacher = teacherName; item.blockedList = blockedList; }
             } else {
-                blockedTimesData.push({ id: Date.now(), teacher, blockedList });
+                let existingIndex = blockedTimesData.findIndex(x => x.teacher.toLowerCase() === teacherName.toLowerCase());
+                if(existingIndex !== -1) {
+                    blockedTimesData[existingIndex].blockedList = blockedList;
+                } else {
+                    blockedTimesData.push({ id: Date.now(), teacher: teacherName, blockedList });
+                }
             }
             saveDatabaseToCloud();
             closeBlockModal();
-            renderBlockedTable();
-            alert('Tetapan blok waktu guru berjaya disimpan!');
+            renderDataTable();
+            alert('Tetapan had masa guru berjaya disimpan!');
         }
-        window.editBlockRecord = (id) => openBlockModal(id);
         window.deleteBlockRecord = function(id) {
-            if(confirm('Adakah anda pasti ingin memadam tetapan blok waktu ini?')) {
+            if(confirm('Adakah anda pasti ingin memadam tetapan had masa ini?')) {
                 blockedTimesData = blockedTimesData.filter(x => x.id !== id);
                 saveDatabaseToCloud();
-                renderBlockedTable();
+                renderDataTable();
             }
         }
         
@@ -1319,7 +1355,6 @@
                 renderDataTable();
             }
         }
-
         window.renderAgihanWaktuTable = function() {
             let selectTing = document.getElementById('agihan-select-tingkatan');
             let tingkatan = selectTing ? selectTing.value : 'TINGKATAN 1';
@@ -1328,14 +1363,12 @@
             if(!tbody) return;
             tbody.innerHTML = '';
             if(tfoot) tfoot.innerHTML = '';
-
             let subjekList = databaseRecords.subjek || [];
             if(subjekList.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-slate-400 italic">Tiada mata pelajaran didaftarkan. Sila daftar di menu Mata Pelajaran dahulu.</td></tr>`;
                 return;
             }
             if(!agihanWaktuData[tingkatan]) agihanWaktuData[tingkatan] = {};
-
             subjekList.forEach(s => {
                 let currentVals = agihanWaktuData[tingkatan][s.code] || { single: 1, double: 0, triple: 0 };
                 let totalMasa = (parseInt(currentVals.single) || 0) * 1 + (parseInt(currentVals.double) || 0) * 2 + (parseInt(currentVals.triple) || 0) * 3;
@@ -1358,37 +1391,29 @@
                     </tr>
                 `;
             });
-
             calculateAgihanTotals();
         }
-
         window.calculateAgihanTotals = function() {
             let rows = document.querySelectorAll('#agihan-waktu-tbody tr');
             let sumSingleMasa = 0, sumDoubleMasa = 0, sumTripleMasa = 0, sumTotal = 0;
-
             rows.forEach(row => {
                 let singleInput = row.querySelector('.agihan-input-single');
                 let doubleInput = row.querySelector('.agihan-input-double');
                 let tripleInput = row.querySelector('.agihan-input-triple');
                 let rowTotalCell = row.querySelector('.agihan-row-total');
-
                 let sVal = parseInt(singleInput?.value) || 0;
                 let dVal = parseInt(doubleInput?.value) || 0;
                 let tVal = parseInt(tripleInput?.value) || 0;
-
                 let sMasa = sVal * 1;
                 let dMasa = dVal * 2;
                 let tMasa = tVal * 3;
                 let rowTotal = sMasa + dMasa + tMasa;
-
                 if(rowTotalCell) rowTotalCell.innerText = rowTotal;
-
                 sumSingleMasa += sMasa;
                 sumDoubleMasa += dMasa;
                 sumTripleMasa += tMasa;
                 sumTotal += rowTotal;
             });
-
             let tfoot = document.getElementById('agihan-waktu-tfoot');
             if(tfoot) {
                 tfoot.innerHTML = `
@@ -1402,12 +1427,10 @@
                 `;
             }
         }
-
         window.saveAgihanWaktuData = function() {
             let selectTing = document.getElementById('agihan-select-tingkatan');
             let tingkatan = selectTing ? selectTing.value : 'TINGKATAN 1';
             if(!agihanWaktuData[tingkatan]) agihanWaktuData[tingkatan] = {};
-
             document.querySelectorAll('#agihan-waktu-tbody tr').forEach(row => {
                 let singleInput = row.querySelector('.agihan-input-single');
                 let doubleInput = row.querySelector('.agihan-input-double');
@@ -1424,19 +1447,57 @@
             saveDatabaseToCloud();
             alert(`Tetapan agihan waktu bagi ${tingkatan} berjaya disimpan!`);
         }
-
         function renderDataTable() {
             const tbody = document.getElementById('data-table-body');
             const totalCountEl = document.getElementById('total-stat-count');
             const thName = document.getElementById('th-name');
             const thCategory = document.getElementById('th-category');
+            const theadRow = document.getElementById('table-head-row');
             if(!tbody) return;
             tbody.innerHTML = '';
+            
+            if(currentSubTab === 'senarai_guru') {
+                if(theadRow) {
+                    theadRow.innerHTML = `
+                        <th class="border border-slate-300 p-2.5 w-16">#</th>
+                        <th class="border border-slate-300 p-2.5 w-36">Kod</th>
+                        <th class="border border-slate-300 p-2.5 text-left pl-4">Nama Guru</th>
+                        <th class="border border-slate-300 p-2.5 w-32 bg-rose-50/70 text-rose-800">Had Masa</th>
+                    `;
+                }
+                let records = databaseRecords['senarai_guru'] || [];
+                if(totalCountEl) totalCountEl.innerText = records.length;
+                if(records.length === 0) { tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-slate-400 italic">Tiada rekod guru dijumpai.</td></tr>`; return; }
+                records.forEach((item, index) => {
+                    tbody.innerHTML += `
+                        <tr class="border-b border-slate-200 hover:bg-slate-50 transition">
+                            <td class="border border-slate-300 p-2.5 font-bold text-slate-600">${index + 1}</td>
+                            <td class="border border-slate-300 p-2.5 font-semibold text-slate-700">${item.code}</td>
+                            <td class="border border-slate-300 p-2.5 text-left pl-4 font-bold text-[#0b1b3d]">${item.name}</td>
+                            <td class="border border-slate-300 p-2.5 bg-rose-50/30">
+                                <button onclick="openBlockModalForTeacher('${item.name}')" class="px-3 py-1 bg-rose-100 hover:bg-rose-200 text-rose-800 rounded-lg shadow-sm text-xs font-bold transition border border-rose-200">Had Masa</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                return;
+            }
+
+            // Standard layout untuk tab lain
+            if(theadRow) {
+                theadRow.innerHTML = `
+                    <th class="border border-slate-300 p-2.5 w-16">Bil.</th>
+                    <th id="th-name" class="border border-slate-300 p-2.5 text-left pl-4">Nama / Maklumat Utama</th>
+                    <th class="border border-slate-300 p-2.5 w-36">Kod / Singkatan</th>
+                    <th id="th-category" class="border border-slate-300 p-2.5 w-56">Tingkatan & Subjek Diajar</th>
+                    <th class="border border-slate-300 p-2.5 w-32">Tindakan</th>
+                `;
+            }
             if(currentSubTab === 'guru') { if(thName) thName.innerText = "Nama Guru"; if(thCategory) thCategory.innerText = "Tingkatan, Subjek & Bilangan Masa"; }
-            else if(currentSubTab === 'senarai_guru') { if(thName) thName.innerText = "Nama Guru"; if(thCategory) thCategory.innerText = "Jawatan / Butiran"; }
             else if(currentSubTab === 'subjek') { if(thName) thName.innerText = "Nama Mata Pelajaran"; if(thCategory) thCategory.innerText = "Kategori Mata Pelajaran"; }
             else if(currentSubTab === 'kelas') { if(thName) thName.innerText = "Nama Kelas"; if(thCategory) thCategory.innerText = "Tingkatan / Aliran"; }
             else { if(thName) thName.innerText = "Nama Bilik Khas"; if(thCategory) thCategory.innerText = "Lokasi / Kegunaan"; }
+
             let records = databaseRecords[currentSubTab] || [];
             if(totalCountEl) totalCountEl.innerText = records.length;
             if(records.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-slate-400 italic">Tiada rekod dijumpai.</td></tr>`; return; }
