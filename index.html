@@ -2086,11 +2086,21 @@
             }
         }
 
+        // PEMBETULAN UTAMA DI SINI:
+        // Apabila klik ikon pensel (edit) pada tab "Guru & Subjek", ia kekal di tab 'guru' 
+        // dan membuka borang matriks pilihan subjek (Gambar 3) dengan betul.
         window.editRecordByName = function(teacherName) {
-            switchDataSubTab('senarai_guru');
-            let item = (databaseRecords['senarai_guru'] || []).find(x => x.name.trim().toLowerCase() === teacherName.trim().toLowerCase());
+            switchDataSubTab('guru');
+            let item = (databaseRecords['guru'] || []).find(x => x.name.trim().toLowerCase() === teacherName.trim().toLowerCase());
             if(item) {
-                editRecord(item.id);
+                openAddModal();
+                let editIdEl = document.getElementById('modal-edit-id');
+                if(editIdEl) editIdEl.value = item.id;
+                let selectNameEl = document.getElementById('modal-select-name');
+                if(selectNameEl) {
+                    selectNameEl.value = item.name;
+                    onTeacherDropdownChange();
+                }
             }
         }
 
