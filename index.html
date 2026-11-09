@@ -1449,7 +1449,7 @@
         }
         window.openBlockModalForTeacher = function(teacherName) {
             let editIdEl = document.getElementById('block-edit-id');
-            let existingData = blockedTimesData.find(x => x.teacher.toLowerCase() === teacherName.toLowerCase());
+            let existingData = blockedTimesData.find(x => x.teacher.trim().toLowerCase() === teacherName.trim().toLowerCase());
             if(editIdEl) editIdEl.value = existingData ? existingData.id : '';
             
             let labelTeacher = document.getElementById('modal-block-teacher-label');
@@ -1532,11 +1532,12 @@
             });
             let editIdEl = document.getElementById('block-edit-id');
             let editId = editIdEl ? editIdEl.value : '';
+            let cleanTargetName = teacherName.toLowerCase();
             if(editId) {
                 let item = blockedTimesData.find(x => x.id == editId);
                 if(item) { item.teacher = teacherName; item.blockedList = blockedList; }
             } else {
-                let existingIndex = blockedTimesData.findIndex(x => x.teacher.trim().toLowerCase() === teacherName.trim().toLowerCase());
+                let existingIndex = blockedTimesData.findIndex(x => x.teacher.trim().toLowerCase() === cleanTargetName);
                 if(existingIndex !== -1) {
                     blockedTimesData[existingIndex].blockedList = blockedList;
                 } else {
