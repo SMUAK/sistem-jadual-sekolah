@@ -677,7 +677,7 @@
         let contextMenuTarget = null;
         let customModalCallback = null;
 
-        // Modul Kotak Pengesahan & Prompt Kustom (Menggantikan browser confirm/prompt)
+        // Modul Kotak Pengesahan & Prompt Kustom
         window.showCustomConfirm = function(message, callback) {
             let modal = document.getElementById('custom-modal-dialog');
             let titleEl = document.getElementById('custom-modal-title');
@@ -809,7 +809,6 @@
             renderDataTable();
         }
 
-        // Fungsi Penyelarasan Menyeluruh (Dibersihkan sepenuhnya jika nilai kosong/null/undefined)
         function syncGMPAllocationsToGuruData() {
             let teacherMap = {};
             (databaseRecords.senarai_guru || []).forEach(sg => {
@@ -829,7 +828,6 @@
                 if(!teacherMap[fullTeacherName]) teacherMap[fullTeacherName] = {};
                 if(!teacherMap[fullTeacherName][kelas]) teacherMap[fullTeacherName][kelas] = [];
                 
-                // Ambil bilangan masa sebenar dari agihan waktu jika ada, atau default 2 masa
                 let masaCount = 2;
                 if(agihanWaktuData[kelas && kelas.toUpperCase().includes('TINGKATAN') ? kelas.toUpperCase() : 'TINGKATAN 1'] && agihanWaktuData[kelas && kelas.toUpperCase().includes('TINGKATAN') ? kelas.toUpperCase() : 'TINGKATAN 1'][subCode]) {
                     let av = agihanWaktuData[kelas && kelas.toUpperCase().includes('TINGKATAN') ? kelas.toUpperCase() : 'TINGKATAN 1'][subCode];
@@ -857,7 +855,7 @@
                 let catStr = summaryArr.length > 0 ? summaryArr.join(' | ') : 'Tiada Opsyen Dipilih';
 
                 newGuruRecords.push({
-                    id: Date.now() + Math.random(),
+                    id: sg.id || (Date.now() + Math.random()),
                     name: tName,
                     code: tCode,
                     category: catStr
@@ -889,6 +887,7 @@
                 console.error("Gagal menyimpan data ke pangkalan data awan:", e);
             }
         }
+
         window.exportJsonData = function() {
             let backupData = {
                 databaseRecords,
@@ -907,6 +906,7 @@
             downloadAnchor.click();
             downloadAnchor.remove();
         }
+
         window.importJsonData = function(event) {
             let file = event.target.files[0];
             if(!file) return;
@@ -932,6 +932,7 @@
             };
             reader.readAsText(file);
         }
+
         function formatTo12Hour(timeStr) {
             if(!timeStr || !timeStr.includes(':')) return timeStr;
             let parts = timeStr.split(':');
@@ -943,6 +944,7 @@
             let formattedH = h < 10 ? '0' + h : h;
             return `${formattedH}:${m} ${ampm}`;
         }
+
         window.switchTab = function(tabId) {
             const tabs = ['utama', 'data', 'waktu', 'guru_matapelajaran', 'tetapan_masa_subjek', 'blok', 'jana', 'jadual_induk', 'relief', 'laporan', 'tetapan'];
             tabs.forEach(t => {
@@ -1064,9 +1066,7 @@
             } else if(action === 'padam') {
                 showCustomConfirm(`Adakah anda pasti ingin memadam agihan guru untuk ${subjekCode} di kelas ${kelas}?`, function(confirmed) {
                     if(confirmed) {
-                        // Padam sepenuhnya kunci daripada objek gmpAllocations
                         delete gmpAllocations[key];
-                        // Pastikan tiada padanan sisa kekunci sensitif huruf
                         for(let k in gmpAllocations) {
                             if(k.toLowerCase() === key.toLowerCase()) {
                                 delete gmpAllocations[k];
@@ -1140,10 +1140,12 @@
                 `;
             });
         }
+
         window.toggleTeacherExpand = function(teacherName) {
             expandedTeachersMap[teacherName] = !expandedTeachersMap[teacherName];
             renderGMPTree();
         };
+
         window.selectSubTreeItem = function(teacherName, kelas, subjekCode) {
             if (selectedActiveSubItem && 
                 selectedActiveSubItem.teacher.toLowerCase() === teacherName.toLowerCase() &&
@@ -1160,6 +1162,7 @@
             renderGMPTree();
             renderGMPMatrix();
         };
+
         window.onMatrixCellClick = function(e, kelas, subjekCode, teacherName) {
             e.preventDefault();
             if(teacherName) {
@@ -1178,6 +1181,7 @@
             renderGMPTree();
             renderGMPMatrix();
         };
+
         function renderSubjectTimeConfigTable() {
             let tbody = document.getElementById('subject-time-config-tbody');
             if(!tbody) return;
@@ -1215,10 +1219,12 @@
             populateMasterDropdown();
             renderMasterTimetable();
         }
+
         function initMasterTimetableTab() {
             populateMasterDropdown();
             renderMasterTimetable();
         }
+
         function populateMasterDropdown() {
             let select = document.getElementById('master-select-target');
             if(!select) return;
@@ -1233,6 +1239,7 @@
                 });
             }
         }
+
         window.renderMasterTimetable = function() {
             let selectTargetEl = document.getElementById('master-select-target');
             let selectTarget = selectTargetEl ? selectTargetEl.value : '';
@@ -1304,6 +1311,7 @@
             });
             renderClassStatusTable();
         }
+
         function renderClassStatusTable() {
             const tbody = document.getElementById('class-status-tbody');
             if(!tbody) return;
@@ -1351,6 +1359,7 @@
                 `;
             });
         }
+
         window.startAutoGeneration = function() {
             let targetClass = document.getElementById('auto-select-class').value;
             let classesToProcess = targetClass === 'Semua' ? (databaseRecords.kelas || []) : (databaseRecords.kelas || []).filter(k => k.name === targetClass);
@@ -1396,6 +1405,7 @@
                 }, 300);
             }, 200);
         }
+
         window.janaSingleClass = function(className) {
             let modal = document.getElementById('generation-progress-modal');
             let bar = document.getElementById('progress-bar-fill');
@@ -1428,6 +1438,7 @@
                 }, 300);
             }, 200);
         }
+
         window.resetAllSchedules = function() {
             showCustomConfirm('Adakah anda pasti ingin mengosongkan semua jadual?', function(confirmed) {
                 if(confirmed) {
@@ -1438,7 +1449,9 @@
                 }
             });
         }
+
         window.cancelGeneration = () => document.getElementById('generation-progress-modal').classList.add('hidden');
+        
         window.saveBackupVersion = function() {
             let nameEl = document.getElementById('backup-version-name');
             let name = nameEl ? nameEl.value : '';
@@ -1472,6 +1485,7 @@
                 `;
             });
         }
+
         window.openBlockModalForTeacher = function(teacherName) {
             let editIdEl = document.getElementById('block-edit-id');
             let existingData = blockedTimesData.find(x => x.teacher.toLowerCase() === teacherName.toLowerCase());
@@ -1515,6 +1529,7 @@
             tbody.innerHTML = bodyHTML;
             document.getElementById('block-modal').classList.remove('hidden');
         }
+
         window.toggleHadMasaCell = function(td, day, slot) {
             let span = td.querySelector('span');
             let isCurrentlyBlocked = span.classList.contains('text-rose-600');
@@ -1529,6 +1544,7 @@
                 span.innerText = "✕";
             }
         }
+
         window.clearAllHadMasa = function() {
             document.querySelectorAll('#had-masa-tbody td').forEach(td => {
                 td.className = "border p-2 text-center cursor-pointer transition bg-white";
@@ -1536,7 +1552,9 @@
                 if(span) { span.className = "text-slate-200 text-xs"; span.innerText = "·"; }
             });
         }
+
         window.closeBlockModal = () => document.getElementById('block-modal').classList.add('hidden');
+        
         window.saveBlockRecord = function() {
             let labelTeacher = document.getElementById('modal-block-teacher-label').innerText;
             let teacherName = labelTeacher.replace('Guru: ', '').trim();
@@ -1577,6 +1595,7 @@
             renderDataTable();
             showCustomAlert('Tetapan had masa guru berjaya disimpan!');
         }
+
         window.deleteBlockRecord = function(id) {
             showCustomConfirm('Adakah anda pasti ingin memadam tetapan had masa ini?', function(confirmed) {
                 if(confirmed) {
@@ -1607,6 +1626,7 @@
                 renderDataTable();
             }
         }
+
         window.renderAgihanWaktuTable = function() {
             let selectTing = document.getElementById('agihan-select-tingkatan');
             let tingkatan = selectTing ? selectTing.value : 'TINGKATAN 1';
@@ -1645,6 +1665,7 @@
             });
             calculateAgihanTotals();
         }
+
         window.calculateAgihanTotals = function() {
             let rows = document.querySelectorAll('#agihan-waktu-tbody tr');
             let sumSingleMasa = 0, sumDoubleMasa = 0, sumTripleMasa = 0, sumTotal = 0;
@@ -1679,6 +1700,7 @@
                 `;
             }
         }
+
         window.saveAgihanWaktuData = function() {
             let selectTing = document.getElementById('agihan-select-tingkatan');
             let tingkatan = selectTing ? selectTing.value : 'TINGKATAN 1';
@@ -1699,6 +1721,7 @@
             saveDatabaseToCloud();
             showCustomAlert(`Tetapan agihan waktu bagi ${tingkatan} berjaya disimpan!`);
         }
+
         function renderDataTable() {
             const tbody = document.getElementById('data-table-body');
             const totalCountEl = document.getElementById('total-stat-count');
@@ -1708,6 +1731,7 @@
             if(!tbody) return;
             tbody.innerHTML = '';
             
+            // Paparan Khas untuk tab GURU (senarai_guru) dengan butang Edit dan Padam (Induk)
             if(currentSubTab === 'senarai_guru') {
                 if(theadRow) {
                     theadRow.innerHTML = `
@@ -1715,25 +1739,29 @@
                         <th class="border border-slate-300 p-2.5 w-36">Kod</th>
                         <th class="border border-slate-300 p-2.5 text-left pl-4">Nama Guru</th>
                         <th class="border border-slate-300 p-2.5 w-44 bg-rose-50/70 text-rose-800">Had Masa</th>
+                        <th class="border border-slate-300 p-2.5 w-32">Tindakan</th>
                     `;
                 }
                 let records = databaseRecords['senarai_guru'] || [];
                 if(totalCountEl) totalCountEl.innerText = records.length;
-                if(records.length === 0) { tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-slate-400 italic">Tiada rekod guru dijumpai.</td></tr>`; return; }
+                if(records.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-slate-400 italic">Tiada rekod guru dijumpai.</td></tr>`; return; }
                 records.forEach((item, index) => {
                     tbody.innerHTML += `
                         <tr class="border-b border-slate-200 hover:bg-slate-50 transition">
                             <td class="border border-slate-300 p-2.5 font-bold text-slate-600">${index + 1}</td>
                             <td class="border border-slate-300 p-2.5 font-semibold text-slate-700">${item.code}</td>
                             <td class="border border-slate-300 p-2.5 text-left pl-4 font-bold text-[#0b1b3d]">
-                                <div class="flex items-center justify-between">
-                                    <span>${item.name}</span>
-                                    <button onclick="editRecord(${item.id})" class="p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow transition" title="Kemaskini Nama & Kod">✏️</button>
-                                </div>
+                                <span>${item.name}</span>
                             </td>
                             <td class="border border-slate-300 p-2.5 bg-rose-50/30">
                                 <div class="flex justify-center items-center">
                                     <button onclick="openBlockModalForTeacher('${item.name}')" class="px-3 py-1 bg-rose-100 hover:bg-rose-200 text-rose-800 rounded-lg shadow-sm text-xs font-bold transition border border-rose-200">Had Masa</button>
+                                </div>
+                            </td>
+                            <td class="border border-slate-300 p-2.5">
+                                <div class="flex justify-center space-x-1.5">
+                                    <button onclick="editRecord(${item.id})" class="p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow transition" title="Kemaskini">✏️</button>
+                                    <button onclick="deleteMasterTeacher('${item.name}', '${item.code}')" class="p-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow transition" title="Padam Induk">🗑️</button>
                                 </div>
                             </td>
                         </tr>
@@ -1742,7 +1770,39 @@
                 return;
             }
 
-            // Standard layout untuk tab lain
+            // Paparan untuk tab Guru & Subjek (Tiada butang tong sampah di kolum tindakan kerana diurus di tab Guru)
+            if(currentSubTab === 'guru') {
+                if(theadRow) {
+                    theadRow.innerHTML = `
+                        <th class="border border-slate-300 p-2.5 w-16">Bil.</th>
+                        <th class="border border-slate-300 p-2.5 text-left pl-4">Nama Guru</th>
+                        <th class="border border-slate-300 p-2.5 w-36">Kod / Singkatan</th>
+                        <th class="border border-slate-300 p-2.5 w-56">Tingkatan & Subjek Diajar</th>
+                        <th class="border border-slate-300 p-2.5 w-32">Tindakan</th>
+                    `;
+                }
+                let records = databaseRecords['guru'] || [];
+                if(totalCountEl) totalCountEl.innerText = records.length;
+                if(records.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-slate-400 italic">Tiada rekod agihan guru.</td></tr>`; return; }
+                records.forEach((item, index) => {
+                    tbody.innerHTML += `
+                        <tr class="border-b border-slate-200 hover:bg-slate-50 transition">
+                            <td class="border border-slate-300 p-2.5 font-bold text-slate-600">${index + 1}</td>
+                            <td class="border border-slate-300 p-2.5 text-left pl-4 font-bold text-[#0b1b3d]">${item.name}</td>
+                            <td class="border border-slate-300 p-2.5 font-semibold text-slate-700">${item.code}</td>
+                            <td class="border border-slate-300 p-2.5 text-slate-600 text-left pl-3">${item.category}</td>
+                            <td class="border border-slate-300 p-2.5">
+                                <div class="flex justify-center space-x-1.5">
+                                    <button onclick="editRecordByName('${item.name}')" class="p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow" title="Kemaskini">✏️</button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+                return;
+            }
+
+            // Standard layout untuk tab lain (Subjek, Kelas, Bilik Khas)
             if(theadRow) {
                 theadRow.innerHTML = `
                     <th class="border border-slate-300 p-2.5 w-16">Bil.</th>
@@ -1752,8 +1812,7 @@
                     <th class="border border-slate-300 p-2.5 w-32">Tindakan</th>
                 `;
             }
-            if(currentSubTab === 'guru') { if(thName) thName.innerText = "Nama Guru"; if(thCategory) thCategory.innerText = "Tingkatan, Subjek & Bilangan Masa"; }
-            else if(currentSubTab === 'subjek') { if(thName) thName.innerText = "Nama Mata Pelajaran"; if(thCategory) thCategory.innerText = "Kategori Mata Pelajaran"; }
+            if(currentSubTab === 'subjek') { if(thName) thName.innerText = "Nama Mata Pelajaran"; if(thCategory) thCategory.innerText = "Kategori Mata Pelajaran"; }
             else if(currentSubTab === 'kelas') { if(thName) thName.innerText = "Nama Kelas"; if(thCategory) thCategory.innerText = "Tingkatan / Aliran"; }
             else { if(thName) thName.innerText = "Nama Bilik Khas"; if(thCategory) thCategory.innerText = "Lokasi / Kegunaan"; }
 
@@ -1777,6 +1836,30 @@
                 `;
             });
         }
+
+        // Fungsi Induk Pemadaman Guru (Memadam dari senarai_guru, membersihkan matriks agihan, dan mengemas kini senarai guru & subjek)
+        window.deleteMasterTeacher = function(teacherName, teacherCode) {
+            showCustomConfirm(`Adakah anda pasti ingin memadam guru "${teacherName}"? Tindakan ini akan memadamkan guru ini sepenuhnya serta semua agihan subjek/kelas matriks beliau secara automatik.`, function(confirmed) {
+                if(confirmed) {
+                    // 1. Padam dari senarai_guru utama
+                    databaseRecords.senarai_guru = (databaseRecords.senarai_guru || []).filter(g => g.name.toLowerCase() !== teacherName.toLowerCase());
+                    
+                    // 2. Padam semua agihan matriks gmpAllocations yang menggunakan kod guru atau nama guru tersebut
+                    for(let key in gmpAllocations) {
+                        let codeVal = gmpAllocations[key];
+                        if(codeVal && (codeVal.toLowerCase() === teacherCode.toLowerCase() || codeVal.toLowerCase() === teacherName.toLowerCase())) {
+                            delete gmpAllocations[key];
+                        }
+                    }
+
+                    // 3. Simpan dan selaraskan semula data
+                    saveDatabaseToCloud();
+                    renderDataTable();
+                    showCustomAlert(`Guru ${teacherName} dan semua agihan matriks berkaitan telah berjaya dipadam!`);
+                }
+            });
+        };
+
         window.openAddModal = function() {
             let tabDisplayName = currentSubTab.toUpperCase().replace('_', ' ');
             if(currentSubTab === 'subjek') tabDisplayName = 'MATA PELAJARAN';
@@ -1841,6 +1924,7 @@
             let dataModalEl = document.getElementById('data-modal');
             if(dataModalEl) dataModalEl.classList.remove('hidden');
         }
+
         function buildMatrixTable(selectedDataMap = {}) {
             let thead = document.getElementById('matrix-thead');
             let tbody = document.getElementById('matrix-tbody');
@@ -1876,6 +1960,7 @@
             });
             tbody.innerHTML = bodyHTML;
         }
+
         window.toggleMasaInput = function(cb) {
             let tr = cb.closest('td');
             let masaInput = tr.querySelector('input[name="matrix-masa"]');
@@ -1885,6 +1970,7 @@
                 masaInput.classList.add('hidden');
             }
         }
+
         window.onTeacherDropdownChange = function() {
             let select = document.getElementById('modal-select-name');
             if(!select) return;
@@ -1919,7 +2005,9 @@
                 buildMatrixTable(parsedMap);
             }
         }
+
         window.closeDataModal = () => document.getElementById('data-modal').classList.add('hidden');
+        
         window.saveModalData = function() {
             let editIdEl = document.getElementById('modal-edit-id');
             let editId = editIdEl ? editIdEl.value : '';
@@ -1982,6 +2070,7 @@
             renderDataTable();
             showCustomAlert('Rekod berjaya disimpan ke pangkalan data awan!');
         }
+
         window.editRecord = function(id) {
             let item = databaseRecords[currentSubTab].find(x => x.id == id);
             if(!item) return;
@@ -2005,6 +2094,15 @@
                 }
             }
         }
+
+        window.editRecordByName = function(teacherName) {
+            switchDataSubTab('senarai_guru');
+            let item = (databaseRecords['senarai_guru'] || []).find(x => x.name.trim().toLowerCase() === teacherName.trim().toLowerCase());
+            if(item) {
+                editRecord(item.id);
+            }
+        }
+
         window.deleteRecord = function(id) {
             showCustomConfirm('Adakah anda pasti ingin memadam rekod ini?', function(confirmed) {
                 if(confirmed) {
@@ -2014,6 +2112,7 @@
                 }
             });
         }
+
         window.filterTableData = function() {
             let searchInput = document.getElementById('search-data-input');
             let q = searchInput ? searchInput.value.toLowerCase() : '';
@@ -2035,6 +2134,7 @@
                 container.innerHTML += `<div class="p-3 bg-slate-50 border rounded-xl text-center space-y-1"><label class="text-xs font-bold text-slate-700">${day}</label><input type="number" id="daily-slot-${day}" value="${val}" class="w-full text-center font-bold px-2 py-1.5 border rounded-lg text-sm bg-white"></div>`;
             });
         }
+
         window.saveDailySlotsConfig = function() {
             const startDayEl = document.getElementById('select-start-day');
             const startDay = startDayEl ? startDayEl.value : 'Ahad';
@@ -2047,6 +2147,7 @@
             localStorage.setItem('school_daily_slots_config', JSON.stringify(dailyConfig));
             showCustomAlert('Tetapan harian berjaya disimpan!');
         }
+
         function renderTimeSlotsTable() {
             const tbody = document.getElementById('time-slots-table-body');
             if(!tbody) return;
@@ -2066,12 +2167,14 @@
                 `;
             });
         }
+
         window.updateSlot = (i, f, v) => { timeSlotsData[i][f] = v; saveDatabaseToCloud(); }
         window.addNewTimeRow = () => { timeSlotsData.push({ id: Date.now(), label: String(timeSlotsData.length+1), start: "08:00", end: "08:35", type: "Waktu belajar" }); saveDatabaseToCloud(); renderTimeSlotsTable(); }
         window.deleteSlot = (i) => { timeSlotsData.splice(i, 1); saveDatabaseToCloud(); renderTimeSlotsTable(); }
         window.moveSlot = (i, dir) => { let t = i + dir; if(t >= 0 && t < timeSlotsData.length) { let tmp = timeSlotsData[i]; timeSlotsData[i] = timeSlotsData[t]; timeSlotsData[t] = tmp; saveDatabaseToCloud(); renderTimeSlotsTable(); } }
         window.openAutoTimeModal = () => document.getElementById('auto-time-modal').classList.remove('hidden');
         window.closeAutoTimeModal = () => document.getElementById('auto-time-modal').classList.add('hidden');
+        
         window.generateAutoTimes = function() {
             let startTimeEl = document.getElementById('modal-start-time');
             let slotDurationEl = document.getElementById('modal-slot-duration');
@@ -2105,10 +2208,12 @@
             closeAutoTimeModal();
             showCustomAlert('Jadual masa berjaya dijana dan disimpan!');
         }
+
         function formatMins(mins) {
             let h = Math.floor(mins/60)%24, m = mins%60;
             return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
         }
+
         window.onload = () => {
             loadDatabaseFromCloud().then(() => {
                 switchTab('guru_matapelajaran');
