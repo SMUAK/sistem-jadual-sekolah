@@ -72,13 +72,14 @@
                 </div>
             </div>
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
+                <!-- Urutan sub-tab baru yang diselaraskan -->
                 <div class="flex flex-wrap gap-2 border-b pb-4">
                     <button onclick="switchDataSubTab('subjek')" id="subtab-btn-subjek" class="px-4 py-2 rounded-xl text-xs font-bold bg-[#0b1b3d] text-white transition shadow">📖 Mata Pelajaran</button>
-                    <button onclick="switchDataSubTab('agihan_waktu')" id="subtab-btn-agihan_waktu" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">⏰ Agihan waktu Mata Pelajaran</button>
-                    <button onclick="switchDataSubTab('kelas')" id="subtab-btn-kelas" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">🏫 Kelas</button>
-                    <button onclick="switchDataSubTab('bilik')" id="subtab-btn-bilik" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">🚪 Bilik Khas</button>
                     <button onclick="switchDataSubTab('senarai_guru')" id="subtab-btn-senarai_guru" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">📋 Guru</button>
+                    <button onclick="switchDataSubTab('kelas')" id="subtab-btn-kelas" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">🏫 Kelas</button>
+                    <button onclick="switchDataSubTab('agihan_waktu')" id="subtab-btn-agihan_waktu" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">⏰ Agihan waktu Mata Pelajaran</button>
                     <button onclick="switchDataSubTab('guru')" id="subtab-btn-guru" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">👨‍🏫 Guru & Subjek</button>
+                    <button onclick="switchDataSubTab('bilik')" id="subtab-btn-bilik" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">🚪 Bilik Khas</button>
                 </div>
                 
                 <!-- Kandungan Sub-tab: Agihan Waktu Mata Pelajaran -->
@@ -130,7 +131,7 @@
                                     <th class="border border-slate-300 p-2.5 w-16">Bil.</th>
                                     <th id="th-name" class="border border-slate-300 p-2.5 text-left pl-4">Nama / Maklumat Utama</th>
                                     <th class="border border-slate-300 p-2.5 w-36">Kod / Singkatan</th>
-                                    <th id="th-category" class="border border-slate-300 p-2.5 w-56">Tingkatan & Subjek Diajar</th>
+                                    <th id="th-category" class="border border-slate-300 p-2.5 w-56">Guru Kelas</th>
                                     <th class="border border-slate-300 p-2.5 w-32">Tindakan</th>
                                 </tr>
                             </thead>
@@ -639,8 +640,8 @@
                 { id: 3, name: "Sains", code: "SN", category: "Teras" }
             ],
             kelas: [
-                { id: 1, name: "Tingkatan 1 - IS", code: "1IS", category: "Menengah Rendah" },
-                { id: 2, name: "Tingkatan 2 - IS", code: "2IS", category: "Menengah Rendah" }
+                { id: 1, name: "Tingkatan 1 - IS", code: "1IS", category: "ASRI B MOHD ZAIN" },
+                { id: 2, name: "Tingkatan 2 - IS", code: "2IS", category: "AHMAD ROSLI" }
             ],
             bilik: [
                 { id: 1, name: "Makmal Komputer 1", code: "MK1", category: "Khas" }
@@ -1561,7 +1562,7 @@
         
         window.switchDataSubTab = function(subTab) {
             currentSubTab = subTab;
-            ['subjek', 'agihan_waktu', 'kelas', 'bilik', 'senarai_guru', 'guru'].forEach(t => {
+            ['subjek', 'senarai_guru', 'kelas', 'agihan_waktu', 'guru', 'bilik'].forEach(t => {
                 let btn = document.getElementById(`subtab-btn-${t}`);
                 if(btn) btn.className = (t === subTab) ? "px-4 py-2 rounded-xl text-xs font-bold bg-[#0b1b3d] text-white transition shadow" : "px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition";
             });
@@ -1752,12 +1753,12 @@
                     <th class="border border-slate-300 p-2.5 w-16">Bil.</th>
                     <th id="th-name" class="border border-slate-300 p-2.5 text-left pl-4">Nama / Maklumat Utama</th>
                     <th class="border border-slate-300 p-2.5 w-36">Kod / Singkatan</th>
-                    <th id="th-category" class="border border-slate-300 p-2.5 w-56">Tingkatan & Subjek Diajar</th>
+                    <th id="th-category" class="border border-slate-300 p-2.5 w-56">Guru Kelas</th>
                     <th class="border border-slate-300 p-2.5 w-32">Tindakan</th>
                 `;
             }
             if(currentSubTab === 'subjek') { if(thName) thName.innerText = "Nama Mata Pelajaran"; if(thCategory) thCategory.innerText = "Kategori Mata Pelajaran"; }
-            else if(currentSubTab === 'kelas') { if(thName) thName.innerText = "Nama Kelas"; if(thCategory) thCategory.innerText = "Tingkatan / Aliran"; }
+            else if(currentSubTab === 'kelas') { if(thName) thName.innerText = "Nama Kelas"; if(thCategory) thCategory.innerText = "Guru Kelas"; }
             else { if(thName) thName.innerText = "Nama Bilik Khas"; if(thCategory) thCategory.innerText = "Lokasi / Kegunaan"; }
             let records = databaseRecords[currentSubTab] || [];
             if(totalCountEl) totalCountEl.innerText = records.length;
@@ -1800,6 +1801,7 @@
             if(currentSubTab === 'subjek') tabDisplayName = 'MATA PELAJARAN';
             else if(currentSubTab === 'senarai_guru') tabDisplayName = 'SENARAI GURU';
             else if(currentSubTab === 'guru') tabDisplayName = 'GURU';
+            else if(currentSubTab === 'kelas') tabDisplayName = 'KELAS';
             
             let modalTitleEl = document.getElementById('modal-title');
             if(modalTitleEl) modalTitleEl.innerText = `Tambah Rekod ${tabDisplayName}`;
@@ -1840,13 +1842,28 @@
                 if(currentSubTab === 'senarai_guru') {
                     if(labelInputName) labelInputName.innerText = 'Isi Nama Guru';
                     if(catContainer) catContainer.classList.add('hidden');
+                } else if(currentSubTab === 'kelas') {
+                    if(labelInputName) labelInputName.innerText = 'Nama Kelas';
+                    if(catContainer) catContainer.classList.remove('hidden');
+                    let labelCat = document.getElementById('label-input-category');
+                    if(labelCat) labelCat.innerText = 'Pilih Guru Kelas';
+                    let inputCat = document.getElementById('modal-input-category');
+                    let selectCat = document.getElementById('modal-select-category');
+                    if(inputCat) inputCat.classList.add('hidden');
+                    if(selectCat) {
+                        selectCat.classList.remove('hidden');
+                        selectCat.innerHTML = '<option value="">-- Sila Pilih Guru Kelas --</option>';
+                        (databaseRecords.senarai_guru || []).forEach(g => {
+                            selectCat.innerHTML += `<option value="${g.name}">${g.name} (${g.code})</option>`;
+                        });
+                    }
                 } else {
                     if(labelInputName) labelInputName.innerText = 'Nama / Maklumat Utama';
                     if(catContainer) catContainer.classList.remove('hidden');
                     let labelCat = document.getElementById('label-input-category');
                     if(labelCat) labelCat.innerText = 'Butiran Lanjut / Kategori';
                     let inputCat = document.getElementById('modal-input-category');
-                    if(inputCat) inputCat.value = '';
+                    if(inputCat) { inputCat.classList.remove('hidden'); inputCat.value = ''; }
                     let selectCat = document.getElementById('modal-select-category');
                     if(selectCat) selectCat.classList.add('hidden');
                 }
@@ -1972,6 +1989,9 @@
             let categoryValue = '';
             if(currentSubTab === 'senarai_guru') {
                 categoryValue = '';
+            } else if(currentSubTab === 'kelas') {
+                let selectCat = document.getElementById('modal-select-category');
+                categoryValue = selectCat ? selectCat.value : '';
             } else {
                 let inputCat = document.getElementById('modal-input-category');
                 categoryValue = inputCat ? inputCat.value : '-';
@@ -2013,7 +2033,10 @@
             } else {
                 let inputNameEl = document.getElementById('modal-input-name');
                 if(inputNameEl) inputNameEl.value = item.name;
-                if(currentSubTab !== 'senarai_guru') {
+                if(currentSubTab === 'kelas') {
+                    let selectCat = document.getElementById('modal-select-category');
+                    if(selectCat) selectCat.value = item.category;
+                } else if(currentSubTab !== 'senarai_guru') {
                     let inputCat = document.getElementById('modal-input-category');
                     if(inputCat) inputCat.value = item.category;
                 }
