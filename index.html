@@ -653,20 +653,7 @@
                 { id: 2, name: "AHMAD ROSLI", code: "Ahmad", category: "" },
                 { id: 3, name: "SHOLIHIN YUSOFF", code: "Sholihin", category: "" }
             ],
-            guru: [
-                {
-                    id: 1,
-                    name: "ASRI B MOHD ZAIN",
-                    code: "Asri",
-                    category: "Tingkatan 1 - IS [Matematik (2 Masa)]"
-                },
-                {
-                    id: 2,
-                    name: "AHMAD ROSLI",
-                    code: "Ahmad",
-                    category: "Tingkatan 1 - IS [Bahasa Melayu (2 Masa)] | Tingkatan 2 - IS [Bahasa Melayu (3 Masa)]"
-                }
-            ]
+            guru: []
         };
         let timeSlotsData = [
             { id: 1, label: "1", start: "07:30", end: "08:05", type: "Waktu belajar" },
@@ -683,16 +670,9 @@
         ];
         let blockedTimesData = [];
         let generatedTimetableData = {};
-        let gmpAllocations = {
-            "Tingkatan 1 - IS_BM": "Ahmad",
-            "Tingkatan 2 - IS_BM": "Ahmad",
-            "Tingkatan 1 - IS_MAT": "Asri"
-        };
+        let gmpAllocations = {};
         let agihanWaktuData = {};
-        let expandedTeachersMap = {
-            "ASRI B MOHD ZAIN": true,
-            "AHMAD ROSLI": true
-        };
+        let expandedTeachersMap = {};
         let selectedActiveSubItem = null;
         let contextMenuTarget = null;
         let customModalCallback = null;
@@ -829,18 +809,16 @@
             renderDataTable();
         }
 
-        // Fungsi Penyelarasan Penuh Dua Hala (Sinkronisasi & Pembersihan Otomatis Data Matriks ke Tab Guru & Subjek)
+        // Fungsi Penyelarasan Menyeluruh (Dibersihkan sepenuhnya jika nilai kosong/null/undefined)
         function syncGMPAllocationsToGuruData() {
             let teacherMap = {};
-            // Pastikan setiap guru dalam senarai asas wujud dalam peta walaupun tiada agihan
             (databaseRecords.senarai_guru || []).forEach(sg => {
                 teacherMap[sg.name] = {};
             });
 
-            // Kumpulkan semula agihan daripada gmpAllocations mengikut guru
             for(let key in gmpAllocations) {
                 let tCode = gmpAllocations[key];
-                if(!tCode) continue;
+                if(!tCode || tCode.trim() === '' || tCode.trim() === '-') continue;
                 let parts = key.split('_');
                 let kelas = parts[0];
                 let subCode = parts[1];
@@ -850,10 +828,17 @@
                 
                 if(!teacherMap[fullTeacherName]) teacherMap[fullTeacherName] = {};
                 if(!teacherMap[fullTeacherName][kelas]) teacherMap[fullTeacherName][kelas] = [];
-                teacherMap[fullTeacherName][kelas].push(`${subCode} (2 Masa)`);
+                
+                // Ambil bilangan masa sebenar dari agihan waktu jika ada, atau default 2 masa
+                let masaCount = 2;
+                if(agihanWaktuData[kelas && kelas.toUpperCase().includes('TINGKATAN') ? kelas.toUpperCase() : 'TINGKATAN 1'] && agihanWaktuData[kelas && kelas.toUpperCase().includes('TINGKATAN') ? kelas.toUpperCase() : 'TINGKATAN 1'][subCode]) {
+                    let av = agihanWaktuData[kelas && kelas.toUpperCase().includes('TINGKATAN') ? kelas.toUpperCase() : 'TINGKATAN 1'][subCode];
+                    masaCount = (parseInt(av.single) || 0) * 1 + (parseInt(av.double) || 0) * 2 + (parseInt(av.triple) || 0) * 3;
+                    if(masaCount === 0) masaCount = 2;
+                }
+                teacherMap[fullTeacherName][kelas].push(`${subCode} (${masaCount} Masa)`);
             }
 
-            // Kemaskini databaseRecords.guru secara menyeluruh (termasuk buang rekod yang telah dipadam dari matriks)
             if(!databaseRecords.guru) databaseRecords.guru = [];
             let newGuruRecords = [];
 
@@ -1079,7 +1064,14 @@
             } else if(action === 'padam') {
                 showCustomConfirm(`Adakah anda pasti ingin memadam agihan guru untuk ${subjekCode} di kelas ${kelas}?`, function(confirmed) {
                     if(confirmed) {
+                        // Padam sepenuhnya kunci daripada objek gmpAllocations
                         delete gmpAllocations[key];
+                        // Pastikan tiada padanan sisa kekunci sensitif huruf
+                        for(let k in gmpAllocations) {
+                            if(k.toLowerCase() === key.toLowerCase()) {
+                                delete gmpAllocations[k];
+                            }
+                        }
                         saveDatabaseToCloud();
                         renderGMPMatrix();
                         renderGMPTree();
@@ -1099,7 +1091,7 @@
                 let totalMasa = 0;
                 let subDetailsHTML = '';
                 let isExpanded = expandedTeachersMap[sg.name] !== undefined ? expandedTeachersMap[sg.name] : true;
-                if(teacherRecord && teacherRecord.category) {
+                if(teacherRecord && teacherRecord.category && teacherRecord.category !== 'Tiada Opsyen Dipilih') {
                     let segments = teacherRecord.category.split(' | ');
                     segments.forEach(seg => {
                         let match = seg.match(/^(.*?) \[(.*?)\]$/);
