@@ -829,9 +829,14 @@
             renderDataTable();
         }
 
-        // Fungsi Penyelarasan Dua Hala (Sinkronisasi Antara Matriks GMP dan Tab Guru & Subjek)
+        // Fungsi Penyelarasan Penuh Dua Hala (Sinkronisasi & Pembersihan Otomatis Data Matriks ke Tab Guru & Subjek)
         function syncGMPAllocationsToGuruData() {
             let teacherMap = {};
+            // Pastikan setiap guru dalam senarai asas wujud dalam peta walaupun tiada agihan
+            (databaseRecords.senarai_guru || []).forEach(sg => {
+                teacherMap[sg.name] = {};
+            });
+
             // Kumpulkan semula agihan daripada gmpAllocations mengikut guru
             for(let key in gmpAllocations) {
                 let tCode = gmpAllocations[key];
@@ -840,7 +845,6 @@
                 let kelas = parts[0];
                 let subCode = parts[1];
                 
-                // Cari nama penuh guru berdasarkan kod singkatannya
                 let foundG = (databaseRecords.senarai_guru || []).find(g => g.code.toLowerCase() === tCode.toLowerCase() || g.name.toLowerCase().includes(tCode.toLowerCase()));
                 let fullTeacherName = foundG ? foundG.name : tCode;
                 
@@ -849,31 +853,32 @@
                 teacherMap[fullTeacherName][kelas].push(`${subCode} (2 Masa)`);
             }
 
-            // Kemaskini databaseRecords.guru secara automatik
+            // Kemaskini databaseRecords.guru secara menyeluruh (termasuk buang rekod yang telah dipadam dari matriks)
             if(!databaseRecords.guru) databaseRecords.guru = [];
-            for(let tName in teacherMap) {
-                let summaryArr = [];
-                for(let k in teacherMap[tName]) {
-                    summaryArr.push(`${k} [${teacherMap[tName][k].join(', ')}]`);
-                }
-                let catStr = summaryArr.join(' | ');
-                
-                let existingG = databaseRecords.guru.find(g => g.name.trim().toLowerCase() === tName.trim().toLowerCase());
-                let foundSenarai = (databaseRecords.senarai_guru || []).find(g => g.name.trim().toLowerCase() === tName.trim().toLowerCase());
-                let tCode = foundSenarai ? foundSenarai.code : tName;
+            let newGuruRecords = [];
 
-                if(existingG) {
-                    existingG.category = catStr;
-                    existingG.code = tCode;
-                } else {
-                    databaseRecords.guru.push({
-                        id: Date.now() + Math.random(),
-                        name: tName,
-                        code: tCode,
-                        category: catStr
-                    });
+            (databaseRecords.senarai_guru || []).forEach(sg => {
+                let tName = sg.name;
+                let tCode = sg.code;
+                let summaryArr = [];
+                
+                if(teacherMap[tName]) {
+                    for(let k in teacherMap[tName]) {
+                        if(teacherMap[tName][k].length > 0) {
+                            summaryArr.push(`${k} [${teacherMap[tName][k].join(', ')}]`);
+                        }
+                    }
                 }
-            }
+                let catStr = summaryArr.length > 0 ? summaryArr.join(' | ') : 'Tiada Opsyen Dipilih';
+
+                newGuruRecords.push({
+                    id: Date.now() + Math.random(),
+                    name: tName,
+                    code: tCode,
+                    category: catStr
+                });
+            });
+            databaseRecords.guru = newGuruRecords;
         }
 
         async function saveDatabaseToCloud() {
@@ -1050,7 +1055,6 @@
             let key = `${kelas}_${subjekCode}`;
 
             if(action === 'tukar') {
-                // Memaparkan nama singkatan guru (kod) daripada senarai_guru dalam data asas
                 let allTeacherCodes = (databaseRecords.senarai_guru || []).map(g => g.code);
                 if(allTeacherCodes.length === 0) allTeacherCodes = ["Asri", "Ahmad", "Sholihin"];
                 
