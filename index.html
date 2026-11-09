@@ -532,25 +532,25 @@
     <div id="data-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-sm hidden flex items-center justify-center z-50">
         <div class="bg-white w-full max-w-3xl p-6 rounded-2xl shadow-2xl border space-y-5 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b pb-3">
-                <h3 id="modal-title" class="text-base font-bold text-[#0b1b3d]">Tambah Rekod Guru & Subjek</h3>
+                <h3 id="modal-title" class="text-base font-bold text-[#0b1b3d]">Tambah Rekod</h3>
                 <button onclick="closeDataModal()" class="w-8 h-8 rounded-full bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-sm flex items-center justify-center shadow-md transition transform active:scale-95" style="box-shadow: 0 4px 6px -1px rgba(225, 29, 72, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.2);">✕</button>
             </div>
             <input type="hidden" id="modal-edit-id" value="">
             <div class="space-y-4 text-xs">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label id="label-input-name" class="font-semibold text-slate-700 block mb-1">Isi Nama Guru</label>
-                        <select id="modal-select-name" onchange="onTeacherDropdownChange()" class="w-full px-3 py-2 border rounded-lg bg-slate-50 font-medium">
+                        <label id="label-input-name" class="font-semibold text-slate-700 block mb-1">Nama / Maklumat Utama</label>
+                        <input type="text" id="modal-input-name" placeholder="Masukkan nama..." class="w-full px-3 py-2 border rounded-lg bg-slate-50 font-medium">
+                        <select id="modal-select-name" onchange="onTeacherDropdownChange()" class="w-full px-3 py-2 border rounded-lg bg-slate-50 font-medium hidden">
                             <option value="">-- Sila Pilih Guru --</option>
                         </select>
-                        <input type="text" id="modal-input-name" placeholder="Masukkan nama..." class="w-full px-3 py-2 border rounded-lg bg-slate-50 hidden">
                     </div>
                     <div>
                         <label class="font-semibold text-slate-700 block mb-1">Kod / Singkatan</label>
                         <input type="text" id="modal-input-code" placeholder="Taip singkatan..." class="w-full px-3 py-2 border rounded-lg bg-white font-bold text-slate-800 focus:ring-2 focus:ring-[#0b1b3d] outline-none">
                     </div>
                 </div>
-                <div id="modal-container-matrix" class="space-y-2">
+                <div id="modal-container-matrix" class="space-y-2 hidden">
                     <label class="font-semibold text-slate-700 block">Matriks Pilihan Tingkatan, Subjek & Bilangan Masa Seminggu:</label>
                     <p class="text-[11px] text-slate-500">Tanda petak persilangan dan masukkan jumlah masa seminggu bagi subjek yang diajar.</p>
                     <div class="overflow-x-auto border rounded-xl max-h-72">
@@ -577,7 +577,7 @@
             </div>
             <div class="flex justify-end space-x-2 pt-3 border-t">
                 <button onclick="closeDataModal()" class="px-4 py-2 border rounded-xl text-xs font-semibold">Batal</button>
-                <button onclick="saveModalData()" class="px-5 py-2 bg-[#0b1b3d] text-white rounded-xl text-xs font-semibold shadow">Simpan Rekod Guru</button>
+                <button onclick="saveModalData()" class="px-5 py-2 bg-[#0b1b3d] text-white rounded-xl text-xs font-semibold shadow">Simpan Rekod</button>
             </div>
         </div>
     </div>
@@ -677,7 +677,6 @@
         let contextMenuTarget = null;
         let customModalCallback = null;
 
-        // Modul Kotak Pengesahan & Prompt Kustom
         window.showCustomConfirm = function(message, callback) {
             let modal = document.getElementById('custom-modal-dialog');
             let titleEl = document.getElementById('custom-modal-title');
@@ -1731,7 +1730,7 @@
             if(!tbody) return;
             tbody.innerHTML = '';
             
-            // Paparan Khas untuk tab GURU (senarai_guru) dengan butang Edit dan Padam (Induk)
+            // Tab GURU (senarai_guru)
             if(currentSubTab === 'senarai_guru') {
                 if(theadRow) {
                     theadRow.innerHTML = `
@@ -1770,7 +1769,7 @@
                 return;
             }
 
-            // Paparan untuk tab Guru & Subjek (Tiada butang tong sampah di kolum tindakan kerana diurus di tab Guru)
+            // Tab GURU & SUBJEK (guru)
             if(currentSubTab === 'guru') {
                 if(theadRow) {
                     theadRow.innerHTML = `
@@ -1802,7 +1801,7 @@
                 return;
             }
 
-            // Standard layout untuk tab lain (Subjek, Kelas, Bilik Khas)
+            // Tab Lain (Subjek, Kelas, Bilik Khas)
             if(theadRow) {
                 theadRow.innerHTML = `
                     <th class="border border-slate-300 p-2.5 w-16">Bil.</th>
@@ -1837,22 +1836,16 @@
             });
         }
 
-        // Fungsi Induk Pemadaman Guru (Memadam dari senarai_guru, membersihkan matriks agihan, dan mengemas kini senarai guru & subjek)
         window.deleteMasterTeacher = function(teacherName, teacherCode) {
             showCustomConfirm(`Adakah anda pasti ingin memadam guru "${teacherName}"? Tindakan ini akan memadamkan guru ini sepenuhnya serta semua agihan subjek/kelas matriks beliau secara automatik.`, function(confirmed) {
                 if(confirmed) {
-                    // 1. Padam dari senarai_guru utama
                     databaseRecords.senarai_guru = (databaseRecords.senarai_guru || []).filter(g => g.name.toLowerCase() !== teacherName.toLowerCase());
-                    
-                    // 2. Padam semua agihan matriks gmpAllocations yang menggunakan kod guru atau nama guru tersebut
                     for(let key in gmpAllocations) {
                         let codeVal = gmpAllocations[key];
                         if(codeVal && (codeVal.toLowerCase() === teacherCode.toLowerCase() || codeVal.toLowerCase() === teacherName.toLowerCase())) {
                             delete gmpAllocations[key];
                         }
                     }
-
-                    // 3. Simpan dan selaraskan semula data
                     saveDatabaseToCloud();
                     renderDataTable();
                     showCustomAlert(`Guru ${teacherName} dan semua agihan matriks berkaitan telah berjaya dipadam!`);
@@ -1863,16 +1856,13 @@
         window.openAddModal = function() {
             let tabDisplayName = currentSubTab.toUpperCase().replace('_', ' ');
             if(currentSubTab === 'subjek') tabDisplayName = 'MATA PELAJARAN';
+            else if(currentSubTab === 'senarai_guru') tabDisplayName = 'SENARAI GURU';
+            else if(currentSubTab === 'guru') tabDisplayName = 'GURU';
+            
             let modalTitleEl = document.getElementById('modal-title');
             if(modalTitleEl) modalTitleEl.innerText = `Tambah Rekod ${tabDisplayName}`;
             let modalEditIdEl = document.getElementById('modal-edit-id');
             if(modalEditIdEl) modalEditIdEl.value = '';
-            let modalInputNameEl = document.getElementById('modal-input-name');
-            if(modalInputNameEl) modalInputNameEl.value = '';
-            let modalSelectNameEl = document.getElementById('modal-select-name');
-            if(modalSelectNameEl) modalSelectNameEl.value = '';
-            let modalInputCodeEl = document.getElementById('modal-input-code');
-            if(modalInputCodeEl) modalInputCodeEl.value = '';
             
             let inputName = document.getElementById('modal-input-name');
             let selectName = document.getElementById('modal-select-name');
@@ -1882,6 +1872,7 @@
             let inputCode = document.getElementById('modal-input-code');
             
             if(inputCode) {
+                inputCode.value = '';
                 inputCode.removeAttribute('readonly');
                 inputCode.classList.remove('bg-slate-100');
                 inputCode.classList.add('bg-white');
@@ -1889,7 +1880,7 @@
 
             if(currentSubTab === 'guru') {
                 if(labelInputName) labelInputName.innerText = 'Pilih Nama Guru';
-                if(inputName) inputName.classList.add('hidden');
+                if(inputName) { inputName.value = ''; inputName.classList.add('hidden'); }
                 if(selectName) {
                     selectName.classList.remove('hidden');
                     selectName.innerHTML = '<option value="">-- Sila Pilih Guru --</option>';
@@ -1901,22 +1892,20 @@
                 if(catContainer) catContainer.classList.add('hidden');
                 buildMatrixTable();
             } else {
+                if(matrixContainer) matrixContainer.classList.add('hidden');
+                if(selectName) selectName.classList.add('hidden');
+                if(inputName) { inputName.value = ''; inputName.classList.remove('hidden'); }
+                
                 if(currentSubTab === 'senarai_guru') {
                     if(labelInputName) labelInputName.innerText = 'Isi Nama Guru';
-                    if(inputName) inputName.classList.remove('hidden');
-                    if(selectName) selectName.classList.add('hidden');
-                    if(matrixContainer) matrixContainer.classList.add('hidden');
                     if(catContainer) catContainer.classList.add('hidden');
                 } else {
                     if(labelInputName) labelInputName.innerText = 'Nama / Maklumat Utama';
-                    if(inputName) inputName.classList.remove('hidden');
-                    if(selectName) selectName.classList.add('hidden');
-                    if(matrixContainer) matrixContainer.classList.add('hidden');
                     if(catContainer) catContainer.classList.remove('hidden');
                     let labelCat = document.getElementById('label-input-category');
                     if(labelCat) labelCat.innerText = 'Butiran Lanjut / Kategori';
                     let inputCat = document.getElementById('modal-input-category');
-                    if(inputCat) inputCat.classList.remove('hidden');
+                    if(inputCat) inputCat.value = '';
                     let selectCat = document.getElementById('modal-select-category');
                     if(selectCat) selectCat.classList.add('hidden');
                 }
@@ -1944,14 +1933,14 @@
             kelasList.forEach(cls => {
                 bodyHTML += `<tr><td class="border p-2 font-bold bg-slate-50 text-slate-700 text-left pl-3">${cls.name}</td>`;
                 subjekList.forEach(sub => {
-                    let cellInfo = (selectedDataMap[cls.name] && selectedDataMap[cls.name][sub.name]) || { checked: false, masa: 4 };
+                    let cellInfo = (selectedDataMap[cls.name] && selectedDataMap[cls.name][sub.code]) || { checked: false, masa: 4 };
                     let isChecked = cellInfo.checked ? 'checked' : '';
                     let masaVal = cellInfo.masa || 4;
                     bodyHTML += `
                         <td class="border p-2 text-center space-y-1">
-                            <input type="checkbox" name="matrix-cb" data-kelas="${cls.name}" data-subjek="${sub.name}" onchange="toggleMasaInput(this)" class="w-4 h-4 rounded border-slate-300" ${isChecked}>
+                            <input type="checkbox" name="matrix-cb" data-kelas="${cls.name}" data-subjek="${sub.code}" onchange="toggleMasaInput(this)" class="w-4 h-4 rounded border-slate-300" ${isChecked}>
                             <div class="mt-1">
-                                <input type="number" name="matrix-masa" data-kelas="${cls.name}" data-subjek="${sub.name}" value="${masaVal}" min="1" max="10" placeholder="Masa" class="w-14 px-1 py-0.5 border rounded text-center text-xs font-bold bg-white ${isChecked ? '' : 'hidden'}">
+                                <input type="number" name="matrix-masa" data-kelas="${cls.name}" data-subjek="${sub.code}" value="${masaVal}" min="1" max="10" placeholder="Masa" class="w-14 px-1 py-0.5 border rounded text-center text-xs font-bold bg-white ${isChecked ? '' : 'hidden'}">
                             </div>
                         </td>
                     `;
@@ -1981,27 +1970,27 @@
                 codeEl.value = opt.getAttribute('data-code') || '';
             }
             if(currentSubTab === 'guru' && teacherName) {
-                let existingRecord = databaseRecords['guru'].find(x => x.name.trim().toLowerCase() === teacherName.trim().toLowerCase());
                 let parsedMap = {};
-                if(existingRecord && existingRecord.category) {
-                    let segments = existingRecord.category.split(' | ');
-                    segments.forEach(seg => {
-                        let match = seg.match(/^(.*?) \[(.*?)\]$/);
-                        if(match) {
-                            let cName = match[1].trim();
-                            let sDetails = match[2].split(', ').map(s => s.trim());
-                            parsedMap[cName] = {};
-                            sDetails.forEach(sd => {
-                                let subMatch = sd.match(/^(.*?)\s*\((\d+)\s*Masa\)$/);
-                                if(subMatch) {
-                                    parsedMap[cName][subMatch[1].trim()] = { checked: true, masa: parseInt(subMatch[2]) };
-                                } else {
-                                    parsedMap[cName][sd] = { checked: true, masa: 4 };
+                (databaseRecords.kelas || []).forEach(cls => {
+                    (databaseRecords.subjek || []).forEach(sub => {
+                        let key = `${cls.name}_${sub.code}`;
+                        let allocatedCode = gmpAllocations[key];
+                        if(allocatedCode) {
+                            let foundG = (databaseRecords.senarai_guru || []).find(g => g.code.toLowerCase() === allocatedCode.toLowerCase() || g.name.toLowerCase().includes(allocatedCode.toLowerCase()));
+                            let fName = foundG ? foundG.name : allocatedCode;
+                            if(fName.toLowerCase() === teacherName.toLowerCase()) {
+                                if(!parsedMap[cls.name]) parsedMap[cls.name] = {};
+                                let masaCount = 2;
+                                if(agihanWaktuData[cls.name && cls.name.toUpperCase().includes('TINGKATAN') ? cls.name.toUpperCase() : 'TINGKATAN 1'] && agihanWaktuData[cls.name && cls.name.toUpperCase().includes('TINGKATAN') ? cls.name.toUpperCase() : 'TINGKATAN 1'][sub.code]) {
+                                    let av = agihanWaktuData[cls.name && cls.name.toUpperCase().includes('TINGKATAN') ? cls.name.toUpperCase() : 'TINGKATAN 1'][sub.code];
+                                    masaCount = (parseInt(av.single) || 0) * 1 + (parseInt(av.double) || 0) * 2 + (parseInt(av.triple) || 0) * 3;
+                                    if(masaCount === 0) masaCount = 2;
                                 }
-                            });
+                                parsedMap[cls.name][sub.code] = { checked: true, masa: masaCount };
+                            }
                         }
                     });
-                }
+                });
                 buildMatrixTable(parsedMap);
             }
         }
@@ -2018,28 +2007,40 @@
             let code = codeEl ? codeEl.value : '';
             if(!name) return showCustomAlert('Sila masukkan atau pilih nama terlebih dahulu.');
             
-            let categoryValue = '';
             if(currentSubTab === 'guru') {
-                let matrixMap = {};
-                document.querySelectorAll('input[name="matrix-cb"]:checked').forEach(cb => {
-                    let k = cb.getAttribute('data-kelas');
-                    let s = cb.getAttribute('data-subjek');
-                    let masaInput = document.querySelector(`input[name="matrix-masa"][data-kelas="${k}"][data-subjek="${s}"]`);
-                    let masaVal = masaInput ? (parseInt(masaInput.value) || 4) : 4;
-                    if(!matrixMap[k]) matrixMap[k] = [];
-                    matrixMap[k].push(`${s} (${masaVal} Masa)`);
+                let foundG = (databaseRecords.senarai_guru || []).find(g => g.name.toLowerCase() === name.toLowerCase());
+                let tCode = foundG ? foundG.code : name;
+                
+                (databaseRecords.kelas || []).forEach(cls => {
+                    (databaseRecords.subjek || []).forEach(sub => {
+                        let key = `${cls.name}_${sub.code}`;
+                        let cb = document.querySelector(`input[name="matrix-cb"][data-kelas="${cls.name}"][data-subjek="${sub.code}"]`);
+                        if(cb && cb.checked) {
+                            gmpAllocations[key] = tCode;
+                        } else {
+                            if(gmpAllocations[key] === tCode) {
+                                delete gmpAllocations[key];
+                            }
+                        }
+                    });
                 });
-                let summaryArr = [];
-                for(let k in matrixMap) {
-                    summaryArr.push(`${k} [${matrixMap[k].join(', ')}]`);
-                }
-                categoryValue = summaryArr.length > 0 ? summaryArr.join(' | ') : 'Tiada Opsyen Dipilih';
-            } else if(currentSubTab === 'senarai_guru') {
+                saveDatabaseToCloud();
+                closeDataModal();
+                renderGMPMatrix();
+                renderGMPTree();
+                renderDataTable();
+                showCustomAlert('Agihan matriks guru berjaya dikemas kini!');
+                return;
+            }
+
+            let categoryValue = '';
+            if(currentSubTab === 'senarai_guru') {
                 categoryValue = '';
             } else {
                 let inputCat = document.getElementById('modal-input-category');
                 categoryValue = inputCat ? inputCat.value : '-';
             }
+
             if(editId) {
                 let item = databaseRecords[currentSubTab].find(x => x.id == editId);
                 if(item) { 
@@ -2053,17 +2054,7 @@
                     }
                 }
             } else {
-                if(currentSubTab === 'guru') {
-                    let existingTeacherIndex = databaseRecords[currentSubTab].findIndex(x => x.name.trim().toLowerCase() === name.trim().toLowerCase());
-                    if(existingTeacherIndex !== -1) {
-                        databaseRecords[currentSubTab][existingTeacherIndex].code = code;
-                        databaseRecords[currentSubTab][existingTeacherIndex].category = categoryValue;
-                    } else {
-                        databaseRecords[currentSubTab].push({ id: Date.now(), name, code, category: categoryValue });
-                    }
-                } else {
-                    databaseRecords[currentSubTab].push({ id: Date.now(), name, code, category: categoryValue });
-                }
+                databaseRecords[currentSubTab].push({ id: Date.now(), name, code, category: categoryValue });
             }
             saveDatabaseToCloud();
             closeDataModal();
