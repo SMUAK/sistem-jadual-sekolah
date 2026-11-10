@@ -1852,7 +1852,7 @@
                     if(inputCat) inputCat.classList.add('hidden');
                     if(selectCat) {
                         selectCat.classList.remove('hidden');
-                        selectCat.innerHTML = '<option value="">-- Sila Pilih Guru Kelas --</option>';
+                        selectCat.innerHTML = '<option value="">-- Sila Pilih Guru Kelas --</option><option value="-">-</option>';
                         (databaseRecords.senarai_guru || []).forEach(g => {
                             selectCat.innerHTML += `<option value="${g.name}">${g.name} (${g.code})</option>`;
                         });
@@ -2169,3 +2169,4 @@
     </script>
 </body>
 </html>
+
