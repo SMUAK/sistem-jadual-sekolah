@@ -326,7 +326,7 @@
                         </div>
                     </div>
                     
-                    <!-- KOTAK IMPORT JADUAL EXCEL (DIKEMASKINI) -->
+                    <!-- KOTAK IMPORT JADUAL EXCEL -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
                         <div class="flex items-center space-x-3 border-b pb-3">
                             <div class="bg-emerald-800 text-white p-2 rounded-xl text-lg font-bold">📊</div>
@@ -341,7 +341,7 @@
                         </div>
                     </div>
 
-                    <!-- KOTAK SIMPAN VERSI SANDARAN (DIKEMASKINI) -->
+                    <!-- KOTAK SIMPAN VERSI SANDARAN -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
                         <div class="flex items-center space-x-3 border-b pb-3">
                             <div class="bg-indigo-900 text-white p-2 rounded-xl text-lg font-bold">💾</div>
@@ -643,23 +643,10 @@
         let currentSubTab = 'subjek';
         let currentMasterMode = 'kelas';
         let databaseRecords = {
-            subjek: [
-                { id: 1, name: "Bahasa Melayu", code: "BM", category: "Teras" },
-                { id: 2, name: "Matematik", code: "MAT", category: "Teras" },
-                { id: 3, name: "Sains", code: "SN", category: "Teras" }
-            ],
-            kelas: [
-                { id: 1, name: "Tingkatan 1 - IS", code: "1IS", category: "ASRI B MOHD ZAIN" },
-                { id: 2, name: "Tingkatan 2 - IS", code: "2IS", category: "AHMAD ROSLI" }
-            ],
-            bilik: [
-                { id: 1, name: "Makmal Komputer 1", code: "MK1", category: "Khas" }
-            ],
-            senarai_guru: [
-                { id: 1, name: "ASRI B MOHD ZAIN", code: "Asri", category: "" },
-                { id: 2, name: "AHMAD ROSLI", code: "Ahmad", category: "" },
-                { id: 3, name: "SHOLIHIN YUSOFF", code: "Sholihin", category: "" }
-            ],
+            subjek: [],
+            kelas: [],
+            bilik: [],
+            senarai_guru: [],
             guru: []
         };
         let timeSlotsData = [
@@ -678,7 +665,7 @@
         let blockedTimesData = [];
         let generatedTimetableData = {};
         let lockedSlotsData = {}; 
-        let savedTimetableVersions = []; // Penyimpanan senarai versi sandaran draf
+        let savedTimetableVersions = [];
         let gmpAllocations = {};
         let agihanWaktuData = {};
         let expandedTeachersMap = {};
@@ -901,9 +888,6 @@
             }
         }
 
-        // ==========================================
-        // FUNGSI AKTIF: IMPORT JADUAL EXCEL / CSV / JSON
-        // ==========================================
         window.importExcelOrCsv = function(event) {
             let file = event.target.files[0];
             if(!file) return;
@@ -919,7 +903,6 @@
                             generatedTimetableData = parsed;
                         }
                     } else {
-                        // Proses fail CSV ringkas (Format: Kelas,Hari,Waktu,Subjek,Guru)
                         let lines = content.split('\n');
                         let count = 0;
                         for(let i = 1; i < lines.length; i++) {
@@ -947,9 +930,6 @@
             reader.readAsText(file);
         };
 
-        // ==========================================
-        // FUNGSI AKTIF: SIMPAN VERSI & PENGURUSAN SANDARAN
-        // ==========================================
         window.saveBackupVersion = function() {
             let nameEl = document.getElementById('backup-version-name');
             let name = nameEl ? nameEl.value.trim() : '';
@@ -1440,13 +1420,20 @@
             let classes = databaseRecords.kelas || [];
             let learningSlots = timeSlotsData.filter(s => s.type === 'Waktu belajar');
             let totalSlotsCount = learningSlots.length * 5;
+            
+            // SEMAK ADAKAH DATA ASAS LENGKAP
+            let hasBasicData = (databaseRecords.subjek || []).length > 0 && 
+                               (databaseRecords.senarai_guru || []).length > 0 && 
+                               classes.length > 0;
+
             if(classes.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="3" class="p-6 text-slate-400 italic text-center">Tiada kelas berdaftar. Sila daftar di tab Data Asas > Kelas.</td></tr>`;
                 return;
             }
             classes.forEach(k => {
                 let filledCount = 0;
-                if(generatedTimetableData[k.name]) {
+                // Jika data asas belum lengkap, paksa 0%
+                if(hasBasicData && generatedTimetableData[k.name]) {
                     ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis'].forEach(day => {
                         learningSlots.forEach(slot => {
                             if(generatedTimetableData[k.name][day] && generatedTimetableData[k.name][day][slot.label]) {
@@ -1455,7 +1442,8 @@
                         });
                     });
                 }
-                let percent = totalSlotsCount > 0 ? Math.round((filledCount / totalSlotsCount) * 100) : 0;
+                let percent = (hasBasicData && totalSlotsCount > 0) ? Math.round((filledCount / totalSlotsCount) * 100) : 0;
+                
                 tbody.innerHTML += `
                     <tr class="border-b border-slate-200 hover:bg-slate-50 transition">
                         <td class="border border-slate-300 p-2.5 text-left pl-4 font-bold text-[#0b1b3d]">${k.name}</td>
@@ -1463,7 +1451,7 @@
                             <div class="space-y-1">
                                 <div class="flex justify-between text-[11px] font-semibold text-slate-600">
                                     <span>${percent}%</span>
-                                    <span>${filledCount} / ${totalSlotsCount} Slot</span>
+                                    <span>${hasBasicData ? filledCount : 0} / ${totalSlotsCount} Slot</span>
                                 </div>
                                 <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
                                     <div class="bg-emerald-600 h-2 rounded-full transition-all duration-300" style="width: ${percent}%;"></div>
@@ -1481,12 +1469,15 @@
             });
         }
         window.startAutoGeneration = function() {
-            let targetClass = document.getElementById('auto-select-class').value;
-            let classesToProcess = targetClass === 'Semua' ? (databaseRecords.kelas || []) : (databaseRecords.kelas || []).filter(k => k.name === targetClass);
-            if(classesToProcess.length === 0) return showCustomAlert('Tiada kelas untuk dijana.');
             let subjects = databaseRecords.subjek || [];
-            let teachers = databaseRecords.guru || [];
-            if(subjects.length === 0 || teachers.length === 0) return showCustomAlert('Sila pastikan data Subjek dan Guru diisi.');
+            let teachers = databaseRecords.senarai_guru || [];
+            let classes = databaseRecords.kelas || [];
+            if(subjects.length === 0 || teachers.length === 0 || classes.length === 0) {
+                return showCustomAlert('Sila lengkapkan Data Asas (Mata Pelajaran, Senarai Guru, dan Kelas) terlebih dahulu sebelum menjana jadual.');
+            }
+            let targetClass = document.getElementById('auto-select-class').value;
+            let classesToProcess = targetClass === 'Semua' ? classes : classes.filter(k => k.name === targetClass);
+            
             let modal = document.getElementById('generation-progress-modal');
             let bar = document.getElementById('progress-bar-fill');
             let statusText = document.getElementById('progress-status-text');
@@ -1534,11 +1525,16 @@
                 setTimeout(() => {
                     modal.classList.add('hidden');
                     renderClassStatusTable();
-                    showCustomAlert('Jadual pintar berjaya dijana dengan mengambil kira slot yang dikunci!');
+                    showCustomAlert('Jadual pintar berjaya dijana!');
                 }, 300);
             }, 200);
         }
         window.janaSingleClass = function(className) {
+            let subjects = databaseRecords.subjek || [];
+            let teachers = databaseRecords.senarai_guru || [];
+            if(subjects.length === 0 || teachers.length === 0) {
+                return showCustomAlert('Sila lengkapkan Data Asas (Mata Pelajaran dan Senarai Guru) terlebih dahulu.');
+            }
             let modal = document.getElementById('generation-progress-modal');
             let bar = document.getElementById('progress-bar-fill');
             modal.classList.remove('hidden');
@@ -1546,8 +1542,6 @@
             setTimeout(() => {
                 let days = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis'];
                 let learningSlots = timeSlotsData.filter(s => s.type === 'Waktu belajar');
-                let subjects = databaseRecords.subjek || [{name: 'Bahasa Melayu', code: 'BM'}];
-                let teachers = databaseRecords.guru || [{name: 'ASRI B MOHD ZAIN'}];
                 if(!generatedTimetableData[className]) generatedTimetableData[className] = {};
                 days.forEach(day => {
                     if(!generatedTimetableData[className][day]) generatedTimetableData[className][day] = {};
