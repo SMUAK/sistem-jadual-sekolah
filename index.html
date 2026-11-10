@@ -71,7 +71,7 @@
                 </div>
             </div>
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
-                <!-- Urutan sub-tab (termasuk sub-tab baru Kunci Slot) -->
+                <!-- Urutan sub-tab (termasuk sub-tab Kunci Slot) -->
                 <div class="flex flex-wrap gap-2 border-b pb-4">
                     <button onclick="switchDataSubTab('subjek')" id="subtab-btn-subjek" class="px-4 py-2 rounded-xl text-xs font-bold bg-[#0b1b3d] text-white transition shadow">📖 Mata Pelajaran</button>
                     <button onclick="switchDataSubTab('senarai_guru')" id="subtab-btn-senarai_guru" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">📋 Guru</button>
@@ -115,7 +115,7 @@
                     </div>
                 </div>
 
-                <!-- Kandungan Sub-tab Baru: Kunci Slot Subjek -->
+                <!-- Kandungan Sub-tab: Kunci Slot Subjek -->
                 <div id="subtab-content-kunci_slot" class="hidden space-y-4">
                     <div class="flex flex-wrap justify-between items-center bg-slate-50 p-4 rounded-xl border border-slate-200 gap-4">
                         <div class="flex items-center space-x-3">
@@ -325,16 +325,23 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <!-- KOTAK IMPORT JADUAL EXCEL (DIKEMASKINI) -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
                         <div class="flex items-center space-x-3 border-b pb-3">
                             <div class="bg-emerald-800 text-white p-2 rounded-xl text-lg font-bold">📊</div>
                             <h3 class="text-base font-bold text-[#0b1b3d]">Import Jadual Excel</h3>
                         </div>
                         <div class="space-y-3 text-xs">
-                            <p class="text-slate-600">Sudah mempunyai jadual waktu? Muat turun templat dan semak fail jadual melalui menu Import Excel Sekolah.</p>
-                            <button onclick="showCustomAlert('Fungsi Import Excel sedang dikemaskini.')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-semibold shadow transition">Buka Import Jadual Excel</button>
+                            <p class="text-slate-600">Muat naik fail jadual (format CSV/JSON) untuk memasukkan jadual waktu dengan cepat.</p>
+                            <label class="block w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-semibold shadow transition text-center cursor-pointer">
+                                Buka Import Jadual Excel
+                                <input type="file" id="import-excel-file" accept=".csv, .json" onchange="importExcelOrCsv(event)" class="hidden">
+                            </label>
                         </div>
                     </div>
+
+                    <!-- KOTAK SIMPAN VERSI SANDARAN (DIKEMASKINI) -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
                         <div class="flex items-center space-x-3 border-b pb-3">
                             <div class="bg-indigo-900 text-white p-2 rounded-xl text-lg font-bold">💾</div>
@@ -343,8 +350,16 @@
                         <div class="space-y-3 text-xs">
                             <input type="text" id="backup-version-name" placeholder="Nama Versi (Contoh: Draf 1)" class="w-full px-3 py-2 border rounded-xl bg-slate-50">
                             <button onclick="saveBackupVersion()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-xl font-semibold shadow transition">Simpan Jadual Semasa</button>
+                            
+                            <div id="saved-versions-container" class="space-y-1.5 pt-2 border-t">
+                                <label class="font-bold text-slate-700 block">Senarai Versi Tersimpan:</label>
+                                <div id="versions-list-box" class="max-h-36 overflow-y-auto space-y-1 font-medium">
+                                    <div class="text-slate-400 italic">Tiada versi sandaran disimpan.</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
                 </div>
                 <div class="lg:col-span-7 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
                     <div class="flex justify-between items-center border-b pb-3">
@@ -662,13 +677,15 @@
         ];
         let blockedTimesData = [];
         let generatedTimetableData = {};
-        let lockedSlotsData = {}; // Menyimpan data slot yang dikunci { className: { day: { slotLabel: { subjectCode, teacherName } } } }
+        let lockedSlotsData = {}; 
+        let savedTimetableVersions = []; // Penyimpanan senarai versi sandaran draf
         let gmpAllocations = {};
         let agihanWaktuData = {};
         let expandedTeachersMap = {};
         let selectedActiveSubItem = null;
         let contextMenuTarget = null;
         let customModalCallback = null;
+
         window.showCustomConfirm = function(message, callback) {
             let modal = document.getElementById('custom-modal-dialog');
             let titleEl = document.getElementById('custom-modal-title');
@@ -773,8 +790,11 @@
                 if(localAgihan) agihanWaktuData = JSON.parse(localAgihan);
                 let localLocked = localStorage.getItem('school_locked_slots');
                 if(localLocked) lockedSlotsData = JSON.parse(localLocked);
+                let localVersions = localStorage.getItem('school_saved_versions');
+                if(localVersions) savedTimetableVersions = JSON.parse(localVersions);
                 syncGMPAllocationsToGuruData();
                 renderDataTable();
+                renderSavedVersionsList();
                 return;
             }
             try {
@@ -789,6 +809,7 @@
                     if(cloudData.gmpAllocations) gmpAllocations = cloudData.gmpAllocations;
                     if(cloudData.agihanWaktuData) agihanWaktuData = cloudData.agihanWaktuData;
                     if(cloudData.lockedSlotsData) lockedSlotsData = cloudData.lockedSlotsData;
+                    if(cloudData.savedTimetableVersions) savedTimetableVersions = cloudData.savedTimetableVersions;
                     syncGMPAllocationsToGuruData();
                 } else {
                     await saveDatabaseToCloud();
@@ -797,6 +818,7 @@
                 console.error("Gagal memuat data dari pangkalan data awan:", e);
             }
             renderDataTable();
+            renderSavedVersionsList();
         }
         function syncGMPAllocationsToGuruData() {
             let teacherMap = {};
@@ -860,6 +882,7 @@
             localStorage.setItem('school_gmp_allocations', JSON.stringify(gmpAllocations));
             localStorage.setItem('school_agihan_waktu', JSON.stringify(agihanWaktuData));
             localStorage.setItem('school_locked_slots', JSON.stringify(lockedSlotsData));
+            localStorage.setItem('school_saved_versions', JSON.stringify(savedTimetableVersions));
             if(!db) return;
             try {
                 await setDoc(doc(db, "sekolah_data", "pusat_data"), {
@@ -870,12 +893,131 @@
                     gmpAllocations,
                     agihanWaktuData,
                     lockedSlotsData,
+                    savedTimetableVersions,
                     updatedAt: new Date().toISOString()
                 });
             } catch (e) {
                 console.error("Gagal menyimpan data ke pangkalan data awan:", e);
             }
         }
+
+        // ==========================================
+        // FUNGSI AKTIF: IMPORT JADUAL EXCEL / CSV / JSON
+        // ==========================================
+        window.importExcelOrCsv = function(event) {
+            let file = event.target.files[0];
+            if(!file) return;
+            let reader = new FileReader();
+            reader.onload = async function(e) {
+                try {
+                    let content = e.target.result;
+                    if(file.name.endsWith('.json')) {
+                        let parsed = JSON.parse(content);
+                        if(parsed.generatedTimetableData) {
+                            generatedTimetableData = parsed.generatedTimetableData;
+                        } else {
+                            generatedTimetableData = parsed;
+                        }
+                    } else {
+                        // Proses fail CSV ringkas (Format: Kelas,Hari,Waktu,Subjek,Guru)
+                        let lines = content.split('\n');
+                        let count = 0;
+                        for(let i = 1; i < lines.length; i++) {
+                            let line = lines[i].trim();
+                            if(!line) continue;
+                            let cols = line.split(',').map(c => c.trim());
+                            if(cols.length >= 5) {
+                                let [cls, day, slotLabel, subCode, teachName] = cols;
+                                if(!generatedTimetableData[cls]) generatedTimetableData[cls] = {};
+                                if(!generatedTimetableData[cls][day]) generatedTimetableData[cls][day] = {};
+                                generatedTimetableData[cls][day][slotLabel] = { subjectCode: subCode, teacherName: teachName };
+                                count++;
+                            }
+                        }
+                        showCustomAlert(`Berjaya mengimport ${count} slot jadual daripada fail.`);
+                    }
+                    await saveDatabaseToCloud();
+                    if(document.getElementById('class-status-tbody')) renderClassStatusTable();
+                    showCustomAlert('Jadual Waktu berjaya diimport ke dalam sistem!');
+                } catch(err) {
+                    showCustomAlert('Ralat memproses fail. Sila pastikan format CSV atau JSON adalah sah.');
+                    console.error(err);
+                }
+            };
+            reader.readAsText(file);
+        };
+
+        // ==========================================
+        // FUNGSI AKTIF: SIMPAN VERSI & PENGURUSAN SANDARAN
+        // ==========================================
+        window.saveBackupVersion = function() {
+            let nameEl = document.getElementById('backup-version-name');
+            let name = nameEl ? nameEl.value.trim() : '';
+            if(!name) return showCustomAlert('Sila masukkan nama versi sandaran.');
+            
+            let newVersion = {
+                id: Date.now(),
+                name: name,
+                timestamp: new Date().toLocaleString('ms-MY'),
+                data: JSON.parse(JSON.stringify(generatedTimetableData))
+            };
+            
+            savedTimetableVersions.push(newVersion);
+            saveDatabaseToCloud();
+            renderSavedVersionsList();
+            if(nameEl) nameEl.value = '';
+            showCustomAlert(`Versi "${name}" berjaya disimpan sebagai sandaran draf!`);
+        };
+
+        function renderSavedVersionsList() {
+            let box = document.getElementById('versions-list-box');
+            if(!box) return;
+            if(!savedTimetableVersions || savedTimetableVersions.length === 0) {
+                box.innerHTML = `<div class="text-slate-400 italic text-[11px]">Tiada versi sandaran disimpan.</div>`;
+                return;
+            }
+            box.innerHTML = '';
+            savedTimetableVersions.forEach((ver, index) => {
+                box.innerHTML += `
+                    <div class="flex items-center justify-between bg-slate-50 border p-2 rounded-lg text-xs">
+                        <div>
+                            <div class="font-bold text-[#0b1b3d]">${ver.name}</div>
+                            <div class="text-[10px] text-slate-500">${ver.timestamp}</div>
+                        </div>
+                        <div class="flex space-x-1">
+                            <button onclick="restoreBackupVersion(${ver.id})" class="px-2 py-1 bg-sky-600 hover:bg-sky-700 text-white rounded font-bold text-[10px]" title="Muat semula versi ini">Pulih</button>
+                            <button onclick="deleteBackupVersion(${ver.id})" class="px-2 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded font-bold text-[10px]" title="Padam versi">Padam</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        window.restoreBackupVersion = function(id) {
+            showCustomConfirm('Adakah anda pasti ingin memulihkan versi jadual ini? Jadual semasa akan digantikan dengan versi sandaran ini.', function(confirmed) {
+                if(confirmed) {
+                    let ver = savedTimetableVersions.find(v => v.id === id);
+                    if(ver) {
+                        generatedTimetableData = JSON.parse(JSON.stringify(ver.data));
+                        saveDatabaseToCloud();
+                        if(document.getElementById('class-status-tbody')) renderClassStatusTable();
+                        showCustomAlert(`Versi "${ver.name}" berjaya dipulihkan!`);
+                    }
+                }
+            });
+        };
+
+        window.deleteBackupVersion = function(id) {
+            showCustomConfirm('Adakah anda pasti ingin memadam versi sandaran ini?', function(confirmed) {
+                if(confirmed) {
+                    savedTimetableVersions = savedTimetableVersions.filter(v => v.id !== id);
+                    saveDatabaseToCloud();
+                    renderSavedVersionsList();
+                    showCustomAlert('Versi sandaran berjaya dipadam.');
+                }
+            });
+        };
+
         window.exportJsonData = function() {
             let backupData = {
                 databaseRecords,
@@ -885,6 +1027,7 @@
                 gmpAllocations,
                 agihanWaktuData,
                 lockedSlotsData,
+                savedTimetableVersions,
                 exportDate: new Date().toISOString()
             };
             let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData, null, 2));
@@ -909,9 +1052,11 @@
                     if(imported.gmpAllocations) gmpAllocations = imported.gmpAllocations;
                     if(imported.agihanWaktuData) agihanWaktuData = imported.agihanWaktuData;
                     if(imported.lockedSlotsData) lockedSlotsData = imported.lockedSlotsData;
+                    if(imported.savedTimetableVersions) savedTimetableVersions = imported.savedTimetableVersions;
                     
                     syncGMPAllocationsToGuruData();
                     await saveDatabaseToCloud();
+                    renderSavedVersionsList();
                     showCustomAlert('Fail sandaran JSON berjaya diimport dan diselaraskan ke sistem!');
                     renderDataTable();
                 } catch(err) {
@@ -954,7 +1099,7 @@
             if(tabId === 'waktu') { renderTimeSlotsTable(); updateSchoolDaysOrder(); }
             if(tabId === 'guru_matapelajaran') { renderGMPTree(); renderGMPMatrix(); }
             if(tabId === 'tetapan_masa_subjek') renderSubjectTimeConfigTable();
-            if(tabId === 'jana') initJanaAutoTab();
+            if(tabId === 'jana') { initJanaAutoTab(); renderSavedVersionsList(); }
             if(tabId === 'jadual_induk') initMasterTimetableTab();
         }
         
@@ -1361,13 +1506,10 @@
                         if(!generatedTimetableData[cName][day]) generatedTimetableData[cName][day] = {};
                         let slotIndex = 1;
                         learningSlots.forEach(slot => {
-                            // Semak sama ada slot ini dikunci
                             let isLocked = lockedSlotsData[cName] && lockedSlotsData[cName][day] && lockedSlotsData[cName][day][slot.label];
                             if(isLocked) {
-                                // Kekalkan slot yang dikunci, jangan ubah
                                 generatedTimetableData[cName][day][slot.label] = lockedSlotsData[cName][day][slot.label];
                             } else {
-                                // Jika mod 'kosong', biarkan jika sudah ada isi, jika tidak isi subjek baru
                                 let currentVal = generatedTimetableData[cName][day][slot.label];
                                 let modRadio = document.querySelector('input[name="auto-mode"]:checked');
                                 let isResetMode = modRadio && modRadio.value === 'reset';
@@ -1437,7 +1579,6 @@
             showCustomConfirm('Adakah anda pasti ingin mengosongkan semua jadual (slot yang dikunci akan dikekalkan)?', function(confirmed) {
                 if(confirmed) {
                     let newGen = {};
-                    // Kekalkan slot yang dikunci sahaja
                     for(let cName in lockedSlotsData) {
                         newGen[cName] = {};
                         for(let day in lockedSlotsData[cName]) {
@@ -1455,14 +1596,6 @@
             });
         }
         window.cancelGeneration = () => document.getElementById('generation-progress-modal').classList.add('hidden');
-        
-        window.saveBackupVersion = function() {
-            let nameEl = document.getElementById('backup-version-name');
-            let name = nameEl ? nameEl.value : '';
-            if(!name) return showCustomAlert('Sila masukkan nama versi sandaran.');
-            showCustomAlert(`Versi "${name}" berjaya disimpan!`);
-            if(nameEl) nameEl.value = '';
-        }
         
         window.openBlockModalForTeacher = function(teacherName) {
             let editIdEl = document.getElementById('block-edit-id');
@@ -1663,8 +1796,6 @@
 
         window.updateLockedSlot = function(className, day, slotLabel, selectEl, type) {
             let tr = selectEl.closest('tr');
-            let selects = tr.querySelectorAll('select');
-            // Kita cari select subjek dan select guru mengikut kedudukan dalam sel
             let subCell = selectEl.closest('td');
             let subSelect = subCell.querySelectorAll('select')[0];
             let teachSelect = subCell.querySelectorAll('select')[1];
@@ -1684,7 +1815,6 @@
                     subjectCode: subCode,
                     teacherName: teachName || 'ASRI B MOHD ZAIN'
                 };
-                // Auto masukkan juga ke generatedTimetableData supaya terus wujud
                 if(!generatedTimetableData[className]) generatedTimetableData[className] = {};
                 if(!generatedTimetableData[className][day]) generatedTimetableData[className][day] = {};
                 generatedTimetableData[className][day][slotLabel] = {
@@ -2281,7 +2411,7 @@
         }
         window.onload = () => {
             loadDatabaseFromCloud().then(() => {
-                switchTab('guru_matapelajaran');
+                switchTab('jana');
             });
         };
     </script>
