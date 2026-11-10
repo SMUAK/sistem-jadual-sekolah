@@ -71,7 +71,7 @@
                 </div>
             </div>
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
-                <!-- Urutan sub-tab baru yang diselaraskan -->
+                <!-- Urutan sub-tab -->
                 <div class="flex flex-wrap gap-2 border-b pb-4">
                     <button onclick="switchDataSubTab('subjek')" id="subtab-btn-subjek" class="px-4 py-2 rounded-xl text-xs font-bold bg-[#0b1b3d] text-white transition shadow">📖 Mata Pelajaran</button>
                     <button onclick="switchDataSubTab('senarai_guru')" id="subtab-btn-senarai_guru" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">📋 Guru</button>
@@ -797,7 +797,11 @@
             }
             if(!databaseRecords.guru) databaseRecords.guru = [];
             let newGuruRecords = [];
-            (databaseRecords.senarai_guru || []).forEach(sg => {
+            
+            // Susun senarai guru ikut abjad A-Z
+            let sortedSenaraiGuru = [...(databaseRecords.senarai_guru || [])].sort((a, b) => a.name.localeCompare(b.name, 'ms', { sensitivity: 'base' }));
+            
+            sortedSenaraiGuru.forEach(sg => {
                 let tName = sg.name;
                 let tCode = sg.code;
                 let summaryArr = [];
@@ -1028,8 +1032,11 @@
             if(!container) return;
             container.innerHTML = '';
             let guruList = databaseRecords.guru || [];
-            let senaraiGuru = databaseRecords.senarai_guru || [];
-            senaraiGuru.forEach(sg => {
+            
+            // Susun senarai guru ikut abjad A-Z untuk tree view juga
+            let sortedSenaraiGuru = [...(databaseRecords.senarai_guru || [])].sort((a, b) => a.name.localeCompare(b.name, 'ms', { sensitivity: 'base' }));
+            
+            sortedSenaraiGuru.forEach(sg => {
                 let teacherRecord = guruList.find(g => g.name.trim().toLowerCase() === sg.name.trim().toLowerCase());
                 let totalMasa = 0;
                 let subDetailsHTML = '';
@@ -1127,7 +1134,7 @@
             tbody.innerHTML = '';
             let guruList = databaseRecords.guru || [];
             if(guruList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="3" class="p-6 text-slate-400 italic">Tiada data guru & subjek didaftarkan lagi di tab Data Asas.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="3" class="p-6 text-slate-400 italic">Sila tetapkan opsyen dan bilangan masa di tab Data Asas > Guru & Mata Pelajaran.</td></tr>`;
                 return;
             }
             guruList.forEach((item, index) => {
@@ -1171,7 +1178,8 @@
                     select.innerHTML += `<option value="${k.name}">${k.name}</option>`;
                 });
             } else {
-                (databaseRecords.senarai_guru || []).forEach(g => {
+                let sortedSenaraiGuru = [...(databaseRecords.senarai_guru || [])].sort((a, b) => a.name.localeCompare(b.name, 'ms', { sensitivity: 'base' }));
+                sortedSenaraiGuru.forEach(g => {
                     select.innerHTML += `<option value="${g.name}">${g.name} (${g.code})</option>`;
                 });
             }
@@ -1625,7 +1633,7 @@
                         <th class="border border-slate-300 p-2.5 w-32">Tindakan</th>
                     `;
                 }
-                let records = databaseRecords['senarai_guru'] || [];
+                let records = [...(databaseRecords['senarai_guru'] || [])].sort((a, b) => a.name.localeCompare(b.name, 'ms', { sensitivity: 'base' }));
                 if(totalCountEl) totalCountEl.innerText = records.length;
                 if(records.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-slate-400 italic">Tiada rekod guru dijumpai.</td></tr>`; return; }
                 records.forEach((item, index) => {
@@ -1662,7 +1670,7 @@
                         <th class="border border-slate-300 p-2.5 w-32">Tindakan</th>
                     `;
                 }
-                let records = databaseRecords['guru'] || [];
+                let records = [...(databaseRecords['guru'] || [])].sort((a, b) => a.name.localeCompare(b.name, 'ms', { sensitivity: 'base' }));
                 if(totalCountEl) totalCountEl.innerText = records.length;
                 if(records.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-slate-400 italic">Tiada rekod agihan guru.</td></tr>`; return; }
                 records.forEach((item, index) => {
@@ -1761,7 +1769,8 @@
                 if(selectName) {
                     selectName.classList.remove('hidden');
                     selectName.innerHTML = '<option value="">-- Sila Pilih Guru --</option>';
-                    (databaseRecords.senarai_guru || []).forEach(g => { 
+                    let sortedSenaraiGuru = [...(databaseRecords.senarai_guru || [])].sort((a, b) => a.name.localeCompare(b.name, 'ms', { sensitivity: 'base' }));
+                    sortedSenaraiGuru.forEach(g => { 
                         selectName.innerHTML += `<option value="${g.name}" data-code="${g.code}">${g.name} (${g.code})</option>`; 
                     });
                 }
@@ -1788,7 +1797,8 @@
                         selectCat.classList.remove('hidden');
                         selectCat.innerHTML = '<option value="">-- Sila Pilih Guru Kelas --</option>';
                         selectCat.innerHTML += `<option value="-">- (Tiada Guru Kelas)</option>`;
-                        (databaseRecords.senarai_guru || []).forEach(g => {
+                        let sortedSenaraiGuru = [...(databaseRecords.senarai_guru || [])].sort((a, b) => a.name.localeCompare(b.name, 'ms', { sensitivity: 'base' }));
+                        sortedSenaraiGuru.forEach(g => {
                             selectCat.innerHTML += `<option value="${g.name}">${g.name} (${g.code})</option>`;
                         });
                     }
