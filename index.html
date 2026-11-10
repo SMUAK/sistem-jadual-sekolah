@@ -32,7 +32,7 @@
                 <button onclick="switchTab('utama')" id="nav-btn-utama" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Utama</button>
                 <button onclick="switchTab('data')" id="nav-btn-data" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Data Asas</button>
                 <button onclick="switchTab('waktu')" id="nav-btn-waktu" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">⏱️ Waktu & Rehat</button>
-                <button onclick="switchTab('guru_matapelajaran')" id="nav-btn-guru_matapelajaran" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">👨‍🏫 <span style="color: #60a5fa;">Guru & Mata Pelajaran</span></button>
+                <button onclick="switchTab('guru_matapelajaran')" id="nav-btn-guru_matapelajaran" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">👨‍🏫 Guru & Mata Pelajaran</button>
                 <button onclick="switchTab('tetapan_masa_subjek')" id="nav-btn-tetapan_masa_subjek" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">⚙️ Tetapan Masa Subjek</button>
                 <button onclick="switchTab('blok')" id="nav-btn-blok" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">🚫 Blok Waktu</button>
                 <button onclick="switchTab('jana')" id="nav-btn-jana" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">⚡ Jana Jadual</button>
@@ -77,8 +77,8 @@
                     <button onclick="switchDataSubTab('subjek')" id="subtab-btn-subjek" class="px-4 py-2 rounded-xl text-xs font-bold bg-[#0b1b3d] text-white transition shadow">📖 Mata Pelajaran</button>
                     <button onclick="switchDataSubTab('senarai_guru')" id="subtab-btn-senarai_guru" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">📋 Guru</button>
                     <button onclick="switchDataSubTab('kelas')" id="subtab-btn-kelas" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">🏫 Kelas</button>
-                    <button onclick="switchDataSubTab('agihan_waktu')" id="subtab-btn-agihan_waktu" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">⏰ <span style="color: #60a5fa;">Agihan Waktu Mata Pelajaran</span></button>
-                    <button onclick="switchDataSubTab('guru')" id="subtab-btn-guru" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">👨‍🏫 <span style="color: #60a5fa;">Guru & Mata Pelajaran</span></button>
+                    <button onclick="switchDataSubTab('agihan_waktu')" id="subtab-btn-agihan_waktu" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">⏰ Agihan Waktu Mata Pelajaran</button>
+                    <button onclick="switchDataSubTab('guru')" id="subtab-btn-guru" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">👨‍🏫 Guru & Mata Pelajaran</button>
                     <button onclick="switchDataSubTab('bilik')" id="subtab-btn-bilik" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">🚪 Bilik Khas</button>
                 </div>
                 
@@ -210,7 +210,7 @@
                 <div class="flex items-center space-x-3 border-b pb-3 mb-4">
                     <div class="bg-[#0b1b3d] text-white p-2.5 rounded-xl text-xl font-bold">👨‍🏫</div>
                     <div>
-                        <h2 class="text-lg font-bold text-[#0b1b3d]">Pengurusan <span style="color: #1d4ed8;">Guru & Mata Pelajaran</span> (Matriks Agihan & Agihan Kelas)</h2>
+                        <h2 class="text-lg font-bold text-[#0b1b3d]">Pengurusan Guru & Mata Pelajaran (Matriks Agihan & Agihan Kelas)</h2>
                         <p class="text-xs text-slate-500">Klik kanan pada petak matriks untuk membuka menu pilihan (Tukar, Salin, Tampal, Padam)</p>
                     </div>
                 </div>
@@ -1753,11 +1753,11 @@
                     <th class="border border-slate-300 p-2.5 w-16">Bil.</th>
                     <th id="th-name" class="border border-slate-300 p-2.5 text-left pl-4">Nama / Maklumat Utama</th>
                     <th class="border border-slate-300 p-2.5 w-36">Kod / Singkatan</th>
-                    <th id="th-category" class="border border-slate-300 p-2.5 w-56">Guru Kelas</th>
+                    <th id="th-category" class="border border-slate-300 p-2.5 w-56">${currentSubTab === 'subjek' ? 'Butiran Lanjut / Kategori' : 'Guru Kelas'}</th>
                     <th class="border border-slate-300 p-2.5 w-32">Tindakan</th>
                 `;
             }
-            if(currentSubTab === 'subjek') { if(thName) thName.innerText = "Nama Mata Pelajaran"; if(thCategory) thCategory.innerText = "Kategori Mata Pelajaran"; }
+            if(currentSubTab === 'subjek') { if(thName) thName.innerText = "Nama Mata Pelajaran"; if(thCategory) thCategory.innerText = "Butiran Lanjut / Kategori"; }
             else if(currentSubTab === 'kelas') { if(thName) thName.innerText = "Nama Kelas"; if(thCategory) thCategory.innerText = "Guru Kelas"; }
             else { if(thName) thName.innerText = "Nama Bilik Khas"; if(thCategory) thCategory.innerText = "Lokasi / Kegunaan"; }
             let records = databaseRecords[currentSubTab] || [];
@@ -1853,7 +1853,6 @@
                     if(selectCat) {
                         selectCat.classList.remove('hidden');
                         selectCat.innerHTML = '<option value="">-- Sila Pilih Guru Kelas --</option>';
-                        /* Penambahan pilihan tanda "-" untuk tiada guru kelas */
                         selectCat.innerHTML += `<option value="-">- (Tiada Guru Kelas)</option>`;
                         (databaseRecords.senarai_guru || []).forEach(g => {
                             selectCat.innerHTML += `<option value="${g.name}">${g.name} (${g.code})</option>`;
