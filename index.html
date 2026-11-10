@@ -71,7 +71,7 @@
                 </div>
             </div>
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
-                <!-- Urutan sub-tab (termasuk sub-tab Kunci Slot) -->
+                <!-- Urutan sub-tab -->
                 <div class="flex flex-wrap gap-2 border-b pb-4">
                     <button onclick="switchDataSubTab('subjek')" id="subtab-btn-subjek" class="px-4 py-2 rounded-xl text-xs font-bold bg-[#0b1b3d] text-white transition shadow">📖 Mata Pelajaran</button>
                     <button onclick="switchDataSubTab('senarai_guru')" id="subtab-btn-senarai_guru" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">📋 Guru</button>
@@ -770,7 +770,11 @@
         async function loadDatabaseFromCloud() {
             if(!db) {
                 let localData = localStorage.getItem('school_database');
-                if(localData) databaseRecords = JSON.parse(localData);
+                if(localData) {
+                    let parsed = JSON.parse(localData);
+                    // Pastikan kelas & senarai guru tidak menggunakan data dummy lama jika kosong
+                    databaseRecords = parsed;
+                }
                 let localGMP = localStorage.getItem('school_gmp_allocations');
                 if(localGMP) gmpAllocations = JSON.parse(localGMP);
                 let localAgihan = localStorage.getItem('school_agihan_waktu');
@@ -1095,6 +1099,10 @@
             });
             thead.innerHTML = headHTML;
             let bodyHTML = '';
+            if(kelasList.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="10" class="p-6 text-slate-400 italic text-center">Tiada kelas didaftarkan di Data Asas.</td></tr>`;
+                return;
+            }
             kelasList.forEach(cls => {
                 bodyHTML += `<tr><td class="border border-slate-300 p-2 font-bold text-slate-700 text-left bg-slate-50">${cls.name}</td>`;
                 subjekList.forEach(s => {
@@ -1189,9 +1197,11 @@
             if(!container) return;
             container.innerHTML = '';
             let guruList = databaseRecords.guru || [];
-            
             let sortedSenaraiGuru = [...(databaseRecords.senarai_guru || [])].sort((a, b) => a.name.localeCompare(b.name, 'ms', { sensitivity: 'base' }));
-            
+            if(sortedSenaraiGuru.length === 0) {
+                container.innerHTML = `<div class="text-slate-400 italic text-center p-2">Tiada guru didaftarkan.</div>`;
+                return;
+            }
             sortedSenaraiGuru.forEach(sg => {
                 let teacherRecord = guruList.find(g => g.name.trim().toLowerCase() === sg.name.trim().toLowerCase());
                 let totalMasa = 0;
@@ -1330,11 +1340,20 @@
             if(!select) return;
             select.innerHTML = '';
             if(currentMasterMode === 'kelas') {
-                (databaseRecords.kelas || []).forEach(k => {
+                let kelasList = databaseRecords.kelas || [];
+                if(kelasList.length === 0) {
+                    select.innerHTML = `<option value="">-- Tiada Kelas --</option>`;
+                    return;
+                }
+                kelasList.forEach(k => {
                     select.innerHTML += `<option value="${k.name}">${k.name}</option>`;
                 });
             } else {
                 let sortedSenaraiGuru = [...(databaseRecords.senarai_guru || [])].sort((a, b) => a.name.localeCompare(b.name, 'ms', { sensitivity: 'base' }));
+                if(sortedSenaraiGuru.length === 0) {
+                    select.innerHTML = `<option value="">-- Tiada Guru --</option>`;
+                    return;
+                }
                 sortedSenaraiGuru.forEach(g => {
                     select.innerHTML += `<option value="${g.name}">${g.name} (${g.code})</option>`;
                 });
@@ -1348,8 +1367,8 @@
             let tbody = document.getElementById('master-tbody');
             if(!tbody) return;
             if(!selectTarget) {
-                if(titleEl) titleEl.innerText = "Sila pilih kelas atau guru terlebih dahulu";
-                tbody.innerHTML = `<tr><td colspan="15" class="p-6 text-slate-400 italic">Tiada data dipilih.</td></tr>`;
+                if(titleEl) titleEl.innerText = "Sila daftar kelas dan guru terlebih dahulu";
+                tbody.innerHTML = `<tr><td colspan="15" class="p-6 text-slate-400 italic">Tiada data dijumpai.</td></tr>`;
                 return;
             }
             if(currentMasterMode === 'kelas') {
@@ -1421,7 +1440,7 @@
             let learningSlots = timeSlotsData.filter(s => s.type === 'Waktu belajar');
             let totalSlotsCount = learningSlots.length * 5;
             
-            // SEMAK ADAKAH DATA ASAS LENGKAP
+            // SEMAK DATA ASAS
             let hasBasicData = (databaseRecords.subjek || []).length > 0 && 
                                (databaseRecords.senarai_guru || []).length > 0 && 
                                classes.length > 0;
@@ -1432,7 +1451,6 @@
             }
             classes.forEach(k => {
                 let filledCount = 0;
-                // Jika data asas belum lengkap, paksa 0%
                 if(hasBasicData && generatedTimetableData[k.name]) {
                     ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis'].forEach(day => {
                         learningSlots.forEach(slot => {
@@ -1727,7 +1745,12 @@
             let selectClass = document.getElementById('lock-select-class');
             if(!selectClass) return;
             selectClass.innerHTML = '';
-            (databaseRecords.kelas || []).forEach(k => {
+            let kelasList = databaseRecords.kelas || [];
+            if(kelasList.length === 0) {
+                selectClass.innerHTML = `<option value="">-- Tiada Kelas --</option>`;
+                return;
+            }
+            kelasList.forEach(k => {
                 selectClass.innerHTML += `<option value="${k.name}">${k.name}</option>`;
             });
             renderLockSlotTable();
@@ -1738,7 +1761,10 @@
             let className = selectClass ? selectClass.value : '';
             let theadRow = document.getElementById('lock-thead-row');
             let tbody = document.getElementById('lock-tbody');
-            if(!tbody || !className) return;
+            if(!tbody || !className) {
+                if(tbody) tbody.innerHTML = `<tr><td colspan="10" class="p-6 text-slate-400 italic text-center">Sila daftar kelas terlebih dahulu di menu Data Asas > Kelas.</td></tr>`;
+                return;
+            }
 
             let learningSlots = timeSlotsData.filter(s => s.type === 'Waktu belajar');
             let theadHTML = `<th class="border border-slate-300 p-2.5 w-24">HARI</th>`;
