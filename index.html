@@ -71,7 +71,7 @@
                 </div>
             </div>
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
-                <!-- Urutan sub-tab -->
+                <!-- Urutan sub-tab (termasuk sub-tab baru Kunci Slot) -->
                 <div class="flex flex-wrap gap-2 border-b pb-4">
                     <button onclick="switchDataSubTab('subjek')" id="subtab-btn-subjek" class="px-4 py-2 rounded-xl text-xs font-bold bg-[#0b1b3d] text-white transition shadow">📖 Mata Pelajaran</button>
                     <button onclick="switchDataSubTab('senarai_guru')" id="subtab-btn-senarai_guru" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">📋 Guru</button>
@@ -79,6 +79,7 @@
                     <button onclick="switchDataSubTab('agihan_waktu')" id="subtab-btn-agihan_waktu" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">⏰ Agihan Waktu Mata Pelajaran</button>
                     <button onclick="switchDataSubTab('guru')" id="subtab-btn-guru" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">👨‍🏫 Guru & Mata Pelajaran</button>
                     <button onclick="switchDataSubTab('bilik')" id="subtab-btn-bilik" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">🚪 Bilik Khas</button>
+                    <button onclick="switchDataSubTab('kunci_slot')" id="subtab-btn-kunci_slot" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">🔒 Kunci Slot</button>
                 </div>
                 
                 <!-- Kandungan Sub-tab: Agihan Waktu Mata Pelajaran -->
@@ -113,6 +114,30 @@
                         </table>
                     </div>
                 </div>
+
+                <!-- Kandungan Sub-tab Baru: Kunci Slot Subjek -->
+                <div id="subtab-content-kunci_slot" class="hidden space-y-4">
+                    <div class="flex flex-wrap justify-between items-center bg-slate-50 p-4 rounded-xl border border-slate-200 gap-4">
+                        <div class="flex items-center space-x-3">
+                            <span class="font-bold text-[#0b1b3d] text-sm">Pilih Kelas untuk Dikunci Slot:</span>
+                            <select id="lock-select-class" onchange="renderLockSlotTable()" class="px-3 py-2 border rounded-xl bg-white font-bold text-[#0b1b3d] text-xs">
+                                <!-- Dinamik diproses melalui JS -->
+                            </select>
+                        </div>
+                        <p class="text-xs text-slate-500">Pilih subjek pada slot waktu tertentu supaya ia kekal dan tidak diubah semasa penjanaan jadual.</p>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full border-collapse border border-slate-300 text-xs text-center bg-white">
+                            <thead>
+                                <tr id="lock-thead-row" class="bg-slate-100 text-slate-800 font-bold">
+                                    <th class="border border-slate-300 p-2.5 w-24">HARI</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lock-tbody" class="font-medium"></tbody>
+                        </table>
+                    </div>
+                </div>
+
                 <!-- Kandungan Sub-tab Standard -->
                 <div id="standard-data-section" class="space-y-4">
                     <div class="flex flex-wrap justify-between items-center gap-4">
@@ -637,6 +662,7 @@
         ];
         let blockedTimesData = [];
         let generatedTimetableData = {};
+        let lockedSlotsData = {}; // Menyimpan data slot yang dikunci { className: { day: { slotLabel: { subjectCode, teacherName } } } }
         let gmpAllocations = {};
         let agihanWaktuData = {};
         let expandedTeachersMap = {};
@@ -745,6 +771,8 @@
                 if(localGMP) gmpAllocations = JSON.parse(localGMP);
                 let localAgihan = localStorage.getItem('school_agihan_waktu');
                 if(localAgihan) agihanWaktuData = JSON.parse(localAgihan);
+                let localLocked = localStorage.getItem('school_locked_slots');
+                if(localLocked) lockedSlotsData = JSON.parse(localLocked);
                 syncGMPAllocationsToGuruData();
                 renderDataTable();
                 return;
@@ -760,6 +788,7 @@
                     if(cloudData.generatedTimetableData) generatedTimetableData = cloudData.generatedTimetableData;
                     if(cloudData.gmpAllocations) gmpAllocations = cloudData.gmpAllocations;
                     if(cloudData.agihanWaktuData) agihanWaktuData = cloudData.agihanWaktuData;
+                    if(cloudData.lockedSlotsData) lockedSlotsData = cloudData.lockedSlotsData;
                     syncGMPAllocationsToGuruData();
                 } else {
                     await saveDatabaseToCloud();
@@ -798,7 +827,6 @@
             if(!databaseRecords.guru) databaseRecords.guru = [];
             let newGuruRecords = [];
             
-            // Susun senarai guru ikut abjad A-Z
             let sortedSenaraiGuru = [...(databaseRecords.senarai_guru || [])].sort((a, b) => a.name.localeCompare(b.name, 'ms', { sensitivity: 'base' }));
             
             sortedSenaraiGuru.forEach(sg => {
@@ -831,6 +859,7 @@
             localStorage.setItem('school_generated_timetable', JSON.stringify(generatedTimetableData));
             localStorage.setItem('school_gmp_allocations', JSON.stringify(gmpAllocations));
             localStorage.setItem('school_agihan_waktu', JSON.stringify(agihanWaktuData));
+            localStorage.setItem('school_locked_slots', JSON.stringify(lockedSlotsData));
             if(!db) return;
             try {
                 await setDoc(doc(db, "sekolah_data", "pusat_data"), {
@@ -840,6 +869,7 @@
                     generatedTimetableData,
                     gmpAllocations,
                     agihanWaktuData,
+                    lockedSlotsData,
                     updatedAt: new Date().toISOString()
                 });
             } catch (e) {
@@ -854,6 +884,7 @@
                 generatedTimetableData,
                 gmpAllocations,
                 agihanWaktuData,
+                lockedSlotsData,
                 exportDate: new Date().toISOString()
             };
             let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData, null, 2));
@@ -877,6 +908,7 @@
                     if(imported.generatedTimetableData) generatedTimetableData = imported.generatedTimetableData;
                     if(imported.gmpAllocations) gmpAllocations = imported.gmpAllocations;
                     if(imported.agihanWaktuData) agihanWaktuData = imported.agihanWaktuData;
+                    if(imported.lockedSlotsData) lockedSlotsData = imported.lockedSlotsData;
                     
                     syncGMPAllocationsToGuruData();
                     await saveDatabaseToCloud();
@@ -1033,7 +1065,6 @@
             container.innerHTML = '';
             let guruList = databaseRecords.guru || [];
             
-            // Susun senarai guru ikut abjad A-Z untuk tree view juga
             let sortedSenaraiGuru = [...(databaseRecords.senarai_guru || [])].sort((a, b) => a.name.localeCompare(b.name, 'ms', { sensitivity: 'base' }));
             
             sortedSenaraiGuru.forEach(sg => {
@@ -1233,8 +1264,10 @@
                             }
                         }
                         if(cellData) {
+                            let isLocked = lockedSlotsData[selectTarget] && lockedSlotsData[selectTarget][day] && lockedSlotsData[selectTarget][day][slot.label];
+                            let badgeLocked = isLocked ? '<span class="text-[9px] bg-amber-100 text-amber-800 px-1 rounded font-bold ml-1">🔒 Kunci</span>' : '';
                             trHTML += `<td class="border border-slate-300 p-2 text-slate-600 bg-white hover:bg-blue-50/50 transition">
-                                <div class="font-bold text-[#0b1b3d]">${cellData.subjectCode}</div>
+                                <div class="font-bold text-[#0b1b3d]">${cellData.subjectCode} ${badgeLocked}</div>
                                 <div class="text-[10px] text-slate-500">${cellData.teacherName}</div>
                             </td>`;
                         } else {
@@ -1320,18 +1353,34 @@
             setTimeout(() => {
                 let days = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis'];
                 let learningSlots = timeSlotsData.filter(s => s.type === 'Waktu belajar');
+                
                 classesToProcess.forEach(k => {
                     if(!generatedTimetableData[k.name]) generatedTimetableData[k.name] = {};
+                    let cName = k.name;
                     days.forEach(day => {
-                        if(!generatedTimetableData[k.name][day]) generatedTimetableData[k.name][day] = {};
+                        if(!generatedTimetableData[cName][day]) generatedTimetableData[cName][day] = {};
                         let slotIndex = 1;
                         learningSlots.forEach(slot => {
-                            let sub = subjects[(slotIndex - 1) % subjects.length];
-                            let assignedTeacher = teachers[0] ? teachers[0].name : "Cikgu Umum";
-                            generatedTimetableData[k.name][day][slot.label] = {
-                                subjectCode: sub ? sub.code : "BM",
-                                teacherName: assignedTeacher
-                            };
+                            // Semak sama ada slot ini dikunci
+                            let isLocked = lockedSlotsData[cName] && lockedSlotsData[cName][day] && lockedSlotsData[cName][day][slot.label];
+                            if(isLocked) {
+                                // Kekalkan slot yang dikunci, jangan ubah
+                                generatedTimetableData[cName][day][slot.label] = lockedSlotsData[cName][day][slot.label];
+                            } else {
+                                // Jika mod 'kosong', biarkan jika sudah ada isi, jika tidak isi subjek baru
+                                let currentVal = generatedTimetableData[cName][day][slot.label];
+                                let modRadio = document.querySelector('input[name="auto-mode"]:checked');
+                                let isResetMode = modRadio && modRadio.value === 'reset';
+                                
+                                if(isResetMode || !currentVal) {
+                                    let sub = subjects[(slotIndex - 1) % subjects.length];
+                                    let assignedTeacher = teachers[0] ? teachers[0].name : "Cikgu Umum";
+                                    generatedTimetableData[cName][day][slot.label] = {
+                                        subjectCode: sub ? sub.code : "BM",
+                                        teacherName: assignedTeacher
+                                    };
+                                }
+                            }
                             slotIndex++;
                         });
                     });
@@ -1343,7 +1392,7 @@
                 setTimeout(() => {
                     modal.classList.add('hidden');
                     renderClassStatusTable();
-                    showCustomAlert('Jadual pintar berjaya dijana!');
+                    showCustomAlert('Jadual pintar berjaya dijana dengan mengambil kira slot yang dikunci!');
                 }, 300);
             }, 200);
         }
@@ -1362,11 +1411,16 @@
                     if(!generatedTimetableData[className][day]) generatedTimetableData[className][day] = {};
                     let sIdx = 1;
                     learningSlots.forEach(slot => {
-                        let sub = subjects[(sIdx - 1) % subjects.length];
-                        generatedTimetableData[className][day][slot.label] = {
-                            subjectCode: sub.code,
-                            teacherName: teachers[0] ? teachers[0].name : 'ASRI B MOHD ZAIN'
-                        };
+                        let isLocked = lockedSlotsData[className] && lockedSlotsData[className][day] && lockedSlotsData[className][day][slot.label];
+                        if(isLocked) {
+                            generatedTimetableData[className][day][slot.label] = lockedSlotsData[className][day][slot.label];
+                        } else {
+                            let sub = subjects[(sIdx - 1) % subjects.length];
+                            generatedTimetableData[className][day][slot.label] = {
+                                subjectCode: sub.code,
+                                teacherName: teachers[0] ? teachers[0].name : 'ASRI B MOHD ZAIN'
+                            };
+                        }
                         sIdx++;
                     });
                 });
@@ -1380,12 +1434,23 @@
             }, 200);
         }
         window.resetAllSchedules = function() {
-            showCustomConfirm('Adakah anda pasti ingin mengosongkan semua jadual?', function(confirmed) {
+            showCustomConfirm('Adakah anda pasti ingin mengosongkan semua jadual (slot yang dikunci akan dikekalkan)?', function(confirmed) {
                 if(confirmed) {
-                    generatedTimetableData = {};
+                    let newGen = {};
+                    // Kekalkan slot yang dikunci sahaja
+                    for(let cName in lockedSlotsData) {
+                        newGen[cName] = {};
+                        for(let day in lockedSlotsData[cName]) {
+                            newGen[cName][day] = {};
+                            for(let slotLabel in lockedSlotsData[cName][day]) {
+                                newGen[cName][day][slotLabel] = lockedSlotsData[cName][day][slotLabel];
+                            }
+                        }
+                    }
+                    generatedTimetableData = newGen;
                     saveDatabaseToCloud();
                     renderClassStatusTable();
-                    showCustomAlert('Semua jadual telah dikosongkan.');
+                    showCustomAlert('Semua jadual selain slot yang dikunci telah dikosongkan.');
                 }
             });
         }
@@ -1504,24 +1569,132 @@
         
         window.switchDataSubTab = function(subTab) {
             currentSubTab = subTab;
-            ['subjek', 'senarai_guru', 'kelas', 'agihan_waktu', 'guru', 'bilik'].forEach(t => {
+            ['subjek', 'senarai_guru', 'kelas', 'agihan_waktu', 'guru', 'bilik', 'kunci_slot'].forEach(t => {
                 let btn = document.getElementById(`subtab-btn-${t}`);
                 if(btn) btn.className = (t === subTab) ? "px-4 py-2 rounded-xl text-xs font-bold bg-[#0b1b3d] text-white transition shadow" : "px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition";
             });
             
             let agihanSec = document.getElementById('subtab-content-agihan_waktu');
+            let kunciSlotSec = document.getElementById('subtab-content-kunci_slot');
             let standardSec = document.getElementById('standard-data-section');
             
             if(subTab === 'agihan_waktu') {
                 if(agihanSec) agihanSec.classList.remove('hidden');
+                if(kunciSlotSec) kunciSlotSec.classList.add('hidden');
                 if(standardSec) standardSec.classList.add('hidden');
                 renderAgihanWaktuTable();
+            } else if(subTab === 'kunci_slot') {
+                if(agihanSec) agihanSec.classList.add('hidden');
+                if(kunciSlotSec) kunciSlotSec.classList.remove('hidden');
+                if(standardSec) standardSec.classList.add('hidden');
+                initLockSlotTab();
             } else {
                 if(agihanSec) agihanSec.classList.add('hidden');
+                if(kunciSlotSec) kunciSlotSec.classList.add('hidden');
                 if(standardSec) standardSec.classList.remove('hidden');
                 renderDataTable();
             }
         }
+        
+        function initLockSlotTab() {
+            let selectClass = document.getElementById('lock-select-class');
+            if(!selectClass) return;
+            selectClass.innerHTML = '';
+            (databaseRecords.kelas || []).forEach(k => {
+                selectClass.innerHTML += `<option value="${k.name}">${k.name}</option>`;
+            });
+            renderLockSlotTable();
+        }
+
+        window.renderLockSlotTable = function() {
+            let selectClass = document.getElementById('lock-select-class');
+            let className = selectClass ? selectClass.value : '';
+            let theadRow = document.getElementById('lock-thead-row');
+            let tbody = document.getElementById('lock-tbody');
+            if(!tbody || !className) return;
+
+            let learningSlots = timeSlotsData.filter(s => s.type === 'Waktu belajar');
+            let theadHTML = `<th class="border border-slate-300 p-2.5 w-24">HARI</th>`;
+            learningSlots.forEach((slot) => {
+                let s12 = formatTo12Hour(slot.start);
+                let e12 = formatTo12Hour(slot.end);
+                theadHTML += `<th class="border border-slate-300 p-2 text-[11px]"><div class="font-bold">${slot.label}</div><div class="text-[10px] text-slate-500">${s12} - ${e12}</div></th>`;
+            });
+            theadRow.innerHTML = theadHTML;
+
+            let days = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis'];
+            let subjekList = databaseRecords.subjek || [];
+            let guruList = databaseRecords.senarai_guru || [];
+
+            tbody.innerHTML = '';
+            days.forEach(day => {
+                let trHTML = `<td class="border border-slate-300 p-3 font-bold bg-slate-50 text-slate-700">${day}</td>`;
+                learningSlots.forEach(slot => {
+                    let currentLocked = lockedSlotsData[className] && lockedSlotsData[className][day] && lockedSlotsData[className][day][slot.label] ? lockedSlotsData[className][day][slot.label] : null;
+                    let selectedSub = currentLocked ? currentLocked.subjectCode : '';
+                    let selectedTeach = currentLocked ? currentLocked.teacherName : '';
+
+                    let subOptions = `<option value="">-- Pilih Subjek --</option>`;
+                    subjekList.forEach(s => {
+                        let isSel = s.code === selectedSub ? 'selected' : '';
+                        subOptions += `<option value="${s.code}" ${isSel}>${s.code} - ${s.name}</option>`;
+                    });
+
+                    let teachOptions = `<option value="">-- Pilih Guru --</option>`;
+                    guruList.forEach(g => {
+                        let isSel = g.name === selectedTeach ? 'selected' : '';
+                        teachOptions += `<option value="${g.name}" ${isSel}>${g.name}</option>`;
+                    });
+
+                    trHTML += `
+                        <td class="border border-slate-300 p-1.5 bg-white space-y-1">
+                            <select onchange="updateLockedSlot('${className}', '${day}', '${slot.label}', this, 'sub')" class="w-full px-1 py-1 border rounded text-[11px] font-bold bg-slate-50">
+                                ${subOptions}
+                            </select>
+                            <select onchange="updateLockedSlot('${className}', '${day}', '${slot.label}', this, 'teach')" class="w-full px-1 py-1 border rounded text-[10px] bg-slate-50">
+                                ${teachOptions}
+                            </select>
+                        </td>
+                    `;
+                });
+                tbody.innerHTML += `<tr>${trHTML}</tr>`;
+            });
+        }
+
+        window.updateLockedSlot = function(className, day, slotLabel, selectEl, type) {
+            let tr = selectEl.closest('tr');
+            let selects = tr.querySelectorAll('select');
+            // Kita cari select subjek dan select guru mengikut kedudukan dalam sel
+            let subCell = selectEl.closest('td');
+            let subSelect = subCell.querySelectorAll('select')[0];
+            let teachSelect = subCell.querySelectorAll('select')[1];
+
+            let subCode = subSelect.value;
+            let teachName = teachSelect.value;
+
+            if(!lockedSlotsData[className]) lockedSlotsData[className] = {};
+            if(!lockedSlotsData[className][day]) lockedSlotsData[className][day] = {};
+
+            if(!subCode) {
+                delete lockedSlotsData[className][day][slotLabel];
+                if(Object.keys(lockedSlotsData[className][day]).length === 0) delete lockedSlotsData[className][day];
+                if(Object.keys(lockedSlotsData[className]).length === 0) delete lockedSlotsData[className];
+            } else {
+                lockedSlotsData[className][day][slotLabel] = {
+                    subjectCode: subCode,
+                    teacherName: teachName || 'ASRI B MOHD ZAIN'
+                };
+                // Auto masukkan juga ke generatedTimetableData supaya terus wujud
+                if(!generatedTimetableData[className]) generatedTimetableData[className] = {};
+                if(!generatedTimetableData[className][day]) generatedTimetableData[className][day] = {};
+                generatedTimetableData[className][day][slotLabel] = {
+                    subjectCode: subCode,
+                    teacherName: teachName || 'ASRI B MOHD ZAIN'
+                };
+            }
+            saveDatabaseToCloud();
+        }
+
         window.renderAgihanWaktuTable = function() {
             let selectTing = document.getElementById('agihan-select-tingkatan');
             let tingkatan = selectTing ? selectTing.value : 'TINGKATAN 1';
