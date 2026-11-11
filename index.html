@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ms">
 <head>
@@ -15,6 +16,14 @@
             #printable-area { position: absolute; left: 0; top: 0; width: 100%; }
         }
         .tree-line { border-left: 1px dotted #cbd5e1; margin-left: 1rem; padding-left: 0.75rem; }
+        
+        /* Custom Modern Toggle Switch */
+        .toggle-switch-checkbox:checked + .toggle-switch-label {
+            background-color: #10b981;
+        }
+        .toggle-switch-checkbox:checked + .toggle-switch-label .toggle-switch-dot {
+            transform: translateX(1.25rem);
+        }
     </style>
 </head>
 <body class="bg-slate-100 text-slate-900 min-h-screen flex flex-col">
@@ -36,8 +45,8 @@
                 <button onclick="switchTab('tetapan_masa_subjek')" id="nav-btn-tetapan_masa_subjek" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">⚙️ Tetapan Masa Subjek</button>
                 <button onclick="switchTab('jana')" id="nav-btn-jana" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">⚡ Jana Jadual</button>
                 <button onclick="switchTab('jadual_induk')" id="nav-btn-jadual_induk" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">📅 Jadual Induk</button>
-                <button onclick="switchTab('relief')" id="nav-btn-relief" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Guru Ganti</button>
-                <button onclick="switchTab('laporan')" id="nav-btn-laporan" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">📊 Laporan</button>
+                <!-- Menu Berpusat Jadual Guru Ganti -->
+                <button onclick="switchTab('jadual_guru_ganti')" id="nav-btn-jadual_guru_ganti" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">📋 Jadual Guru Ganti</button>
                 <button onclick="switchTab('tetapan')" id="nav-btn-tetapan" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Tetapan</button>
             </nav>
         </div>
@@ -114,7 +123,6 @@
                         </table>
                     </div>
                 </div>
-
                 <!-- Kandungan Sub-tab: Kunci Slot Subjek -->
                 <div id="subtab-content-kunci_slot" class="hidden space-y-4">
                     <div class="flex flex-wrap justify-between items-center bg-slate-50 p-4 rounded-xl border border-slate-200 gap-4">
@@ -137,7 +145,6 @@
                         </table>
                     </div>
                 </div>
-
                 <!-- Kandungan Sub-tab Standard -->
                 <div id="standard-data-section" class="space-y-4">
                     <div class="flex flex-wrap justify-between items-center gap-4">
@@ -340,7 +347,6 @@
                             </label>
                         </div>
                     </div>
-
                     <!-- KOTAK SIMPAN VERSI SANDARAN -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
                         <div class="flex items-center space-x-3 border-b pb-3">
@@ -359,7 +365,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <div class="lg:col-span-7 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
                     <div class="flex justify-between items-center border-b pb-3">
@@ -409,9 +414,194 @@
                 </div>
             </div>
         </section>
-        <!-- Tab Lain -->
-        <section id="tab-relief" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Modul Guru Ganti</div></section>
-        <section id="tab-laporan" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Modul Laporan</div></section>
+
+        <!-- TAB BERPUSAT: JADUAL GURU GANTI -->
+        <section id="tab-jadual_guru_ganti" class="hidden space-y-6">
+            <!-- Pilihan Menu Utama (Landing View) -->
+            <div id="relief-landing-view" class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 space-y-6">
+                <div class="text-center max-w-xl mx-auto space-y-2">
+                    <h2 class="text-2xl font-bold text-[#0b1b3d]">Pusat Pengurusan Jadual Guru Ganti</h2>
+                    <p class="text-xs text-slate-500">Sila pilih modul pengurusan guru ganti harian atau paparan laporan lengkap.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto pt-4">
+                    <!-- Butang 1: Guru Ganti Harian -->
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-4 text-center hover:border-indigo-300 transition shadow-sm">
+                        <div class="text-4xl">👨‍🏫</div>
+                        <h3 class="font-bold text-[#0b1b3d] text-base">1. Penetapan Guru Ganti</h3>
+                        <p class="text-xs text-slate-500">Tetapkan guru tidak hadir, guru dikecualikan, dan pilih penugasan guru ganti harian.</p>
+                        <button onclick="openReliefSubView('harian')" class="w-full bg-[#0b1b3d] hover:bg-[#132d60] text-white py-3 rounded-xl text-xs font-bold shadow transition flex items-center justify-center space-x-2">
+                            <span>📅</span><span>Guru Ganti (Harian)</span>
+                        </button>
+                    </div>
+                    <!-- Butang 2: Laporan -->
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-4 text-center hover:border-indigo-300 transition shadow-sm">
+                        <div class="text-4xl">📊</div>
+                        <h3 class="font-bold text-[#0b1b3d] text-base">2. Laporan Penugasan Relief</h3>
+                        <p class="text-xs text-slate-500">Lihat ringkasan penugasan harian/mingguan, cetak laporan dan analisis log simpanan.</p>
+                        <button onclick="openReliefSubView('laporan')" class="w-full bg-[#0b1b3d] hover:bg-[#132d60] text-white py-3 rounded-xl text-xs font-bold shadow transition flex items-center justify-center space-x-2">
+                            <span>📈</span><span>Laporan (Harian/Mingguan)</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sub-View 1: Tetapan Guru Ganti Harian -->
+            <div id="relief-harian-subview" class="hidden space-y-6">
+                <div class="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200">
+                    <button onclick="backToReliefLanding()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center space-x-1">
+                        <span>⬅️ Kembali ke Pusat Pengurusan</span>
+                    </button>
+                    <span class="text-xs font-bold text-[#0b1b3d]">Penetapan Relief Harian</span>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Panel Kiri: Tarikh, Guru Cuti & Guru Dikecualikan -->
+                    <div class="lg:col-span-5 space-y-6">
+                        <!-- Tarikh & Hari -->
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-3">
+                            <div class="flex items-center space-x-3 border-b pb-2">
+                                <div class="bg-indigo-900 text-white p-2 rounded-xl text-sm font-bold">📅</div>
+                                <h3 class="text-sm font-bold text-[#0b1b3d]">Tarikh & Hari Relief</h3>
+                            </div>
+                            <div class="space-y-2 text-xs">
+                                <label class="font-semibold text-slate-700 block">Pilih Tarikh Bertugas:</label>
+                                <input type="date" id="relief-date-picker" onchange="onReliefDateChange()" class="w-full px-3 py-2 border rounded-xl bg-slate-50 font-bold text-[#0b1b3d]">
+                                <div class="p-2.5 bg-slate-100 rounded-xl text-xs font-bold text-slate-700 flex justify-between">
+                                    <span>Hari Semasa:</span>
+                                    <span id="relief-current-day" class="text-indigo-900 font-extrabold">-</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Guru Tidak Hadir -->
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-3">
+                            <div class="flex items-center space-x-3 border-b pb-2">
+                                <div class="bg-rose-600 text-white p-2 rounded-xl text-sm font-bold">👤</div>
+                                <h3 class="text-sm font-bold text-[#0b1b3d]">Guru Tidak Hadir (Cuti / Kursus)</h3>
+                            </div>
+                            <div class="space-y-3 text-xs">
+                                <input type="text" id="search-absent-teacher" onkeyup="filterAbsentTeachers()" placeholder="Cari nama guru..." class="w-full px-3 py-2 border rounded-xl bg-slate-50">
+                                <div id="absent-teachers-list" class="max-h-56 overflow-y-auto space-y-2 pr-1"></div>
+                            </div>
+                        </div>
+
+                        <!-- Guru Dikecualikan Ganti -->
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-3">
+                            <div class="flex items-center space-x-3 border-b pb-2">
+                                <div class="bg-amber-500 text-white p-2 rounded-xl text-sm font-bold">🛡️</div>
+                                <h3 class="text-sm font-bold text-[#0b1b3d]">Guru Dikecualikan Ganti (Carian/Tandakan)</h3>
+                            </div>
+                            <p class="text-[11px] text-slate-500">Pilih guru yang sedia ada di sekolah tetapi tidak patut ditugaskan ganti untuk slot ini.</p>
+                            <div class="space-y-3 text-xs">
+                                <input type="text" id="search-exempt-teacher" onkeyup="filterExemptTeachers()" placeholder="Guru Dikecualikan Carian..." class="w-full px-3 py-2 border rounded-xl bg-slate-50">
+                                <div id="exempt-teachers-list" class="max-h-56 overflow-y-auto space-y-2 pr-1"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Panel Kanan: Jadual & Cadangan Guru Ganti -->
+                    <div class="lg:col-span-7 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                        <div class="flex flex-wrap justify-between items-center border-b pb-3 gap-2">
+                            <div class="flex items-center space-x-3">
+                                <div class="bg-emerald-600 text-white p-2 rounded-xl text-sm font-bold">⚡</div>
+                                <div>
+                                    <h3 class="text-sm font-bold text-[#0b1b3d]">Maklumat Jadual & Cadangan Guru Ganti</h3>
+                                    <p class="text-[11px] text-slate-500">Papar waktu kelas guru tidak hadir dan pilih guru ganti yang bebas.</p>
+                                </div>
+                            </div>
+                            <button onclick="saveReliefAssignments()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-bold shadow transition flex items-center space-x-1">
+                                <span>✓</span><span>Sahkan & Simpan Tugasan</span>
+                            </button>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full border-collapse border border-slate-200 text-xs text-center">
+                                <thead>
+                                    <tr class="bg-slate-100 text-slate-700 font-bold">
+                                        <th class="border border-slate-300 p-2">Guru Asal</th>
+                                        <th class="border border-slate-300 p-2">Kelas</th>
+                                        <th class="border border-slate-300 p-2">Subjek</th>
+                                        <th class="border border-slate-300 p-2">Masa / Waktu</th>
+                                        <th class="border border-slate-300 p-2 min-w-[160px]">Guru Ganti</th>
+                                        <th class="border border-slate-300 p-2 w-24">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="relief-assignments-tbody" class="font-medium">
+                                    <tr><td colspan="6" class="p-6 text-slate-400 italic">Sila tandakan sekurang-kurangnya seorang guru tidak hadir.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sub-View 2: Laporan Relief -->
+            <div id="relief-laporan-subview" class="hidden space-y-6">
+                <div class="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200">
+                    <button onclick="backToReliefLanding()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center space-x-1">
+                        <span>⬅️ Kembali ke Pusat Pengurusan</span>
+                    </button>
+                    <div class="flex space-x-2">
+                        <button onclick="window.print()" class="px-3 py-1.5 bg-slate-800 text-white rounded-lg text-xs font-bold shadow">🖨️ Cetak Laporan</button>
+                    </div>
+                </div>
+
+                <div id="printable-area" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <div class="lg:col-span-8 space-y-6">
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                            <div class="flex justify-between items-center border-b pb-3">
+                                <div>
+                                    <h3 class="text-base font-bold text-[#0b1b3d]">Ringkasan Laporan Relief</h3>
+                                    <p class="text-xs text-slate-500" id="report-date-label">Tanggal: -</p>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-3 gap-4 text-center">
+                                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                                    <div class="text-xs text-slate-500 font-semibold">Jumlah Slot Terjejas</div>
+                                    <div id="stat-slots-affected" class="text-xl font-bold text-[#0b1b3d]">0</div>
+                                </div>
+                                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                                    <div class="text-xs text-slate-500 font-semibold">Jumlah Guru Ganti Dilantik</div>
+                                    <div id="stat-substitutes-count" class="text-xl font-bold text-emerald-600">0</div>
+                                </div>
+                                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                                    <div class="text-xs text-slate-500 font-semibold">Status Tugasan</div>
+                                    <div id="stat-relief-status" class="text-xs font-bold text-slate-700 mt-1">Selesai (Disimpan)</div>
+                                </div>
+                            </div>
+                            <div class="overflow-x-auto pt-2">
+                                <table class="w-full border-collapse border border-slate-200 text-xs text-center">
+                                    <thead>
+                                        <tr class="bg-slate-100 text-slate-700 font-bold">
+                                            <th class="border border-slate-300 p-2">Guru Asal</th>
+                                            <th class="border border-slate-300 p-2">Kelas</th>
+                                            <th class="border border-slate-300 p-2">Subjek</th>
+                                            <th class="border border-slate-300 p-2">Masa / Waktu</th>
+                                            <th class="border border-slate-300 p-2">Guru Ganti</th>
+                                            <th class="border border-slate-300 p-2">Disahkan Oleh</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="report-relief-tbody">
+                                        <tr><td colspan="6" class="p-6 text-slate-400 italic">Tiada rekod laporan untuk tarikh ini.</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-4 space-y-6">
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-3">
+                            <h3 class="text-sm font-bold text-[#0b1b3d] border-b pb-2">Log Pengguna & Analisis</h3>
+                            <div id="relief-log-container" class="text-xs space-y-2 max-h-60 overflow-y-auto">
+                                <div class="p-2 bg-slate-50 rounded-lg text-slate-600">Belum ada log simpanan dikesan.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tab-relief" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Redirecting...</div></section>
+        <section id="tab-laporan" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Redirecting...</div></section>
         
         <!-- TAB TETAPAN -->
         <section id="tab-tetapan" class="hidden space-y-6">
@@ -673,6 +863,12 @@
         let contextMenuTarget = null;
         let customModalCallback = null;
 
+        // DATA MODUL GURU GANTI (RELIEF)
+        let reliefAbsentTeachers = [];
+        let reliefExemptTeachers = [];
+        let reliefAssignmentsData = {};
+        let reliefLogsData = [];
+
         window.showCustomConfirm = function(message, callback) {
             let modal = document.getElementById('custom-modal-dialog');
             let titleEl = document.getElementById('custom-modal-title');
@@ -770,11 +966,7 @@
         async function loadDatabaseFromCloud() {
             if(!db) {
                 let localData = localStorage.getItem('school_database');
-                if(localData) {
-                    let parsed = JSON.parse(localData);
-                    // Pastikan kelas & senarai guru tidak menggunakan data dummy lama jika kosong
-                    databaseRecords = parsed;
-                }
+                if(localData) databaseRecords = JSON.parse(localData);
                 let localGMP = localStorage.getItem('school_gmp_allocations');
                 if(localGMP) gmpAllocations = JSON.parse(localGMP);
                 let localAgihan = localStorage.getItem('school_agihan_waktu');
@@ -783,6 +975,11 @@
                 if(localLocked) lockedSlotsData = JSON.parse(localLocked);
                 let localVersions = localStorage.getItem('school_saved_versions');
                 if(localVersions) savedTimetableVersions = JSON.parse(localVersions);
+                let localReliefAss = localStorage.getItem('school_relief_assignments');
+                if(localReliefAss) reliefAssignmentsData = JSON.parse(localReliefAss);
+                let localReliefLogs = localStorage.getItem('school_relief_logs');
+                if(localReliefLogs) reliefLogsData = JSON.parse(localReliefLogs);
+                
                 syncGMPAllocationsToGuruData();
                 renderDataTable();
                 renderSavedVersionsList();
@@ -801,6 +998,8 @@
                     if(cloudData.agihanWaktuData) agihanWaktuData = cloudData.agihanWaktuData;
                     if(cloudData.lockedSlotsData) lockedSlotsData = cloudData.lockedSlotsData;
                     if(cloudData.savedTimetableVersions) savedTimetableVersions = cloudData.savedTimetableVersions;
+                    if(cloudData.reliefAssignmentsData) reliefAssignmentsData = cloudData.reliefAssignmentsData;
+                    if(cloudData.reliefLogsData) reliefLogsData = cloudData.reliefLogsData;
                     syncGMPAllocationsToGuruData();
                 } else {
                     await saveDatabaseToCloud();
@@ -874,6 +1073,9 @@
             localStorage.setItem('school_agihan_waktu', JSON.stringify(agihanWaktuData));
             localStorage.setItem('school_locked_slots', JSON.stringify(lockedSlotsData));
             localStorage.setItem('school_saved_versions', JSON.stringify(savedTimetableVersions));
+            localStorage.setItem('school_relief_assignments', JSON.stringify(reliefAssignmentsData));
+            localStorage.setItem('school_relief_logs', JSON.stringify(reliefLogsData));
+
             if(!db) return;
             try {
                 await setDoc(doc(db, "sekolah_data", "pusat_data"), {
@@ -885,13 +1087,14 @@
                     agihanWaktuData,
                     lockedSlotsData,
                     savedTimetableVersions,
+                    reliefAssignmentsData,
+                    reliefLogsData,
                     updatedAt: new Date().toISOString()
                 });
             } catch (e) {
                 console.error("Gagal menyimpan data ke pangkalan data awan:", e);
             }
         }
-
         window.importExcelOrCsv = function(event) {
             let file = event.target.files[0];
             if(!file) return;
@@ -933,7 +1136,6 @@
             };
             reader.readAsText(file);
         };
-
         window.saveBackupVersion = function() {
             let nameEl = document.getElementById('backup-version-name');
             let name = nameEl ? nameEl.value.trim() : '';
@@ -952,7 +1154,6 @@
             if(nameEl) nameEl.value = '';
             showCustomAlert(`Versi "${name}" berjaya disimpan sebagai sandaran draf!`);
         };
-
         function renderSavedVersionsList() {
             let box = document.getElementById('versions-list-box');
             if(!box) return;
@@ -976,7 +1177,6 @@
                 `;
             });
         }
-
         window.restoreBackupVersion = function(id) {
             showCustomConfirm('Adakah anda pasti ingin memulihkan versi jadual ini? Jadual semasa akan digantikan dengan versi sandaran ini.', function(confirmed) {
                 if(confirmed) {
@@ -990,7 +1190,6 @@
                 }
             });
         };
-
         window.deleteBackupVersion = function(id) {
             showCustomConfirm('Adakah anda pasti ingin memadam versi sandaran ini?', function(confirmed) {
                 if(confirmed) {
@@ -1001,7 +1200,6 @@
                 }
             });
         };
-
         window.exportJsonData = function() {
             let backupData = {
                 databaseRecords,
@@ -1012,6 +1210,8 @@
                 agihanWaktuData,
                 lockedSlotsData,
                 savedTimetableVersions,
+                reliefAssignmentsData,
+                reliefLogsData,
                 exportDate: new Date().toISOString()
             };
             let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData, null, 2));
@@ -1037,7 +1237,9 @@
                     if(imported.agihanWaktuData) agihanWaktuData = imported.agihanWaktuData;
                     if(imported.lockedSlotsData) lockedSlotsData = imported.lockedSlotsData;
                     if(imported.savedTimetableVersions) savedTimetableVersions = imported.savedTimetableVersions;
-                    
+                    if(imported.reliefAssignmentsData) reliefAssignmentsData = imported.reliefAssignmentsData;
+                    if(imported.reliefLogsData) reliefLogsData = imported.reliefLogsData;
+
                     syncGMPAllocationsToGuruData();
                     await saveDatabaseToCloud();
                     renderSavedVersionsList();
@@ -1062,7 +1264,10 @@
             return `${formattedH}:${m} ${ampm}`;
         }
         window.switchTab = function(tabId) {
-            const tabs = ['utama', 'data', 'waktu', 'guru_matapelajaran', 'tetapan_masa_subjek', 'jana', 'jadual_induk', 'relief', 'laporan', 'tetapan'];
+            if(tabId === 'relief') tabId = 'jadual_guru_ganti';
+            if(tabId === 'laporan') tabId = 'jadual_guru_ganti';
+
+            const tabs = ['utama', 'data', 'waktu', 'guru_matapelajaran', 'tetapan_masa_subjek', 'jana', 'jadual_induk', 'jadual_guru_ganti', 'tetapan'];
             tabs.forEach(t => {
                 let el = document.getElementById(`tab-${t}`);
                 let btn = document.getElementById(`nav-btn-${t}`);
@@ -1085,6 +1290,7 @@
             if(tabId === 'tetapan_masa_subjek') renderSubjectTimeConfigTable();
             if(tabId === 'jana') { initJanaAutoTab(); renderSavedVersionsList(); }
             if(tabId === 'jadual_induk') initMasterTimetableTab();
+            if(tabId === 'jadual_guru_ganti') backToReliefLanding();
         }
         
         function renderGMPMatrix() {
@@ -1440,11 +1646,9 @@
             let learningSlots = timeSlotsData.filter(s => s.type === 'Waktu belajar');
             let totalSlotsCount = learningSlots.length * 5;
             
-            // SEMAK DATA ASAS
             let hasBasicData = (databaseRecords.subjek || []).length > 0 && 
                                (databaseRecords.senarai_guru || []).length > 0 && 
                                classes.length > 0;
-
             if(classes.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="3" class="p-6 text-slate-400 italic text-center">Tiada kelas berdaftar. Sila daftar di tab Data Asas > Kelas.</td></tr>`;
                 return;
@@ -1755,7 +1959,6 @@
             });
             renderLockSlotTable();
         }
-
         window.renderLockSlotTable = function() {
             let selectClass = document.getElementById('lock-select-class');
             let className = selectClass ? selectClass.value : '';
@@ -1765,7 +1968,6 @@
                 if(tbody) tbody.innerHTML = `<tr><td colspan="10" class="p-6 text-slate-400 italic text-center">Sila daftar kelas terlebih dahulu di menu Data Asas > Kelas.</td></tr>`;
                 return;
             }
-
             let learningSlots = timeSlotsData.filter(s => s.type === 'Waktu belajar');
             let theadHTML = `<th class="border border-slate-300 p-2.5 w-24">HARI</th>`;
             learningSlots.forEach((slot) => {
@@ -1774,11 +1976,9 @@
                 theadHTML += `<th class="border border-slate-300 p-2 text-[11px]"><div class="font-bold">${slot.label}</div><div class="text-[10px] text-slate-500">${s12} - ${e12}</div></th>`;
             });
             theadRow.innerHTML = theadHTML;
-
             let days = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis'];
             let subjekList = databaseRecords.subjek || [];
             let guruList = databaseRecords.senarai_guru || [];
-
             tbody.innerHTML = '';
             days.forEach(day => {
                 let trHTML = `<td class="border border-slate-300 p-3 font-bold bg-slate-50 text-slate-700">${day}</td>`;
@@ -1786,19 +1986,16 @@
                     let currentLocked = lockedSlotsData[className] && lockedSlotsData[className][day] && lockedSlotsData[className][day][slot.label] ? lockedSlotsData[className][day][slot.label] : null;
                     let selectedSub = currentLocked ? currentLocked.subjectCode : '';
                     let selectedTeach = currentLocked ? currentLocked.teacherName : '';
-
                     let subOptions = `<option value="">-- Pilih Subjek --</option>`;
                     subjekList.forEach(s => {
                         let isSel = s.code === selectedSub ? 'selected' : '';
                         subOptions += `<option value="${s.code}" ${isSel}>${s.code} - ${s.name}</option>`;
                     });
-
                     let teachOptions = `<option value="">-- Pilih Guru --</option>`;
                     guruList.forEach(g => {
                         let isSel = g.name === selectedTeach ? 'selected' : '';
                         teachOptions += `<option value="${g.name}" ${isSel}>${g.name}</option>`;
                     });
-
                     trHTML += `
                         <td class="border border-slate-300 p-1.5 bg-white space-y-1">
                             <select onchange="updateLockedSlot('${className}', '${day}', '${slot.label}', this, 'sub')" class="w-full px-1 py-1 border rounded text-[11px] font-bold bg-slate-50">
@@ -1813,19 +2010,15 @@
                 tbody.innerHTML += `<tr>${trHTML}</tr>`;
             });
         }
-
         window.updateLockedSlot = function(className, day, slotLabel, selectEl, type) {
             let tr = selectEl.closest('tr');
             let subCell = selectEl.closest('td');
             let subSelect = subCell.querySelectorAll('select')[0];
             let teachSelect = subCell.querySelectorAll('select')[1];
-
             let subCode = subSelect.value;
             let teachName = teachSelect.value;
-
             if(!lockedSlotsData[className]) lockedSlotsData[className] = {};
             if(!lockedSlotsData[className][day]) lockedSlotsData[className][day] = {};
-
             if(!subCode) {
                 delete lockedSlotsData[className][day][slotLabel];
                 if(Object.keys(lockedSlotsData[className][day]).length === 0) delete lockedSlotsData[className][day];
@@ -1844,7 +2037,6 @@
             }
             saveDatabaseToCloud();
         }
-
         window.renderAgihanWaktuTable = function() {
             let selectTing = document.getElementById('agihan-select-tingkatan');
             let tingkatan = selectTing ? selectTing.value : 'TINGKATAN 1';
@@ -2429,6 +2621,328 @@
             let h = Math.floor(mins/60)%24, m = mins%60;
             return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
         }
+
+        // ==========================================
+        // FUNGSI KHAS MODUL JADUAL GURU GANTI (RELIEF)
+        // ==========================================
+        window.backToReliefLanding = function() {
+            document.getElementById('relief-landing-view').classList.remove('hidden');
+            document.getElementById('relief-harian-subview').classList.add('hidden');
+            document.getElementById('relief-laporan-subview').classList.add('hidden');
+        };
+
+        window.openReliefSubView = function(viewType) {
+            document.getElementById('relief-landing-view').classList.add('hidden');
+            if(viewType === 'harian') {
+                document.getElementById('relief-harian-subview').classList.remove('hidden');
+                document.getElementById('relief-laporan-subview').classList.add('hidden');
+                initReliefHarianView();
+            } else {
+                document.getElementById('relief-harian-subview').classList.add('hidden');
+                document.getElementById('relief-laporan-subview').classList.remove('hidden');
+                initReliefLaporanView();
+            }
+        };
+
+        function initReliefHarianView() {
+            let picker = document.getElementById('relief-date-picker');
+            if(picker && !picker.value) {
+                let today = new Date().toISOString().split('T')[0];
+                picker.value = today;
+            }
+            onReliefDateChange();
+        }
+
+        window.onReliefDateChange = function() {
+            let picker = document.getElementById('relief-date-picker');
+            let dateStr = picker ? picker.value : '';
+            let dayLabelEl = document.getElementById('relief-current-day');
+            if(!dateStr) return;
+
+            let dt = new Date(dateStr);
+            let dayIndex = dt.getDay(); // 0: Ahad, 1: Isnin ...
+            let daysNames = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat', 'Sabtu'];
+            let dayName = daysNames[dayIndex];
+            if(dayLabelEl) dayLabelEl.innerText = dayName;
+
+            renderAbsentTeachersList();
+            renderExemptTeachersList();
+            renderReliefAssignmentsTable();
+        };
+
+        function renderAbsentTeachersList() {
+            let container = document.getElementById('absent-teachers-list');
+            if(!container) return;
+            container.innerHTML = '';
+
+            let sortedGuru = [...(databaseRecords.senarai_guru || [])].sort((a, b) => a.name.localeCompare(b.name, 'ms'));
+            if(sortedGuru.length === 0) {
+                container.innerHTML = `<div class="text-slate-400 italic">Tiada guru didaftarkan.</div>`;
+                return;
+            }
+
+            sortedGuru.forEach(g => {
+                let isChecked = reliefAbsentTeachers.includes(g.name);
+                container.innerHTML += `
+                    <div class="flex items-center justify-between p-2 bg-slate-50 border rounded-xl hover:bg-slate-100 transition">
+                        <span class="font-bold text-[#0b1b3d] text-xs">${g.name} (${g.code})</span>
+                        <!-- Toggle Switch Button -->
+                        <div class="relative inline-block w-10 align-middle select-none">
+                            <input type="checkbox" id="absent-toggle-${g.id}" onchange="toggleAbsentTeacher('${g.name}')" ${isChecked ? 'checked' : ''} class="toggle-switch-checkbox hidden">
+                            <label for="absent-toggle-${g.id}" class="toggle-switch-label block overflow-hidden h-5 rounded-full bg-slate-300 cursor-pointer transition-colors duration-200">
+                                <span class="toggle-switch-dot block w-4 h-4 rounded-full bg-white shadow transform transition-transform duration-200 mt-0.5 ml-0.5"></span>
+                            </label>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderExemptTeachersList() {
+            let container = document.getElementById('exempt-teachers-list');
+            if(!container) return;
+            container.innerHTML = '';
+
+            let sortedGuru = [...(databaseRecords.senarai_guru || [])].sort((a, b) => a.name.localeCompare(b.name, 'ms'));
+            if(sortedGuru.length === 0) {
+                container.innerHTML = `<div class="text-slate-400 italic">Tiada guru didaftarkan.</div>`;
+                return;
+            }
+
+            sortedGuru.forEach(g => {
+                let isChecked = reliefExemptTeachers.includes(g.name);
+                container.innerHTML += `
+                    <div class="flex items-center justify-between p-2 bg-slate-50 border rounded-xl hover:bg-slate-100 transition">
+                        <span class="font-bold text-slate-700 text-xs">${g.name}</span>
+                        <!-- Toggle Switch Button -->
+                        <div class="relative inline-block w-10 align-middle select-none">
+                            <input type="checkbox" id="exempt-toggle-${g.id}" onchange="toggleExemptTeacher('${g.name}')" ${isChecked ? 'checked' : ''} class="toggle-switch-checkbox hidden">
+                            <label for="exempt-toggle-${g.id}" class="toggle-switch-label block overflow-hidden h-5 rounded-full bg-slate-300 cursor-pointer transition-colors duration-200">
+                                <span class="toggle-switch-dot block w-4 h-4 rounded-full bg-white shadow transform transition-transform duration-200 mt-0.5 ml-0.5"></span>
+                            </label>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        window.toggleAbsentTeacher = function(teacherName) {
+            if(reliefAbsentTeachers.includes(teacherName)) {
+                reliefAbsentTeachers = reliefAbsentTeachers.filter(t => t !== teacherName);
+            } else {
+                reliefAbsentTeachers.push(teacherName);
+            }
+            renderReliefAssignmentsTable();
+        };
+
+        window.toggleExemptTeacher = function(teacherName) {
+            if(reliefExemptTeachers.includes(teacherName)) {
+                reliefExemptTeachers = reliefExemptTeachers.filter(t => t !== teacherName);
+            } else {
+                reliefExemptTeachers.push(teacherName);
+            }
+            renderReliefAssignmentsTable();
+        };
+
+        window.filterAbsentTeachers = function() {
+            let q = document.getElementById('search-absent-teacher').value.toLowerCase();
+            document.querySelectorAll('#absent-teachers-list > div').forEach(el => {
+                el.style.display = el.innerText.toLowerCase().includes(q) ? 'flex' : 'none';
+            });
+        };
+
+        window.filterExemptTeachers = function() {
+            let q = document.getElementById('search-exempt-teacher').value.toLowerCase();
+            document.querySelectorAll('#exempt-teachers-list > div').forEach(el => {
+                el.style.display = el.innerText.toLowerCase().includes(q) ? 'flex' : 'none';
+            });
+        };
+
+        function renderReliefAssignmentsTable() {
+            let tbody = document.getElementById('relief-assignments-tbody');
+            let picker = document.getElementById('relief-date-picker');
+            let dateStr = picker ? picker.value : '';
+            let dayName = document.getElementById('relief-current-day').innerText;
+            if(!tbody) return;
+
+            if(reliefAbsentTeachers.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-slate-400 italic">Sila tandakan sekurang-kurangnya seorang guru tidak hadir di panel kiri.</td></tr>`;
+                return;
+            }
+
+            let affectedSlots = [];
+            let learningSlots = timeSlotsData.filter(s => s.type === 'Waktu belajar');
+
+            reliefAbsentTeachers.forEach(absentTeacher => {
+                for(let cName in generatedTimetableData) {
+                    if(generatedTimetableData[cName][dayName]) {
+                        learningSlots.forEach(slot => {
+                            let cell = generatedTimetableData[cName][dayName][slot.label];
+                            if(cell && cell.teacherName === absentTeacher) {
+                                affectedSlots.push({
+                                    absentTeacher,
+                                    className: cName,
+                                    subjectCode: cell.subjectCode,
+                                    slotLabel: slot.label,
+                                    slotTime: `${slot.start} - ${slot.end}`
+                                });
+                            }
+                        });
+                    }
+                }
+            });
+
+            if(affectedSlots.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-slate-400 italic">Guru yang dipilih tidak mempunyai kelas mengajar pada hari ${dayName}.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = '';
+            let existingDateData = reliefAssignmentsData[dateStr] || {};
+
+            affectedSlots.forEach((item, idx) => {
+                let slotKey = `${item.className}_${item.slotLabel}`;
+                let currentAssigned = existingDateData[slotKey] ? existingDateData[slotKey].substituteTeacher : '';
+
+                // Dapatkan senarai guru bebas
+                let freeTeachers = getFreeTeachersForSlot(dayName, item.slotLabel);
+                let optionsHTML = `<option value="">-- Pilih Guru Ganti --</option>`;
+
+                freeTeachers.forEach(ft => {
+                    let isExempt = reliefExemptTeachers.includes(ft.name);
+                    let isSel = (ft.name === currentAssigned) ? 'selected' : '';
+                    if(!isExempt) {
+                        optionsHTML += `<option value="${ft.name}" ${isSel}>${ft.name} (${ft.code})</option>`;
+                    }
+                });
+
+                let statusBadge = currentAssigned ? '<span class="px-2 py-1 bg-emerald-100 text-emerald-800 rounded font-bold text-[10px]">Selesai</span>' : '<span class="px-2 py-1 bg-amber-100 text-amber-800 rounded font-bold text-[10px]">Belum Diisi</span>';
+
+                tbody.innerHTML += `
+                    <tr class="border-b hover:bg-slate-50 transition">
+                        <td class="border p-2 font-bold text-rose-700">${item.absentTeacher}</td>
+                        <td class="border p-2 font-bold text-[#0b1b3d]">${item.className}</td>
+                        <td class="border p-2 font-semibold text-slate-700">${item.subjectCode}</td>
+                        <td class="border p-2 font-medium text-slate-600">Waktu ${item.slotLabel} (${item.slotTime})</td>
+                        <td class="border p-1.5">
+                            <select id="sub-select-${idx}" data-key="${slotKey}" data-class="${item.className}" data-slot="${item.slotLabel}" data-absent="${item.absentTeacher}" data-subject="${item.subjectCode}" class="w-full px-2 py-1.5 border rounded-xl bg-slate-50 text-xs font-bold text-[#0b1b3d] outline-none">
+                                ${optionsHTML}
+                            </select>
+                        </td>
+                        <td class="border p-2">${statusBadge}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        function getFreeTeachersForSlot(dayName, slotLabel) {
+            let allGuru = databaseRecords.senarai_guru || [];
+            let busyTeacherNames = [];
+
+            for(let cName in generatedTimetableData) {
+                if(generatedTimetableData[cName][dayName] && generatedTimetableData[cName][dayName][slotLabel]) {
+                    busyTeacherNames.push(generatedTimetableData[cName][dayName][slotLabel].teacherName);
+                }
+            }
+
+            return allGuru.filter(g => !busyTeacherNames.includes(g.name) && !reliefAbsentTeachers.includes(g.name));
+        }
+
+        window.saveReliefAssignments = function() {
+            let picker = document.getElementById('relief-date-picker');
+            let dateStr = picker ? picker.value : '';
+            if(!dateStr) return showCustomAlert('Sila pilih tarikh bertugas terlebih dahulu.');
+
+            let selects = document.querySelectorAll('#relief-assignments-tbody select');
+            if(selects.length === 0) return showCustomAlert('Tiada tugasan jadual untuk disimpan.');
+
+            if(!reliefAssignmentsData[dateStr]) reliefAssignmentsData[dateStr] = {};
+
+            let savedCount = 0;
+            selects.forEach(sel => {
+                let slotKey = sel.getAttribute('data-key');
+                let subTeacher = sel.value;
+                let className = sel.getAttribute('data-class');
+                let slotLabel = sel.getAttribute('data-slot');
+                let absentTeacher = sel.getAttribute('data-absent');
+                let subjectCode = sel.getAttribute('data-subject');
+
+                if(subTeacher) {
+                    reliefAssignmentsData[dateStr][slotKey] = {
+                        className,
+                        slotLabel,
+                        absentTeacher,
+                        subjectCode,
+                        substituteTeacher: subTeacher,
+                        timestamp: new Date().toLocaleString('ms-MY')
+                    };
+                    savedCount++;
+                }
+            });
+
+            let logEntry = {
+                timestamp: new Date().toLocaleTimeString('ms-MY'),
+                date: dateStr,
+                action: `Admin mengesahkan ${savedCount} tugasan ganti.`
+            };
+            reliefLogsData.unshift(logEntry);
+
+            saveDatabaseToCloud();
+            renderReliefAssignmentsTable();
+            showCustomAlert(`Berjaya menyimpan ${savedCount} penugasan guru ganti bagi tarikh ${dateStr}!`);
+        };
+
+        function initReliefLaporanView() {
+            let picker = document.getElementById('relief-date-picker');
+            let dateStr = picker ? picker.value : new Date().toISOString().split('T')[0];
+            let reportDateLabel = document.getElementById('report-date-label');
+            if(reportDateLabel) reportDateLabel.innerText = `Tanggal: ${dateStr}`;
+
+            let dateData = reliefAssignmentsData[dateStr] || {};
+            let keys = Object.keys(dateData);
+
+            document.getElementById('stat-slots-affected').innerText = keys.length;
+            document.getElementById('stat-substitutes-count').innerText = keys.length;
+
+            let tbody = document.getElementById('report-relief-tbody');
+            if(!tbody) return;
+            tbody.innerHTML = '';
+
+            if(keys.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-slate-400 italic">Tiada rekod laporan relief yang disimpan pada tarikh ${dateStr}.</td></tr>`;
+            } else {
+                keys.forEach(k => {
+                    let item = dateData[k];
+                    tbody.innerHTML += `
+                        <tr class="border-b hover:bg-slate-50 font-medium">
+                            <td class="border p-2 text-rose-700 font-bold">${item.absentTeacher}</td>
+                            <td class="border p-2 font-bold text-[#0b1b3d]">${item.className}</td>
+                            <td class="border p-2 font-semibold text-slate-700">${item.subjectCode}</td>
+                            <td class="border p-2">Waktu ${item.slotLabel}</td>
+                            <td class="border p-2 text-emerald-700 font-bold">${item.substituteTeacher}</td>
+                            <td class="border p-2 text-[10px] text-slate-500">Sistem (Firebase)<br>${item.timestamp}</td>
+                        </tr>
+                    `;
+                });
+            }
+
+            let logContainer = document.getElementById('relief-log-container');
+            if(logContainer) {
+                logContainer.innerHTML = '';
+                if(reliefLogsData.length === 0) {
+                    logContainer.innerHTML = `<div class="p-2 bg-slate-50 rounded-lg text-slate-600">Belum ada log simpanan dikesan.</div>`;
+                } else {
+                    reliefLogsData.slice(0, 10).forEach(lg => {
+                        logContainer.innerHTML += `
+                            <div class="p-2 bg-slate-50 rounded-lg border text-slate-700">
+                                <span class="font-bold text-indigo-900">[${lg.timestamp}]</span> ${lg.action}
+                            </div>
+                        `;
+                    });
+                }
+            }
+        }
+
         window.onload = () => {
             loadDatabaseFromCloud().then(() => {
                 switchTab('jana');
@@ -2437,3 +2951,4 @@
     </script>
 </body>
 </html>
+```
