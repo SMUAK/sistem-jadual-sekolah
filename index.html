@@ -46,9 +46,9 @@
                     <img id="header-school-logo" src="Logo_SMUAK-removebg-preview.png" alt="Logo Sekolah" class="w-full h-full object-contain drop-shadow">
                 </div>
                 <div>
-                    <!-- Nama Sekolah & Lokasi -->
+                    <!-- Nama Sekolah & Lokasi Dinamik -->
                     <h1 id="header-school-name" class="text-xl font-extrabold tracking-wide text-white header-title-shadow">SMU(A) Khairiah Banggol Setol</h1>
-                    <p id="header-school-address" class="text-xs text-blue-200 font-medium">17070 Pasir Mas, Kelantan</p>
+                    <p id="header-school-address" class="text-xs text-blue-200 font-medium">17070 Pasir Mas, Kelantan.</p>
                     
                     <!-- Teks Berwarna Biru Muda Cerah & Corak Khas -->
                     <div class="header-sub-fancy text-sm leading-tight mt-0.5">
@@ -643,7 +643,40 @@
                     <div class="bg-[#0b1b3d] text-white p-2.5 rounded-xl text-xl font-bold">🛠️</div>
                     <div>
                         <h3 class="text-lg font-bold text-[#0b1b3d]">Tetapan Sistem & Sandaran</h3>
-                        <p class="text-xs text-slate-500">Urus logo sekolah, sandaran data dan konfigurasi sistem</p>
+                        <p class="text-xs text-slate-500">Urus maklumat sekolah, logo, dan konfigurasi sistem</p>
+                    </div>
+                </div>
+
+                <!-- Modul Maklumat Sekolah (Bahagian Atas) -->
+                <div class="bg-slate-50 border border-slate-200 p-5 rounded-2xl space-y-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="bg-[#0b1b3d] text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shadow">🏫</div>
+                        <div>
+                            <h4 class="font-bold text-[#0b1b3d] text-sm">Maklumat Sekolah</h4>
+                        </div>
+                    </div>
+                    <div class="space-y-3 text-xs">
+                        <div>
+                            <label class="font-bold text-slate-700 block mb-1">Nama Institusi / Sekolah</label>
+                            <input type="text" id="setting-school-name" value="SMU(A) Khairiah Banggol Setol" class="w-full px-3 py-2 border rounded-xl bg-white font-semibold text-[#0b1b3d] focus:ring-2 focus:ring-[#0b1b3d] outline-none">
+                        </div>
+                        <div>
+                            <label class="font-bold text-slate-700 block mb-1">Alamat Tetap Sekolah</label>
+                            <input type="text" id="setting-school-address" value="17070 Pasir Mas, Kelantan." class="w-full px-3 py-2 border rounded-xl bg-white font-medium text-slate-800 focus:ring-2 focus:ring-[#0b1b3d] outline-none">
+                        </div>
+                        <div>
+                            <label class="font-bold text-slate-700 block mb-1">No. Telefon Rasmi</label>
+                            <input type="text" id="setting-school-phone" value="09-7909195" class="w-full px-3 py-2 border rounded-xl bg-white font-medium text-slate-800 focus:ring-2 focus:ring-[#0b1b3d] outline-none">
+                        </div>
+                        <div>
+                            <label class="font-bold text-slate-700 block mb-1">Email</label>
+                            <input type="email" id="setting-school-email" value="smuakhairiahbs@yik.edu.my" class="w-full px-3 py-2 border rounded-xl bg-white font-medium text-slate-800 focus:ring-2 focus:ring-[#0b1b3d] outline-none">
+                        </div>
+                        <div class="pt-2">
+                            <button onclick="saveSchoolInfoSettings()" class="w-full bg-[#0b1b3d] hover:bg-[#132d60] text-white py-2.5 px-4 rounded-xl font-bold text-xs shadow transition">
+                                Simpan Maklumat Sekolah
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -928,11 +961,54 @@
         let customModalCallback = null;
         let customSchoolLogo = null;
         
+        // TETAPAN MAKLUMAT SEKOLAH
+        let schoolInfoSettings = {
+            name: "SMU(A) Khairiah Banggol Setol",
+            address: "17070 Pasir Mas, Kelantan.",
+            phone: "09-7909195",
+            email: "smuakhairiahbs@yik.edu.my"
+        };
+        
         // DATA MODUL GURU GANTI (RELIEF)
         let reliefAbsentTeachers = [];
         let reliefExemptTeachers = [];
         let reliefAssignmentsData = {};
         let reliefLogsData = [];
+
+        // FUNGSI SIMPAN MAKLUMAT SEKOLAH
+        window.saveSchoolInfoSettings = async function() {
+            const nameInput = document.getElementById('setting-school-name');
+            const addressInput = document.getElementById('setting-school-address');
+            const phoneInput = document.getElementById('setting-school-phone');
+            const emailInput = document.getElementById('setting-school-email');
+
+            if(nameInput) schoolInfoSettings.name = nameInput.value.trim() || "SMU(A) Khairiah Banggol Setol";
+            if(addressInput) schoolInfoSettings.address = addressInput.value.trim() || "17070 Pasir Mas, Kelantan.";
+            if(phoneInput) schoolInfoSettings.phone = phoneInput.value.trim();
+            if(emailInput) schoolInfoSettings.email = emailInput.value.trim();
+
+            updateHeaderSchoolInfoDisplay();
+            await saveDatabaseToCloud();
+            showCustomAlert('Maklumat sekolah berjaya disimpan dan dikemaskini pada header!');
+        };
+
+        function updateHeaderSchoolInfoDisplay() {
+            const headerName = document.getElementById('header-school-name');
+            const headerAddress = document.getElementById('header-school-address');
+            if(headerName) headerName.innerText = schoolInfoSettings.name;
+            if(headerAddress) headerAddress.innerText = schoolInfoSettings.address;
+
+            // Kemaskini semula pada borang Tetapan jika ada
+            const nameInput = document.getElementById('setting-school-name');
+            const addressInput = document.getElementById('setting-school-address');
+            const phoneInput = document.getElementById('setting-school-phone');
+            const emailInput = document.getElementById('setting-school-email');
+
+            if(nameInput && nameInput.value !== schoolInfoSettings.name) nameInput.value = schoolInfoSettings.name;
+            if(addressInput && addressInput.value !== schoolInfoSettings.address) addressInput.value = schoolInfoSettings.address;
+            if(phoneInput && phoneInput.value !== schoolInfoSettings.phone) phoneInput.value = schoolInfoSettings.phone;
+            if(emailInput && emailInput.value !== schoolInfoSettings.email) emailInput.value = schoolInfoSettings.email;
+        }
 
         // FUNGSI PENUKARAN LOGO (TETAPAN)
         window.uploadSchoolLogo = function(event) {
@@ -1079,6 +1155,11 @@
                     const headerImg = document.getElementById('header-school-logo');
                     if(headerImg) headerImg.src = customSchoolLogo;
                 }
+                let localSchoolInfo = localStorage.getItem('school_info_settings');
+                if(localSchoolInfo) {
+                    schoolInfoSettings = JSON.parse(localSchoolInfo);
+                }
+                updateHeaderSchoolInfoDisplay();
                 
                 syncGMPAllocationsToGuruData();
                 renderDataTable();
@@ -1106,6 +1187,10 @@
                         const headerImg = document.getElementById('header-school-logo');
                         if(headerImg) headerImg.src = customSchoolLogo;
                     }
+                    if(cloudData.schoolInfoSettings) {
+                        schoolInfoSettings = cloudData.schoolInfoSettings;
+                    }
+                    updateHeaderSchoolInfoDisplay();
                     syncGMPAllocationsToGuruData();
                 } else {
                     await saveDatabaseToCloud();
@@ -1184,6 +1269,7 @@
             localStorage.setItem('school_relief_assignments', JSON.stringify(reliefAssignmentsData));
             localStorage.setItem('school_relief_logs', JSON.stringify(reliefLogsData));
             localStorage.setItem('school_relief_exempt', JSON.stringify(reliefExemptTeachers));
+            localStorage.setItem('school_info_settings', JSON.stringify(schoolInfoSettings));
             if(customSchoolLogo) localStorage.setItem('school_custom_logo', customSchoolLogo);
             else localStorage.removeItem('school_custom_logo');
 
@@ -1202,6 +1288,7 @@
                     reliefLogsData,
                     reliefExemptTeachers,
                     customSchoolLogo,
+                    schoolInfoSettings,
                     updatedAt: new Date().toISOString()
                 });
             } catch (e) {
@@ -1333,6 +1420,7 @@
                 reliefLogsData,
                 reliefExemptTeachers,
                 customSchoolLogo,
+                schoolInfoSettings,
                 exportDate: new Date().toISOString()
             };
             let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData, null, 2));
@@ -1367,6 +1455,10 @@
                         const headerImg = document.getElementById('header-school-logo');
                         if(headerImg) headerImg.src = customSchoolLogo;
                     }
+                    if(imported.schoolInfoSettings) {
+                        schoolInfoSettings = imported.schoolInfoSettings;
+                    }
+                    updateHeaderSchoolInfoDisplay();
                     syncGMPAllocationsToGuruData();
                     await saveDatabaseToCloud();
                     renderSavedVersionsList();
@@ -1419,6 +1511,7 @@
             if(tabId === 'jana') { initJanaAutoTab(); renderSavedVersionsList(); }
             if(tabId === 'jadual_induk') initMasterTimetableTab();
             if(tabId === 'jadual_guru_ganti') backToReliefLanding();
+            if(tabId === 'tetapan') updateHeaderSchoolInfoDisplay();
         }
         
         function renderGMPMatrix() {
@@ -2079,7 +2172,7 @@
                 renderAgihanWaktuTable();
             } else if(subTab === 'kunci_slot') {
                 if(agihanSec) agihanSec.classList.add('hidden');
-                if(kunciSlotSec) kunciSlotSec.classList.remove('hidden');
+                if(kunciSlotSec) kunciSlotSec.remove('hidden');
                 if(standardSec) standardSec.classList.add('hidden');
                 initLockSlotTab();
             } else {
