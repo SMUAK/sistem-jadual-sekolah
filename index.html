@@ -37,15 +37,15 @@
                 </div>
             </div>
             <nav class="flex space-x-1 sm:space-x-2 mt-2 sm:mt-0 overflow-x-auto items-center">
-                <button onclick="switchTab('utama')" id="nav-btn-utama" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Utama</button>
-                <button onclick="switchTab('data')" id="nav-btn-data" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Data Asas</button>
+                <button onclick="switchTab('utama')" id="nav-btn-utama" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">🏠 Utama</button>
+                <button onclick="switchTab('data')" id="nav-btn-data" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">📂 Data Asas</button>
                 <button onclick="switchTab('waktu')" id="nav-btn-waktu" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">⏱️ Waktu & Rehat</button>
                 <button onclick="switchTab('guru_matapelajaran')" id="nav-btn-guru_matapelajaran" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">👨‍🏫 Guru & Mata Pelajaran</button>
                 <button onclick="switchTab('tetapan_masa_subjek')" id="nav-btn-tetapan_masa_subjek" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">⚙️ Tetapan Masa Subjek</button>
                 <button onclick="switchTab('jana')" id="nav-btn-jana" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">⚡ Jana Jadual</button>
                 <button onclick="switchTab('jadual_induk')" id="nav-btn-jadual_induk" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">📅 Jadual Induk</button>
                 <button onclick="switchTab('jadual_guru_ganti')" id="nav-btn-jadual_guru_ganti" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">📋 Jadual Guru Ganti</button>
-                <button onclick="switchTab('tetapan')" id="nav-btn-tetapan" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Tetapan</button>
+                <button onclick="switchTab('tetapan')" id="nav-btn-tetapan" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">🛠️ Tetapan</button>
             </nav>
         </div>
     </header>
@@ -421,9 +421,9 @@
                     <p class="text-xs text-slate-500">Sila pilih modul pengurusan guru ganti harian atau paparan laporan lengkap.</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto pt-4">
-                    <!-- Butang 1: Guru Ganti Harian -->
+                    <!-- Butang 1: Guru Ganti Harian (Dengan Ikon Lencana Nama / Kad Pengenalan Menarik) -->
                     <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-4 text-center hover:border-indigo-300 transition shadow-sm">
-                        <div class="text-4xl">👨‍🏫</div>
+                        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-tr from-emerald-500 to-teal-400 text-white rounded-2xl shadow-md text-3xl mb-1">🪪</div>
                         <h3 class="font-bold text-[#0b1b3d] text-base">1. Penetapan Guru Ganti</h3>
                         <p class="text-xs text-slate-500">Tetapkan guru tidak hadir, guru dikecualikan, dan pilih penugasan guru ganti harian.</p>
                         <button onclick="openReliefSubView('harian')" class="w-full bg-[#0b1b3d] hover:bg-[#132d60] text-white py-3 rounded-xl text-xs font-bold shadow transition flex items-center justify-center space-x-2">
@@ -432,7 +432,7 @@
                     </div>
                     <!-- Butang 2: Laporan -->
                     <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-4 text-center hover:border-indigo-300 transition shadow-sm">
-                        <div class="text-4xl">📊</div>
+                        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-tr from-indigo-500 to-blue-500 text-white rounded-2xl shadow-md text-3xl mb-1">📊</div>
                         <h3 class="font-bold text-[#0b1b3d] text-base">2. Laporan Penugasan Relief</h3>
                         <p class="text-xs text-slate-500">Lihat ringkasan penugasan harian/mingguan, cetak laporan dan analisis log simpanan.</p>
                         <button onclick="openReliefSubView('laporan')" class="w-full bg-[#0b1b3d] hover:bg-[#132d60] text-white py-3 rounded-xl text-xs font-bold shadow transition flex items-center justify-center space-x-2">
@@ -596,7 +596,7 @@
         <section id="tab-tetapan" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6 max-w-xl">
                 <div class="flex items-center space-x-3 border-b pb-3">
-                    <div class="bg-[#0b1b3d] text-white p-2.5 rounded-xl text-xl font-bold">⚙️</div>
+                    <div class="bg-[#0b1b3d] text-white p-2.5 rounded-xl text-xl font-bold">🛠️</div>
                     <div>
                         <h3 class="text-lg font-bold text-[#0b1b3d]">Tetapan Sistem & Sandaran</h3>
                         <p class="text-xs text-slate-500">Urus sandaran data dan konfigurasi sistem</p>
@@ -604,7 +604,7 @@
                 </div>
                 <div class="bg-slate-50 border border-slate-200 p-5 rounded-2xl space-y-4">
                     <div class="flex items-center space-x-3">
-                        <div class="bg-indigo-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shadow">5</div>
+                        <div class="bg-indigo-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shadow">💾</div>
                         <div>
                             <h4 class="font-bold text-[#0b1b3d] text-sm">Sandaran JSON : (Eksport JSON dan Import JSON)</h4>
                         </div>
@@ -1791,7 +1791,7 @@
                         for(let day in lockedSlotsData[cName]) {
                             newGen[cName][day] = {};
                             for(let slotLabel in lockedSlotsData[cName][day]) {
-                                newGen[cName][day][slotLabel] = lockedSlotsData[cName][day][slotLabel];
+                                newGen[cName][day][slotLabel] = lockedSlotsData[cName][day][slot.label];
                             }
                         }
                     }
