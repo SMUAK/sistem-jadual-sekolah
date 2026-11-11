@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="ms">
 <head>
@@ -6,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Jadual Waktu & Relief Sekolah</title>
     <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
+    <link href="[https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap](https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap)" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
         @media print {
@@ -414,7 +413,6 @@
                 </div>
             </div>
         </section>
-
         <!-- TAB BERPUSAT: JADUAL GURU GANTI -->
         <section id="tab-jadual_guru_ganti" class="hidden space-y-6">
             <!-- Pilihan Menu Utama (Landing View) -->
@@ -444,7 +442,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- Sub-View 1: Tetapan Guru Ganti Harian -->
             <div id="relief-harian-subview" class="hidden space-y-6">
                 <div class="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200">
@@ -472,7 +469,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <!-- Guru Tidak Hadir -->
                         <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-3">
                             <div class="flex items-center space-x-3 border-b pb-2">
@@ -481,24 +477,22 @@
                             </div>
                             <div class="space-y-3 text-xs">
                                 <input type="text" id="search-absent-teacher" onkeyup="filterAbsentTeachers()" placeholder="Cari nama guru..." class="w-full px-3 py-2 border rounded-xl bg-slate-50">
-                                <div id="absent-teachers-list" class="max-h-56 overflow-y-auto space-y-2 pr-1"></div>
+                                <div id="absent-teachers-list" class="max-h-56 overflow-y-auto space-y-2 pr-1 grid grid-cols-1 gap-2"></div>
                             </div>
                         </div>
-
                         <!-- Guru Dikecualikan Ganti -->
                         <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-3">
                             <div class="flex items-center space-x-3 border-b pb-2">
                                 <div class="bg-amber-500 text-white p-2 rounded-xl text-sm font-bold">🛡️</div>
                                 <h3 class="text-sm font-bold text-[#0b1b3d]">Guru Dikecualikan Ganti (Carian/Tandakan)</h3>
                             </div>
-                            <p class="text-[11px] text-slate-500">Pilih guru yang sedia ada di sekolah tetapi tidak patut ditugaskan ganti untuk slot ini.</p>
+                            <p class="text-[11px] text-slate-500">Pilih guru yang sedia ada di sekolah tetapi tidak patut ditugaskan ganti untuk slot ini (Kekal tersimpan).</p>
                             <div class="space-y-3 text-xs">
                                 <input type="text" id="search-exempt-teacher" onkeyup="filterExemptTeachers()" placeholder="Guru Dikecualikan Carian..." class="w-full px-3 py-2 border rounded-xl bg-slate-50">
-                                <div id="exempt-teachers-list" class="max-h-56 overflow-y-auto space-y-2 pr-1"></div>
+                                <div id="exempt-teachers-list" class="max-h-56 overflow-y-auto space-y-2 pr-1 grid grid-cols-1 gap-2"></div>
                             </div>
                         </div>
                     </div>
-
                     <!-- Panel Kanan: Jadual & Cadangan Guru Ganti -->
                     <div class="lg:col-span-7 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
                         <div class="flex flex-wrap justify-between items-center border-b pb-3 gap-2">
@@ -513,7 +507,6 @@
                                 <span>✓</span><span>Sahkan & Simpan Tugasan</span>
                             </button>
                         </div>
-
                         <div class="overflow-x-auto">
                             <table class="w-full border-collapse border border-slate-200 text-xs text-center">
                                 <thead>
@@ -534,7 +527,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- Sub-View 2: Laporan Relief -->
             <div id="relief-laporan-subview" class="hidden space-y-6">
                 <div class="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200">
@@ -545,7 +537,6 @@
                         <button onclick="window.print()" class="px-3 py-1.5 bg-slate-800 text-white rounded-lg text-xs font-bold shadow">🖨️ Cetak Laporan</button>
                     </div>
                 </div>
-
                 <div id="printable-area" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                     <div class="lg:col-span-8 space-y-6">
                         <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
@@ -599,7 +590,6 @@
                 </div>
             </div>
         </section>
-
         <section id="tab-relief" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Redirecting...</div></section>
         <section id="tab-laporan" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Redirecting...</div></section>
         
@@ -815,8 +805,8 @@
     </div>
     <!-- Skrip Aplikasi Utama -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { initializeApp } from "[https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js](https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js)";
+        import { getFirestore, doc, getDoc, setDoc } from "[https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js](https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js)";
         
         let db = null;
         try {
@@ -862,13 +852,11 @@
         let selectedActiveSubItem = null;
         let contextMenuTarget = null;
         let customModalCallback = null;
-
         // DATA MODUL GURU GANTI (RELIEF)
         let reliefAbsentTeachers = [];
         let reliefExemptTeachers = [];
         let reliefAssignmentsData = {};
         let reliefLogsData = [];
-
         window.showCustomConfirm = function(message, callback) {
             let modal = document.getElementById('custom-modal-dialog');
             let titleEl = document.getElementById('custom-modal-title');
@@ -979,6 +967,8 @@
                 if(localReliefAss) reliefAssignmentsData = JSON.parse(localReliefAss);
                 let localReliefLogs = localStorage.getItem('school_relief_logs');
                 if(localReliefLogs) reliefLogsData = JSON.parse(localReliefLogs);
+                let localExempt = localStorage.getItem('school_relief_exempt');
+                if(localExempt) reliefExemptTeachers = JSON.parse(localExempt);
                 
                 syncGMPAllocationsToGuruData();
                 renderDataTable();
@@ -1000,6 +990,7 @@
                     if(cloudData.savedTimetableVersions) savedTimetableVersions = cloudData.savedTimetableVersions;
                     if(cloudData.reliefAssignmentsData) reliefAssignmentsData = cloudData.reliefAssignmentsData;
                     if(cloudData.reliefLogsData) reliefLogsData = cloudData.reliefLogsData;
+                    if(cloudData.reliefExemptTeachers) reliefExemptTeachers = cloudData.reliefExemptTeachers;
                     syncGMPAllocationsToGuruData();
                 } else {
                     await saveDatabaseToCloud();
@@ -1075,7 +1066,7 @@
             localStorage.setItem('school_saved_versions', JSON.stringify(savedTimetableVersions));
             localStorage.setItem('school_relief_assignments', JSON.stringify(reliefAssignmentsData));
             localStorage.setItem('school_relief_logs', JSON.stringify(reliefLogsData));
-
+            localStorage.setItem('school_relief_exempt', JSON.stringify(reliefExemptTeachers));
             if(!db) return;
             try {
                 await setDoc(doc(db, "sekolah_data", "pusat_data"), {
@@ -1089,6 +1080,7 @@
                     savedTimetableVersions,
                     reliefAssignmentsData,
                     reliefLogsData,
+                    reliefExemptTeachers,
                     updatedAt: new Date().toISOString()
                 });
             } catch (e) {
@@ -1212,6 +1204,7 @@
                 savedTimetableVersions,
                 reliefAssignmentsData,
                 reliefLogsData,
+                reliefExemptTeachers,
                 exportDate: new Date().toISOString()
             };
             let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData, null, 2));
@@ -1239,7 +1232,7 @@
                     if(imported.savedTimetableVersions) savedTimetableVersions = imported.savedTimetableVersions;
                     if(imported.reliefAssignmentsData) reliefAssignmentsData = imported.reliefAssignmentsData;
                     if(imported.reliefLogsData) reliefLogsData = imported.reliefLogsData;
-
+                    if(imported.reliefExemptTeachers) reliefExemptTeachers = imported.reliefExemptTeachers;
                     syncGMPAllocationsToGuruData();
                     await saveDatabaseToCloud();
                     renderSavedVersionsList();
@@ -1266,7 +1259,6 @@
         window.switchTab = function(tabId) {
             if(tabId === 'relief') tabId = 'jadual_guru_ganti';
             if(tabId === 'laporan') tabId = 'jadual_guru_ganti';
-
             const tabs = ['utama', 'data', 'waktu', 'guru_matapelajaran', 'tetapan_masa_subjek', 'jana', 'jadual_induk', 'jadual_guru_ganti', 'tetapan'];
             tabs.forEach(t => {
                 let el = document.getElementById(`tab-${t}`);
@@ -2621,7 +2613,6 @@
             let h = Math.floor(mins/60)%24, m = mins%60;
             return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
         }
-
         // ==========================================
         // FUNGSI KHAS MODUL JADUAL GURU GANTI (RELIEF)
         // ==========================================
@@ -2630,7 +2621,6 @@
             document.getElementById('relief-harian-subview').classList.add('hidden');
             document.getElementById('relief-laporan-subview').classList.add('hidden');
         };
-
         window.openReliefSubView = function(viewType) {
             document.getElementById('relief-landing-view').classList.add('hidden');
             if(viewType === 'harian') {
@@ -2643,7 +2633,6 @@
                 initReliefLaporanView();
             }
         };
-
         function initReliefHarianView() {
             let picker = document.getElementById('relief-date-picker');
             if(picker && !picker.value) {
@@ -2652,42 +2641,45 @@
             }
             onReliefDateChange();
         }
-
         window.onReliefDateChange = function() {
             let picker = document.getElementById('relief-date-picker');
             let dateStr = picker ? picker.value : '';
             let dayLabelEl = document.getElementById('relief-current-day');
             if(!dateStr) return;
-
             let dt = new Date(dateStr);
             let dayIndex = dt.getDay(); // 0: Ahad, 1: Isnin ...
             let daysNames = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat', 'Sabtu'];
             let dayName = daysNames[dayIndex];
             if(dayLabelEl) dayLabelEl.innerText = dayName;
-
             renderAbsentTeachersList();
             renderExemptTeachersList();
             renderReliefAssignmentsTable();
         };
-
         function renderAbsentTeachersList() {
             let container = document.getElementById('absent-teachers-list');
             if(!container) return;
             container.innerHTML = '';
-
             let sortedGuru = [...(databaseRecords.senarai_guru || [])].sort((a, b) => a.name.localeCompare(b.name, 'ms'));
             if(sortedGuru.length === 0) {
                 container.innerHTML = `<div class="text-slate-400 italic">Tiada guru didaftarkan.</div>`;
                 return;
             }
-
             sortedGuru.forEach(g => {
                 let isChecked = reliefAbsentTeachers.includes(g.name);
+                // Stail visual mengikut Rujukan Gambar 2 (Guru Tidak Hadir: pill merah, ikon X di kiri, teks putih/jelas)
+                let cardClass = isChecked 
+                    ? 'bg-rose-500 text-white font-bold border-rose-600 shadow-sm' 
+                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border-slate-200';
+                
                 container.innerHTML += `
-                    <div class="flex items-center justify-between p-2 bg-slate-50 border rounded-xl hover:bg-slate-100 transition">
-                        <span class="font-bold text-[#0b1b3d] text-xs">${g.name} (${g.code})</span>
-                        <!-- Toggle Switch Button -->
-                        <div class="relative inline-block w-10 align-middle select-none">
+                    <div class="flex items-center justify-between p-2.5 rounded-xl border transition ${cardClass} cursor-pointer" onclick="toggleAbsentTeacher('${g.name}')">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${isChecked ? 'bg-white text-rose-600' : 'bg-slate-300 text-slate-600'}">
+                                ${isChecked ? '✕' : 'O'}
+                            </span>
+                            <span class="text-xs font-bold">${g.name} (${g.code})</span>
+                        </div>
+                        <div class="relative inline-block w-10 align-middle select-none" onclick="event.stopPropagation()">
                             <input type="checkbox" id="absent-toggle-${g.id}" onchange="toggleAbsentTeacher('${g.name}')" ${isChecked ? 'checked' : ''} class="toggle-switch-checkbox hidden">
                             <label for="absent-toggle-${g.id}" class="toggle-switch-label block overflow-hidden h-5 rounded-full bg-slate-300 cursor-pointer transition-colors duration-200">
                                 <span class="toggle-switch-dot block w-4 h-4 rounded-full bg-white shadow transform transition-transform duration-200 mt-0.5 ml-0.5"></span>
@@ -2697,25 +2689,31 @@
                 `;
             });
         }
-
         function renderExemptTeachersList() {
             let container = document.getElementById('exempt-teachers-list');
             if(!container) return;
             container.innerHTML = '';
-
             let sortedGuru = [...(databaseRecords.senarai_guru || [])].sort((a, b) => a.name.localeCompare(b.name, 'ms'));
             if(sortedGuru.length === 0) {
                 container.innerHTML = `<div class="text-slate-400 italic">Tiada guru didaftarkan.</div>`;
                 return;
             }
-
             sortedGuru.forEach(g => {
                 let isChecked = reliefExemptTeachers.includes(g.name);
+                // Stail visual mengikut Rujukan Gambar 3 (Guru Dikecualikan Ganti: semak centang ✓ di kiri, toggle di kanan, kekal state)
+                let cardClass = isChecked 
+                    ? 'bg-slate-800 text-white font-bold border-slate-700 shadow-sm' 
+                    : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border-slate-200';
+
                 container.innerHTML += `
-                    <div class="flex items-center justify-between p-2 bg-slate-50 border rounded-xl hover:bg-slate-100 transition">
-                        <span class="font-bold text-slate-700 text-xs">${g.name}</span>
-                        <!-- Toggle Switch Button -->
-                        <div class="relative inline-block w-10 align-middle select-none">
+                    <div class="flex items-center justify-between p-2.5 rounded-xl border transition ${cardClass} cursor-pointer" onclick="toggleExemptTeacher('${g.name}')">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${isChecked ? 'bg-emerald-500 text-white' : 'bg-slate-300 text-slate-500'}">
+                                ${isChecked ? '✓' : ''}
+                            </span>
+                            <span class="text-xs font-bold">${g.name}</span>
+                        </div>
+                        <div class="relative inline-block w-10 align-middle select-none" onclick="event.stopPropagation()">
                             <input type="checkbox" id="exempt-toggle-${g.id}" onchange="toggleExemptTeacher('${g.name}')" ${isChecked ? 'checked' : ''} class="toggle-switch-checkbox hidden">
                             <label for="exempt-toggle-${g.id}" class="toggle-switch-label block overflow-hidden h-5 rounded-full bg-slate-300 cursor-pointer transition-colors duration-200">
                                 <span class="toggle-switch-dot block w-4 h-4 rounded-full bg-white shadow transform transition-transform duration-200 mt-0.5 ml-0.5"></span>
@@ -2725,54 +2723,49 @@
                 `;
             });
         }
-
         window.toggleAbsentTeacher = function(teacherName) {
             if(reliefAbsentTeachers.includes(teacherName)) {
                 reliefAbsentTeachers = reliefAbsentTeachers.filter(t => t !== teacherName);
             } else {
                 reliefAbsentTeachers.push(teacherName);
             }
+            renderAbsentTeachersList();
             renderReliefAssignmentsTable();
         };
-
         window.toggleExemptTeacher = function(teacherName) {
             if(reliefExemptTeachers.includes(teacherName)) {
                 reliefExemptTeachers = reliefExemptTeachers.filter(t => t !== teacherName);
             } else {
                 reliefExemptTeachers.push(teacherName);
             }
+            saveDatabaseToCloud(); // Simpan kekal ke LocalStorage & Firebase secara automatik
+            renderExemptTeachersList();
             renderReliefAssignmentsTable();
         };
-
         window.filterAbsentTeachers = function() {
             let q = document.getElementById('search-absent-teacher').value.toLowerCase();
             document.querySelectorAll('#absent-teachers-list > div').forEach(el => {
                 el.style.display = el.innerText.toLowerCase().includes(q) ? 'flex' : 'none';
             });
         };
-
         window.filterExemptTeachers = function() {
             let q = document.getElementById('search-exempt-teacher').value.toLowerCase();
             document.querySelectorAll('#exempt-teachers-list > div').forEach(el => {
                 el.style.display = el.innerText.toLowerCase().includes(q) ? 'flex' : 'none';
             });
         };
-
         function renderReliefAssignmentsTable() {
             let tbody = document.getElementById('relief-assignments-tbody');
             let picker = document.getElementById('relief-date-picker');
             let dateStr = picker ? picker.value : '';
             let dayName = document.getElementById('relief-current-day').innerText;
             if(!tbody) return;
-
             if(reliefAbsentTeachers.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-slate-400 italic">Sila tandakan sekurang-kurangnya seorang guru tidak hadir di panel kiri.</td></tr>`;
                 return;
             }
-
             let affectedSlots = [];
             let learningSlots = timeSlotsData.filter(s => s.type === 'Waktu belajar');
-
             reliefAbsentTeachers.forEach(absentTeacher => {
                 for(let cName in generatedTimetableData) {
                     if(generatedTimetableData[cName][dayName]) {
@@ -2791,23 +2784,18 @@
                     }
                 }
             });
-
             if(affectedSlots.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-slate-400 italic">Guru yang dipilih tidak mempunyai kelas mengajar pada hari ${dayName}.</td></tr>`;
                 return;
             }
-
             tbody.innerHTML = '';
             let existingDateData = reliefAssignmentsData[dateStr] || {};
-
             affectedSlots.forEach((item, idx) => {
                 let slotKey = `${item.className}_${item.slotLabel}`;
                 let currentAssigned = existingDateData[slotKey] ? existingDateData[slotKey].substituteTeacher : '';
-
-                // Dapatkan senarai guru bebas
+                // Dapatkan senarai guru bebas dan tapis guru yang dikecualikan
                 let freeTeachers = getFreeTeachersForSlot(dayName, item.slotLabel);
                 let optionsHTML = `<option value="">-- Pilih Guru Ganti --</option>`;
-
                 freeTeachers.forEach(ft => {
                     let isExempt = reliefExemptTeachers.includes(ft.name);
                     let isSel = (ft.name === currentAssigned) ? 'selected' : '';
@@ -2815,9 +2803,7 @@
                         optionsHTML += `<option value="${ft.name}" ${isSel}>${ft.name} (${ft.code})</option>`;
                     }
                 });
-
                 let statusBadge = currentAssigned ? '<span class="px-2 py-1 bg-emerald-100 text-emerald-800 rounded font-bold text-[10px]">Selesai</span>' : '<span class="px-2 py-1 bg-amber-100 text-amber-800 rounded font-bold text-[10px]">Belum Diisi</span>';
-
                 tbody.innerHTML += `
                     <tr class="border-b hover:bg-slate-50 transition">
                         <td class="border p-2 font-bold text-rose-700">${item.absentTeacher}</td>
@@ -2834,30 +2820,23 @@
                 `;
             });
         }
-
         function getFreeTeachersForSlot(dayName, slotLabel) {
             let allGuru = databaseRecords.senarai_guru || [];
             let busyTeacherNames = [];
-
             for(let cName in generatedTimetableData) {
                 if(generatedTimetableData[cName][dayName] && generatedTimetableData[cName][dayName][slotLabel]) {
                     busyTeacherNames.push(generatedTimetableData[cName][dayName][slotLabel].teacherName);
                 }
             }
-
             return allGuru.filter(g => !busyTeacherNames.includes(g.name) && !reliefAbsentTeachers.includes(g.name));
         }
-
         window.saveReliefAssignments = function() {
             let picker = document.getElementById('relief-date-picker');
             let dateStr = picker ? picker.value : '';
             if(!dateStr) return showCustomAlert('Sila pilih tarikh bertugas terlebih dahulu.');
-
             let selects = document.querySelectorAll('#relief-assignments-tbody select');
             if(selects.length === 0) return showCustomAlert('Tiada tugasan jadual untuk disimpan.');
-
             if(!reliefAssignmentsData[dateStr]) reliefAssignmentsData[dateStr] = {};
-
             let savedCount = 0;
             selects.forEach(sel => {
                 let slotKey = sel.getAttribute('data-key');
@@ -2866,7 +2845,6 @@
                 let slotLabel = sel.getAttribute('data-slot');
                 let absentTeacher = sel.getAttribute('data-absent');
                 let subjectCode = sel.getAttribute('data-subject');
-
                 if(subTeacher) {
                     reliefAssignmentsData[dateStr][slotKey] = {
                         className,
@@ -2879,35 +2857,28 @@
                     savedCount++;
                 }
             });
-
             let logEntry = {
                 timestamp: new Date().toLocaleTimeString('ms-MY'),
                 date: dateStr,
                 action: `Admin mengesahkan ${savedCount} tugasan ganti.`
             };
             reliefLogsData.unshift(logEntry);
-
             saveDatabaseToCloud();
             renderReliefAssignmentsTable();
             showCustomAlert(`Berjaya menyimpan ${savedCount} penugasan guru ganti bagi tarikh ${dateStr}!`);
         };
-
         function initReliefLaporanView() {
             let picker = document.getElementById('relief-date-picker');
             let dateStr = picker ? picker.value : new Date().toISOString().split('T')[0];
             let reportDateLabel = document.getElementById('report-date-label');
             if(reportDateLabel) reportDateLabel.innerText = `Tanggal: ${dateStr}`;
-
             let dateData = reliefAssignmentsData[dateStr] || {};
             let keys = Object.keys(dateData);
-
             document.getElementById('stat-slots-affected').innerText = keys.length;
             document.getElementById('stat-substitutes-count').innerText = keys.length;
-
             let tbody = document.getElementById('report-relief-tbody');
             if(!tbody) return;
             tbody.innerHTML = '';
-
             if(keys.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-slate-400 italic">Tiada rekod laporan relief yang disimpan pada tarikh ${dateStr}.</td></tr>`;
             } else {
@@ -2925,7 +2896,6 @@
                     `;
                 });
             }
-
             let logContainer = document.getElementById('relief-log-container');
             if(logContainer) {
                 logContainer.innerHTML = '';
@@ -2942,7 +2912,6 @@
                 }
             }
         }
-
         window.onload = () => {
             loadDatabaseFromCloud().then(() => {
                 switchTab('jana');
@@ -2951,4 +2920,3 @@
     </script>
 </body>
 </html>
-```
