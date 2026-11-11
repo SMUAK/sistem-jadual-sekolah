@@ -6,7 +6,7 @@
     <title>Sistem Jadual Waktu & Relief Sekolah</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; color: #0f172a; margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
         @media print {
@@ -23,20 +23,43 @@
         .toggle-switch-checkbox:checked + .toggle-switch-label .toggle-switch-dot {
             transform: translateX(1.25rem);
         }
+
+        /* Styling Gaya Header Utama */
+        .header-title-shadow {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .header-sub-fancy {
+            color: #38bdf8; /* Biru muda cerah (Sky 400) */
+            font-weight: 800;
+            letter-spacing: 0.025em;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+        }
     </style>
 </head>
 <body class="bg-slate-100 text-slate-900 min-h-screen flex flex-col">
     <!-- Header / Navigasi Utama -->
-    <header class="bg-[#0b1b3d] text-white shadow-md">
+    <header class="bg-[#0b1b3d] text-white shadow-md border-b border-slate-800">
         <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
-            <div class="flex items-center space-x-3">
-                <div class="bg-[#132d60] p-2 rounded-lg text-xl font-bold">🏫</div>
+            <div class="flex items-center space-x-3.5">
+                <!-- Logo Sekolah Dinamik -->
+                <div class="bg-[#132d60] p-1.5 rounded-xl border border-blue-900/50 shadow-inner flex items-center justify-center w-14 h-14 overflow-hidden">
+                    <img id="header-school-logo" src="Logo_SMUAK-removebg-preview.png" alt="Logo Sekolah" class="w-full h-full object-contain drop-shadow">
+                </div>
                 <div>
-                    <h1 id="header-school-name" class="text-lg font-bold">SMU(A) Khairiah Banggol Setol</h1>
-                    <p class="text-xs text-blue-200">Sistem Pengurusan Jadual Waktu & Guru Ganti Pintar (Pangkalan Data Awan)</p>
+                    <!-- Nama Sekolah & Lokasi -->
+                    <h1 id="header-school-name" class="text-xl font-extrabold tracking-wide text-white header-title-shadow">SMU(A) Khairiah Banggol Setol</h1>
+                    <p id="header-school-address" class="text-xs text-blue-200 font-medium">17070 Pasir Mas, Kelantan</p>
+                    
+                    <!-- Teks Berwarna Biru Muda Cerah & Corak Khas -->
+                    <div class="header-sub-fancy text-sm leading-tight mt-0.5">
+                        aFz Jadual Waktu & Guru Ganti
+                    </div>
+                    <p class="text-[11px] text-blue-300/80 font-normal leading-tight">
+                        (Sistem Pengurusan Jadual Waktu & Guru Ganti Pintar)
+                    </p>
                 </div>
             </div>
-            <nav class="flex space-x-1 sm:space-x-2 mt-2 sm:mt-0 overflow-x-auto items-center">
+            <nav class="flex space-x-1 sm:space-x-2 mt-3 lg:mt-0 overflow-x-auto items-center">
                 <button onclick="switchTab('utama')" id="nav-btn-utama" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">🏠 Utama</button>
                 <button onclick="switchTab('data')" id="nav-btn-data" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">📂 Data Asas</button>
                 <button onclick="switchTab('waktu')" id="nav-btn-waktu" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">⏱️ Waktu & Rehat</button>
@@ -49,6 +72,7 @@
             </nav>
         </div>
     </header>
+
     <!-- Kandungan Utama -->
     <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-6 space-y-6">
         
@@ -59,6 +83,7 @@
                 <p class="text-slate-600 mt-1">Urus jadual kelas, guru, dan agihan guru ganti harian dengan selamat menggunakan pangkalan data awan Firebase.</p>
             </div>
         </section>
+
         <!-- TAB DATA ASAS -->
         <section id="tab-data" class="space-y-6">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-wrap justify-between items-center gap-4">
@@ -121,6 +146,7 @@
                         </table>
                     </div>
                 </div>
+
                 <!-- Kandungan Sub-tab: Kunci Slot Subjek -->
                 <div id="subtab-content-kunci_slot" class="hidden space-y-4">
                     <div class="flex flex-wrap justify-between items-center bg-slate-50 p-4 rounded-xl border border-slate-200 gap-4">
@@ -143,6 +169,7 @@
                         </table>
                     </div>
                 </div>
+
                 <!-- Kandungan Sub-tab Standard -->
                 <div id="standard-data-section" class="space-y-4">
                     <div class="flex flex-wrap justify-between items-center gap-4">
@@ -170,6 +197,7 @@
                 </div>
             </div>
         </section>
+
         <!-- Tab Waktu & Rehat -->
         <section id="tab-waktu" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
@@ -233,6 +261,7 @@
                 </div>
             </div>
         </section>
+
         <!-- TAB GURU MATA PELAJARAN -->
         <section id="tab-guru_matapelajaran" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
@@ -265,6 +294,7 @@
                 </div>
             </div>
         </section>
+
         <!-- Tab Tetapan Masa Subjek -->
         <section id="tab-tetapan_masa_subjek" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
@@ -293,6 +323,7 @@
                 </div>
             </div>
         </section>
+
         <!-- Tab Jana Jadual (Auto) -->
         <section id="tab-jana" class="hidden space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -345,6 +376,7 @@
                             </label>
                         </div>
                     </div>
+
                     <!-- KOTAK SIMPAN VERSI SANDARAN -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
                         <div class="flex items-center space-x-3 border-b pb-3">
@@ -364,6 +396,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="lg:col-span-7 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
                     <div class="flex justify-between items-center border-b pb-3">
                         <h3 class="text-base font-bold text-[#0b1b3d]">Status Pengisian Jadual Waktu</h3>
@@ -383,6 +416,7 @@
                 </div>
             </div>
         </section>
+
         <!-- TAB: JADUAL INDUK -->
         <section id="tab-jadual_induk" class="hidden space-y-6">
             <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex flex-wrap justify-between items-center gap-4">
@@ -418,6 +452,7 @@
                 </div>
             </div>
         </section>
+
         <!-- TAB BERPUSAT: JADUAL GURU GANTI -->
         <section id="tab-jadual_guru_ganti" class="hidden space-y-6">
             <!-- Pilihan Menu Utama (Landing View) -->
@@ -427,7 +462,7 @@
                     <p class="text-xs text-slate-500">Sila pilih modul pengurusan guru ganti harian atau paparan laporan lengkap.</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto pt-4">
-                    <!-- Butang 1: Guru Ganti Harian (Dengan Ikon Lencana Nama / Kad Pengenalan Menarik) -->
+                    <!-- Butang 1: Guru Ganti Harian -->
                     <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-4 text-center hover:border-indigo-300 transition shadow-sm">
                         <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-tr from-emerald-500 to-teal-400 text-white rounded-2xl shadow-md text-3xl mb-1">🪪</div>
                         <h3 class="font-bold text-[#0b1b3d] text-base">1. Penetapan Guru Ganti</h3>
@@ -447,6 +482,7 @@
                     </div>
                 </div>
             </div>
+
             <!-- Sub-View 1: Tetapan Guru Ganti Harian -->
             <div id="relief-harian-subview" class="hidden space-y-6">
                 <div class="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200">
@@ -532,6 +568,7 @@
                     </div>
                 </div>
             </div>
+
             <!-- Sub-View 2: Laporan Relief -->
             <div id="relief-laporan-subview" class="hidden space-y-6">
                 <div class="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200">
@@ -595,6 +632,7 @@
                 </div>
             </div>
         </section>
+
         <section id="tab-relief" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Redirecting...</div></section>
         <section id="tab-laporan" class="hidden space-y-6"><div class="bg-white p-6 rounded-xl shadow-sm border">Redirecting...</div></section>
         
@@ -605,9 +643,33 @@
                     <div class="bg-[#0b1b3d] text-white p-2.5 rounded-xl text-xl font-bold">🛠️</div>
                     <div>
                         <h3 class="text-lg font-bold text-[#0b1b3d]">Tetapan Sistem & Sandaran</h3>
-                        <p class="text-xs text-slate-500">Urus sandaran data dan konfigurasi sistem</p>
+                        <p class="text-xs text-slate-500">Urus logo sekolah, sandaran data dan konfigurasi sistem</p>
                     </div>
                 </div>
+
+                <!-- Modul Penukaran Logo Sekolah -->
+                <div class="bg-slate-50 border border-slate-200 p-5 rounded-2xl space-y-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="bg-sky-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shadow">🖼️</div>
+                        <div>
+                            <h4 class="font-bold text-[#0b1b3d] text-sm">Kemaskini Logo Sekolah (Header)</h4>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Muat naik fail logo sekolah baharu (PNG/JPG). Logo ini akan bertukar secara automatik pada header utama navigasi.
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-center gap-3 pt-2">
+                        <label class="w-full sm:w-auto flex-1 bg-sky-600 hover:bg-sky-700 text-white py-2.5 px-4 rounded-xl font-bold text-xs shadow transition text-center cursor-pointer">
+                            📁 Pilih Fail Logo Baharu
+                            <input type="file" id="upload-logo-input" accept="image/*" onchange="uploadSchoolLogo(event)" class="hidden">
+                        </label>
+                        <button onclick="resetDefaultLogo()" class="w-full sm:w-auto bg-slate-200 hover:bg-slate-300 text-slate-800 py-2.5 px-4 rounded-xl font-bold text-xs shadow transition text-center">
+                            Set Asal
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Modul Sandaran JSON -->
                 <div class="bg-slate-50 border border-slate-200 p-5 rounded-2xl space-y-4">
                     <div class="flex items-center space-x-3">
                         <div class="bg-indigo-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shadow">💾</div>
@@ -631,6 +693,7 @@
             </div>
         </section>
     </main>
+
     <!-- MODAL KUSTOM: PENGESAHAN & PROMPT KUSTOM -->
     <div id="custom-modal-dialog" class="fixed inset-0 bg-slate-900/65 backdrop-blur-sm hidden flex items-center justify-center z-50">
         <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-2xl border space-y-4">
@@ -646,6 +709,7 @@
             </div>
         </div>
     </div>
+
     <!-- MENU KLIK KANAN KUSTOM (CONTEXT MENU) UNTUK MATRIKS -->
     <div id="custom-context-menu" class="fixed hidden bg-white shadow-xl border border-slate-200 rounded-xl py-1.5 z-50 min-w-[150px] text-xs font-medium">
         <button onclick="handleContextAction('tukar')" class="w-full text-left px-4 py-2 hover:bg-slate-100 flex items-center space-x-2 text-slate-700">
@@ -662,6 +726,7 @@
             <span>❌</span><span>Padam</span>
         </button>
     </div>
+
     <!-- MODAL PROGRESS JANA JADUAL -->
     <div id="generation-progress-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-sm hidden flex items-center justify-center z-50">
         <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-2xl border space-y-5">
@@ -680,6 +745,7 @@
             </div>
         </div>
     </div>
+
     <!-- MODAL "MENGHADAGANG JADUAL" (HAD MASA) -->
     <div id="block-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-sm hidden flex items-center justify-center z-50">
         <div class="bg-white w-full max-w-5xl p-6 rounded-2xl shadow-2xl border space-y-5 max-h-[95vh] overflow-y-auto">
@@ -720,6 +786,7 @@
             </div>
         </div>
     </div>
+
     <!-- MODAL DATA ASAS -->
     <div id="data-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-sm hidden flex items-center justify-center z-50">
         <div class="bg-white w-full max-w-3xl p-6 rounded-2xl shadow-2xl border space-y-5 max-h-[90vh] overflow-y-auto">
@@ -773,6 +840,7 @@
             </div>
         </div>
     </div>
+
     <!-- MODAL JANA PANTAS WAKTU -->
     <div id="auto-time-modal" class="fixed inset-0 bg-slate-900/65 backdrop-blur-sm hidden flex items-center justify-center z-50">
         <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-2xl border space-y-5">
@@ -808,6 +876,7 @@
             </div>
         </div>
     </div>
+
     <!-- Skrip Aplikasi Utama -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -857,11 +926,37 @@
         let selectedActiveSubItem = null;
         let contextMenuTarget = null;
         let customModalCallback = null;
+        let customSchoolLogo = null;
+        
         // DATA MODUL GURU GANTI (RELIEF)
         let reliefAbsentTeachers = [];
         let reliefExemptTeachers = [];
         let reliefAssignmentsData = {};
         let reliefLogsData = [];
+
+        // FUNGSI PENUKARAN LOGO (TETAPAN)
+        window.uploadSchoolLogo = function(event) {
+            const file = event.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                customSchoolLogo = e.target.result;
+                const headerImg = document.getElementById('header-school-logo');
+                if(headerImg) headerImg.src = customSchoolLogo;
+                await saveDatabaseToCloud();
+                showCustomAlert('Logo sekolah berjaya dikemaskini dan disimpan!');
+            };
+            reader.readAsDataURL(file);
+        };
+
+        window.resetDefaultLogo = async function() {
+            customSchoolLogo = null;
+            const headerImg = document.getElementById('header-school-logo');
+            if(headerImg) headerImg.src = "Logo_SMUAK-removebg-preview.png";
+            await saveDatabaseToCloud();
+            showCustomAlert('Logo sekolah dikembalikan ke bentuk asal.');
+        };
+
         window.showCustomConfirm = function(message, callback) {
             let modal = document.getElementById('custom-modal-dialog');
             let titleEl = document.getElementById('custom-modal-title');
@@ -881,6 +976,7 @@
             customModalCallback = callback;
             if(modal) modal.classList.remove('hidden');
         };
+
         window.showCustomPrompt = function(message, defaultValue, callback, optionsList = null) {
             let modal = document.getElementById('custom-modal-dialog');
             let titleEl = document.getElementById('custom-modal-title');
@@ -917,6 +1013,7 @@
             if(modal) modal.classList.remove('hidden');
             if(!optionsList && inputEl) { inputEl.focus(); inputEl.select(); }
         };
+
         window.showCustomAlert = function(message) {
             let modal = document.getElementById('custom-modal-dialog');
             let titleEl = document.getElementById('custom-modal-title');
@@ -934,6 +1031,7 @@
             customModalCallback = (res) => { if(btnCancel) btnCancel.classList.remove('hidden'); };
             if(modal) modal.classList.remove('hidden');
         };
+
         window.closeCustomModal = function(isOk) {
             let modal = document.getElementById('custom-modal-dialog');
             let inputEl = document.getElementById('custom-modal-input');
@@ -956,6 +1054,7 @@
                 cb(val);
             }
         };
+
         async function loadDatabaseFromCloud() {
             if(!db) {
                 let localData = localStorage.getItem('school_database');
@@ -974,6 +1073,12 @@
                 if(localReliefLogs) reliefLogsData = JSON.parse(localReliefLogs);
                 let localExempt = localStorage.getItem('school_relief_exempt');
                 if(localExempt) reliefExemptTeachers = JSON.parse(localExempt);
+                let localLogo = localStorage.getItem('school_custom_logo');
+                if(localLogo) {
+                    customSchoolLogo = localLogo;
+                    const headerImg = document.getElementById('header-school-logo');
+                    if(headerImg) headerImg.src = customSchoolLogo;
+                }
                 
                 syncGMPAllocationsToGuruData();
                 renderDataTable();
@@ -996,6 +1101,11 @@
                     if(cloudData.reliefAssignmentsData) reliefAssignmentsData = cloudData.reliefAssignmentsData;
                     if(cloudData.reliefLogsData) reliefLogsData = cloudData.reliefLogsData;
                     if(cloudData.reliefExemptTeachers) reliefExemptTeachers = cloudData.reliefExemptTeachers;
+                    if(cloudData.customSchoolLogo) {
+                        customSchoolLogo = cloudData.customSchoolLogo;
+                        const headerImg = document.getElementById('header-school-logo');
+                        if(headerImg) headerImg.src = customSchoolLogo;
+                    }
                     syncGMPAllocationsToGuruData();
                 } else {
                     await saveDatabaseToCloud();
@@ -1006,6 +1116,7 @@
             renderDataTable();
             renderSavedVersionsList();
         }
+
         function syncGMPAllocationsToGuruData() {
             let teacherMap = {};
             (databaseRecords.senarai_guru || []).forEach(sg => {
@@ -1059,6 +1170,7 @@
             });
             databaseRecords.guru = newGuruRecords;
         }
+
         async function saveDatabaseToCloud() {
             syncGMPAllocationsToGuruData();
             localStorage.setItem('school_database', JSON.stringify(databaseRecords));
@@ -1072,6 +1184,9 @@
             localStorage.setItem('school_relief_assignments', JSON.stringify(reliefAssignmentsData));
             localStorage.setItem('school_relief_logs', JSON.stringify(reliefLogsData));
             localStorage.setItem('school_relief_exempt', JSON.stringify(reliefExemptTeachers));
+            if(customSchoolLogo) localStorage.setItem('school_custom_logo', customSchoolLogo);
+            else localStorage.removeItem('school_custom_logo');
+
             if(!db) return;
             try {
                 await setDoc(doc(db, "sekolah_data", "pusat_data"), {
@@ -1086,12 +1201,14 @@
                     reliefAssignmentsData,
                     reliefLogsData,
                     reliefExemptTeachers,
+                    customSchoolLogo,
                     updatedAt: new Date().toISOString()
                 });
             } catch (e) {
                 console.error("Gagal menyimpan data ke pangkalan data awan:", e);
             }
         }
+
         window.importExcelOrCsv = function(event) {
             let file = event.target.files[0];
             if(!file) return;
@@ -1133,6 +1250,7 @@
             };
             reader.readAsText(file);
         };
+
         window.saveBackupVersion = function() {
             let nameEl = document.getElementById('backup-version-name');
             let name = nameEl ? nameEl.value.trim() : '';
@@ -1151,6 +1269,7 @@
             if(nameEl) nameEl.value = '';
             showCustomAlert(`Versi "${name}" berjaya disimpan sebagai sandaran draf!`);
         };
+
         function renderSavedVersionsList() {
             let box = document.getElementById('versions-list-box');
             if(!box) return;
@@ -1174,6 +1293,7 @@
                 `;
             });
         }
+
         window.restoreBackupVersion = function(id) {
             showCustomConfirm('Adakah anda pasti ingin memulihkan versi jadual ini? Jadual semasa akan digantikan dengan versi sandaran ini.', function(confirmed) {
                 if(confirmed) {
@@ -1187,6 +1307,7 @@
                 }
             });
         };
+
         window.deleteBackupVersion = function(id) {
             showCustomConfirm('Adakah anda pasti ingin memadam versi sandaran ini?', function(confirmed) {
                 if(confirmed) {
@@ -1197,6 +1318,7 @@
                 }
             });
         };
+
         window.exportJsonData = function() {
             let backupData = {
                 databaseRecords,
@@ -1210,6 +1332,7 @@
                 reliefAssignmentsData,
                 reliefLogsData,
                 reliefExemptTeachers,
+                customSchoolLogo,
                 exportDate: new Date().toISOString()
             };
             let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData, null, 2));
@@ -1220,6 +1343,7 @@
             downloadAnchor.click();
             downloadAnchor.remove();
         }
+
         window.importJsonData = function(event) {
             let file = event.target.files[0];
             if(!file) return;
@@ -1238,6 +1362,11 @@
                     if(imported.reliefAssignmentsData) reliefAssignmentsData = imported.reliefAssignmentsData;
                     if(imported.reliefLogsData) reliefLogsData = imported.reliefLogsData;
                     if(imported.reliefExemptTeachers) reliefExemptTeachers = imported.reliefExemptTeachers;
+                    if(imported.customSchoolLogo) {
+                        customSchoolLogo = imported.customSchoolLogo;
+                        const headerImg = document.getElementById('header-school-logo');
+                        if(headerImg) headerImg.src = customSchoolLogo;
+                    }
                     syncGMPAllocationsToGuruData();
                     await saveDatabaseToCloud();
                     renderSavedVersionsList();
@@ -1250,6 +1379,7 @@
             };
             reader.readAsText(file);
         }
+
         function formatTo12Hour(timeStr) {
             if(!timeStr || !timeStr.includes(':')) return timeStr;
             let parts = timeStr.split(':');
@@ -1261,6 +1391,7 @@
             let formattedH = h < 10 ? '0' + h : h;
             return `${formattedH}:${m} ${ampm}`;
         }
+
         window.switchTab = function(tabId) {
             if(tabId === 'relief') tabId = 'jadual_guru_ganti';
             if(tabId === 'laporan') tabId = 'jadual_guru_ganti';
@@ -1336,6 +1467,7 @@
             });
             tbody.innerHTML = bodyHTML;
         }
+
         window.onMatrixCellContextMenu = function(e, kelas, subjekCode) {
             e.preventDefault();
             contextMenuTarget = { kelas, subjekCode };
@@ -1346,12 +1478,14 @@
                 menu.classList.remove('hidden');
             }
         };
+
         window.addEventListener('click', function(e) {
             let menu = document.getElementById('custom-context-menu');
             if(menu && !menu.contains(e.target)) {
                 menu.classList.add('hidden');
             }
         });
+
         window.handleContextAction = function(action) {
             let menu = document.getElementById('custom-context-menu');
             if(menu) menu.classList.add('hidden');
@@ -1395,6 +1529,7 @@
                 });
             }
         };
+
         function renderGMPTree() {
             const container = document.getElementById('gmp-teacher-tree');
             if(!container) return;
@@ -1459,10 +1594,12 @@
                 `;
             });
         }
+
         window.toggleTeacherExpand = function(teacherName) {
             expandedTeachersMap[teacherName] = !expandedTeachersMap[teacherName];
             renderGMPTree();
         };
+
         window.selectSubTreeItem = function(teacherName, kelas, subjekCode) {
             if (selectedActiveSubItem && 
                 selectedActiveSubItem.teacher.toLowerCase() === teacherName.toLowerCase() &&
@@ -1479,6 +1616,7 @@
             renderGMPTree();
             renderGMPMatrix();
         };
+
         window.onMatrixCellClick = function(e, kelas, subjekCode, teacherName) {
             e.preventDefault();
             if(teacherName) {
@@ -1497,6 +1635,7 @@
             renderGMPTree();
             renderGMPMatrix();
         };
+
         function renderSubjectTimeConfigTable() {
             let tbody = document.getElementById('subject-time-config-tbody');
             if(!tbody) return;
@@ -1534,10 +1673,12 @@
             populateMasterDropdown();
             renderMasterTimetable();
         }
+
         function initMasterTimetableTab() {
             populateMasterDropdown();
             renderMasterTimetable();
         }
+
         function populateMasterDropdown() {
             let select = document.getElementById('master-select-target');
             if(!select) return;
@@ -1562,6 +1703,7 @@
                 });
             }
         }
+
         window.renderMasterTimetable = function() {
             let selectTargetEl = document.getElementById('master-select-target');
             let selectTarget = selectTargetEl ? selectTargetEl.value : '';
@@ -1635,6 +1777,7 @@
             });
             renderClassStatusTable();
         }
+
         function renderClassStatusTable() {
             const tbody = document.getElementById('class-status-tbody');
             if(!tbody) return;
@@ -1687,6 +1830,7 @@
                 `;
             });
         }
+
         window.startAutoGeneration = function() {
             let subjects = databaseRecords.subjek || [];
             let teachers = databaseRecords.senarai_guru || [];
@@ -1748,6 +1892,7 @@
                 }, 300);
             }, 200);
         }
+
         window.janaSingleClass = function(className) {
             let subjects = databaseRecords.subjek || [];
             let teachers = databaseRecords.senarai_guru || [];
@@ -1788,6 +1933,7 @@
                 }, 300);
             }, 200);
         }
+
         window.resetAllSchedules = function() {
             showCustomConfirm('Adakah anda pasti ingin mengosongkan semua jadual (slot yang dikunci akan dikekalkan)?', function(confirmed) {
                 if(confirmed) {
@@ -1849,6 +1995,7 @@
             tbody.innerHTML = bodyHTML;
             document.getElementById('block-modal').classList.remove('hidden');
         }
+
         window.toggleHadMasaCell = function(td, day, slot) {
             let span = td.querySelector('span');
             let isCurrentlyBlocked = span.classList.contains('text-rose-600');
@@ -1863,6 +2010,7 @@
                 span.innerText = "✕";
             }
         }
+
         window.clearAllHadMasa = function() {
             document.querySelectorAll('#had-masa-tbody td').forEach(td => {
                 td.className = "border p-2 text-center cursor-pointer transition bg-white";
@@ -1956,6 +2104,7 @@
             });
             renderLockSlotTable();
         }
+
         window.renderLockSlotTable = function() {
             let selectClass = document.getElementById('lock-select-class');
             let className = selectClass ? selectClass.value : '';
@@ -2007,6 +2156,7 @@
                 tbody.innerHTML += `<tr>${trHTML}</tr>`;
             });
         }
+
         window.updateLockedSlot = function(className, day, slotLabel, selectEl, type) {
             let tr = selectEl.closest('tr');
             let subCell = selectEl.closest('td');
@@ -2034,6 +2184,7 @@
             }
             saveDatabaseToCloud();
         }
+
         window.renderAgihanWaktuTable = function() {
             let selectTing = document.getElementById('agihan-select-tingkatan');
             let tingkatan = selectTing ? selectTing.value : 'TINGKATAN 1';
@@ -2072,6 +2223,7 @@
             });
             calculateAgihanTotals();
         }
+
         window.calculateAgihanTotals = function() {
             let rows = document.querySelectorAll('#agihan-waktu-tbody tr');
             let sumSingleMasa = 0, sumDoubleMasa = 0, sumTripleMasa = 0, sumTotal = 0;
@@ -2106,6 +2258,7 @@
                 `;
             }
         }
+
         window.saveAgihanWaktuData = function() {
             let selectTing = document.getElementById('agihan-select-tingkatan');
             let tingkatan = selectTing ? selectTing.value : 'TINGKATAN 1';
@@ -2126,6 +2279,7 @@
             saveDatabaseToCloud();
             showCustomAlert(`Tetapan agihan waktu bagi ${tingkatan} berjaya disimpan!`);
         }
+
         function renderDataTable() {
             const tbody = document.getElementById('data-table-body');
             const totalCountEl = document.getElementById('total-stat-count');
@@ -2234,6 +2388,7 @@
                 `;
             });
         }
+
         window.deleteMasterTeacher = function(teacherName, teacherCode) {
             showCustomConfirm(`Adakah anda pasti ingin memadam guru "${teacherName}"? Tindakan ini akan memadamkan guru ini sepenuhnya serta semua agihan subjek/kelas matriks beliau secara automatik.`, function(confirmed) {
                 if(confirmed) {
@@ -2250,6 +2405,7 @@
                 }
             });
         };
+
         window.openAddModal = function() {
             let tabDisplayName = currentSubTab.toUpperCase().replace('_', ' ');
             if(currentSubTab === 'subjek') tabDisplayName = 'MATA PELAJARAN';
@@ -2328,6 +2484,7 @@
             let dataModalEl = document.getElementById('data-modal');
             if(dataModalEl) dataModalEl.classList.remove('hidden');
         }
+
         function buildMatrixTable(selectedDataMap = {}) {
             let thead = document.getElementById('matrix-thead');
             let tbody = document.getElementById('matrix-tbody');
@@ -2363,6 +2520,7 @@
             });
             tbody.innerHTML = bodyHTML;
         }
+
         window.toggleMasaInput = function(cb) {
             let tr = cb.closest('td');
             let masaInput = tr.querySelector('input[name="matrix-masa"]');
@@ -2372,6 +2530,7 @@
                 masaInput.classList.add('hidden');
             }
         }
+
         window.onTeacherDropdownChange = function() {
             let select = document.getElementById('modal-select-name');
             if(!select) return;
@@ -2473,6 +2632,7 @@
             renderDataTable();
             showCustomAlert('Rekod berjaya disimpan ke pangkalan data awan!');
         }
+
         window.editRecord = function(id) {
             let item = databaseRecords[currentSubTab].find(x => x.id == id);
             if(!item) return;
@@ -2499,6 +2659,7 @@
                 }
             }
         }
+
         window.editRecordByName = function(teacherName) {
             switchDataSubTab('guru');
             let item = (databaseRecords['guru'] || []).find(x => x.name.trim().toLowerCase() === teacherName.trim().toLowerCase());
@@ -2513,6 +2674,7 @@
                 }
             }
         }
+
         window.deleteRecord = function(id) {
             showCustomConfirm('Adakah anda pasti ingin memadam rekod ini?', function(confirmed) {
                 if(confirmed) {
@@ -2522,6 +2684,7 @@
                 }
             });
         }
+
         window.filterTableData = function() {
             let searchInput = document.getElementById('search-data-input');
             let q = searchInput ? searchInput.value.toLowerCase() : '';
@@ -2543,6 +2706,7 @@
                 container.innerHTML += `<div class="p-3 bg-slate-50 border rounded-xl text-center space-y-1"><label class="text-xs font-bold text-slate-700">${day}</label><input type="number" id="daily-slot-${day}" value="${val}" class="w-full text-center font-bold px-2 py-1.5 border rounded-lg text-sm bg-white"></div>`;
             });
         }
+
         window.saveDailySlotsConfig = function() {
             const startDayEl = document.getElementById('select-start-day');
             const startDay = startDayEl ? startDayEl.value : 'Ahad';
@@ -2555,6 +2719,7 @@
             localStorage.setItem('school_daily_slots_config', JSON.stringify(dailyConfig));
             showCustomAlert('Tetapan harian berjaya disimpan!');
         }
+
         function renderTimeSlotsTable() {
             const tbody = document.getElementById('time-slots-table-body');
             if(!tbody) return;
@@ -2574,6 +2739,7 @@
                 `;
             });
         }
+
         window.updateSlot = (i, f, v) => { timeSlotsData[i][f] = v; saveDatabaseToCloud(); }
         window.addNewTimeRow = () => { timeSlotsData.push({ id: Date.now(), label: String(timeSlotsData.length+1), start: "08:00", end: "08:35", type: "Waktu belajar" }); saveDatabaseToCloud(); renderTimeSlotsTable(); }
         window.deleteSlot = (i) => { timeSlotsData.splice(i, 1); saveDatabaseToCloud(); renderTimeSlotsTable(); }
@@ -2614,10 +2780,12 @@
             closeAutoTimeModal();
             showCustomAlert('Jadual masa berjaya dijana dan disimpan!');
         }
+
         function formatMins(mins) {
             let h = Math.floor(mins/60)%24, m = mins%60;
             return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
         }
+
         // ==========================================
         // FUNGSI KHAS MODUL JADUAL GURU GANTI (RELIEF)
         // ==========================================
@@ -2626,6 +2794,7 @@
             document.getElementById('relief-harian-subview').classList.add('hidden');
             document.getElementById('relief-laporan-subview').classList.add('hidden');
         };
+
         window.openReliefSubView = function(viewType) {
             document.getElementById('relief-landing-view').classList.add('hidden');
             if(viewType === 'harian') {
@@ -2638,6 +2807,7 @@
                 initReliefLaporanView();
             }
         };
+
         function initReliefHarianView() {
             let picker = document.getElementById('relief-date-picker');
             if(picker && !picker.value) {
@@ -2646,6 +2816,7 @@
             }
             onReliefDateChange();
         }
+
         window.onReliefDateChange = function() {
             let picker = document.getElementById('relief-date-picker');
             let dateStr = picker ? picker.value : '';
@@ -2660,6 +2831,7 @@
             renderExemptTeachersList();
             renderReliefAssignmentsTable();
         };
+
         function renderAbsentTeachersList() {
             let container = document.getElementById('absent-teachers-list');
             if(!container) return;
@@ -2693,6 +2865,7 @@
                 `;
             });
         }
+
         function renderExemptTeachersList() {
             let container = document.getElementById('exempt-teachers-list');
             if(!container) return;
@@ -2707,7 +2880,6 @@
                 let cardClass = isChecked 
                     ? 'bg-slate-800 text-white font-bold border-slate-700 shadow-sm' 
                     : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border-slate-200';
-
                 container.innerHTML += `
                     <div class="flex items-center justify-between p-2.5 rounded-xl border transition ${cardClass} cursor-pointer" onclick="toggleExemptTeacher('${g.name}')">
                         <div class="flex items-center space-x-2">
@@ -2726,6 +2898,7 @@
                 `;
             });
         }
+
         window.toggleAbsentTeacher = function(teacherName) {
             if(reliefAbsentTeachers.includes(teacherName)) {
                 reliefAbsentTeachers = reliefAbsentTeachers.filter(t => t !== teacherName);
@@ -2735,6 +2908,7 @@
             renderAbsentTeachersList();
             renderReliefAssignmentsTable();
         };
+
         window.toggleExemptTeacher = function(teacherName) {
             if(reliefExemptTeachers.includes(teacherName)) {
                 reliefExemptTeachers = reliefExemptTeachers.filter(t => t !== teacherName);
@@ -2745,18 +2919,21 @@
             renderExemptTeachersList();
             renderReliefAssignmentsTable();
         };
+
         window.filterAbsentTeachers = function() {
             let q = document.getElementById('search-absent-teacher').value.toLowerCase();
             document.querySelectorAll('#absent-teachers-list > div').forEach(el => {
                 el.style.display = el.innerText.toLowerCase().includes(q) ? 'flex' : 'none';
             });
         };
+
         window.filterExemptTeachers = function() {
             let q = document.getElementById('search-exempt-teacher').value.toLowerCase();
             document.querySelectorAll('#exempt-teachers-list > div').forEach(el => {
                 el.style.display = el.innerText.toLowerCase().includes(q) ? 'flex' : 'none';
             });
         };
+
         function renderReliefAssignmentsTable() {
             let tbody = document.getElementById('relief-assignments-tbody');
             let picker = document.getElementById('relief-date-picker');
@@ -2822,6 +2999,7 @@
                 `;
             });
         }
+
         function getFreeTeachersForSlot(dayName, slotLabel) {
             let allGuru = databaseRecords.senarai_guru || [];
             let busyTeacherNames = [];
@@ -2832,6 +3010,7 @@
             }
             return allGuru.filter(g => !busyTeacherNames.includes(g.name) && !reliefAbsentTeachers.includes(g.name));
         }
+
         window.saveReliefAssignments = function() {
             let picker = document.getElementById('relief-date-picker');
             let dateStr = picker ? picker.value : '';
@@ -2869,6 +3048,7 @@
             renderReliefAssignmentsTable();
             showCustomAlert(`Berjaya menyimpan ${savedCount} penugasan guru ganti bagi tarikh ${dateStr}!`);
         };
+
         function initReliefLaporanView() {
             let picker = document.getElementById('relief-date-picker');
             let dateStr = picker ? picker.value : new Date().toISOString().split('T')[0];
@@ -2914,6 +3094,7 @@
                 }
             }
         }
+
         window.onload = () => {
             loadDatabaseFromCloud().then(() => {
                 switchTab('jana');
