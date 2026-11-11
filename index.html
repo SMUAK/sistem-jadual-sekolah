@@ -11,8 +11,8 @@
         body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; color: #0f172a; margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
         @media print {
             body * { visibility: hidden; }
-            #printable-area, #printable-area * { visibility: visible; }
-            #printable-area { position: absolute; left: 0; top: 0; width: 100%; }
+            #printable-master-area, #printable-master-area * { visibility: visible; }
+            #printable-master-area { position: absolute; left: 0; top: 0; width: 100%; }
         }
         .tree-line { border-left: 1px dotted #cbd5e1; margin-left: 1rem; padding-left: 0.75rem; }
         
@@ -390,12 +390,18 @@
                     <button onclick="switchMasterTab('kelas')" id="master-btn-kelas" class="px-4 py-2 rounded-lg text-xs font-bold bg-[#0b1b3d] text-white shadow transition">Jadual Mengikut Kelas</button>
                     <button onclick="switchMasterTab('guru')" id="master-btn-guru" class="px-4 py-2 rounded-lg text-xs font-bold text-slate-700 hover:bg-slate-200 transition">Jadual Mengikut Guru</button>
                 </div>
-                <div class="flex items-center space-x-2">
-                    <label id="master-dropdown-label" class="text-xs font-semibold text-slate-700">Pilih Kelas:</label>
-                    <select id="master-select-target" onchange="renderMasterTimetable()" class="px-3 py-2 border rounded-xl text-xs bg-white font-bold text-[#0b1b3d] min-w-[200px]"></select>
+                <div class="flex items-center space-x-3">
+                    <div class="flex items-center space-x-2">
+                        <label id="master-dropdown-label" class="text-xs font-semibold text-slate-700">Pilih Kelas:</label>
+                        <select id="master-select-target" onchange="renderMasterTimetable()" class="px-3 py-2 border rounded-xl text-xs bg-white font-bold text-[#0b1b3d] min-w-[200px]"></select>
+                    </div>
+                    <!-- Butang Cetak Jadual Baru -->
+                    <button onclick="window.print()" class="bg-[#0b1b3d] hover:bg-[#132d60] text-white px-4 py-2 rounded-xl text-xs font-bold shadow transition flex items-center space-x-2">
+                        <span>🖨️</span><span>Cetak Jadual</span>
+                    </button>
                 </div>
             </div>
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+            <div id="printable-master-area" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
                 <div class="text-center pb-2 border-b">
                     <h3 id="master-table-title" class="text-lg font-bold text-[#0b1b3d]">Papar Jadual Waktu</h3>
                     <p class="text-xs text-slate-500">Paparan penuh jadual mingguan mengikut slot waktu rasmi sekolah</p>
