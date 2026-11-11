@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Jadual Waktu & Relief Sekolah</title>
     <!-- Tailwind CSS CDN -->
-    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
-    <link href="[https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap](https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap)" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; color: #0f172a; margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
         @media print {
             body * { visibility: hidden; }
             #printable-area, #printable-area * { visibility: visible; }
@@ -44,7 +44,6 @@
                 <button onclick="switchTab('tetapan_masa_subjek')" id="nav-btn-tetapan_masa_subjek" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">⚙️ Tetapan Masa Subjek</button>
                 <button onclick="switchTab('jana')" id="nav-btn-jana" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">⚡ Jana Jadual</button>
                 <button onclick="switchTab('jadual_induk')" id="nav-btn-jadual_induk" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">📅 Jadual Induk</button>
-                <!-- Menu Berpusat Jadual Guru Ganti -->
                 <button onclick="switchTab('jadual_guru_ganti')" id="nav-btn-jadual_guru_ganti" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">📋 Jadual Guru Ganti</button>
                 <button onclick="switchTab('tetapan')" id="nav-btn-tetapan" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">Tetapan</button>
             </nav>
@@ -805,8 +804,8 @@
     </div>
     <!-- Skrip Aplikasi Utama -->
     <script type="module">
-        import { initializeApp } from "[https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js](https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js)";
-        import { getFirestore, doc, getDoc, setDoc } from "[https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js](https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js)";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         
         let db = null;
         try {
@@ -2666,7 +2665,6 @@
             }
             sortedGuru.forEach(g => {
                 let isChecked = reliefAbsentTeachers.includes(g.name);
-                // Stail visual mengikut Rujukan Gambar 2 (Guru Tidak Hadir: pill merah, ikon X di kiri, teks putih/jelas)
                 let cardClass = isChecked 
                     ? 'bg-rose-500 text-white font-bold border-rose-600 shadow-sm' 
                     : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border-slate-200';
@@ -2700,7 +2698,6 @@
             }
             sortedGuru.forEach(g => {
                 let isChecked = reliefExemptTeachers.includes(g.name);
-                // Stail visual mengikut Rujukan Gambar 3 (Guru Dikecualikan Ganti: semak centang ✓ di kiri, toggle di kanan, kekal state)
                 let cardClass = isChecked 
                     ? 'bg-slate-800 text-white font-bold border-slate-700 shadow-sm' 
                     : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border-slate-200';
@@ -2738,7 +2735,7 @@
             } else {
                 reliefExemptTeachers.push(teacherName);
             }
-            saveDatabaseToCloud(); // Simpan kekal ke LocalStorage & Firebase secara automatik
+            saveDatabaseToCloud();
             renderExemptTeachersList();
             renderReliefAssignmentsTable();
         };
@@ -2793,7 +2790,6 @@
             affectedSlots.forEach((item, idx) => {
                 let slotKey = `${item.className}_${item.slotLabel}`;
                 let currentAssigned = existingDateData[slotKey] ? existingDateData[slotKey].substituteTeacher : '';
-                // Dapatkan senarai guru bebas dan tapis guru yang dikecualikan
                 let freeTeachers = getFreeTeachersForSlot(dayName, item.slotLabel);
                 let optionsHTML = `<option value="">-- Pilih Guru Ganti --</option>`;
                 freeTeachers.forEach(ft => {
