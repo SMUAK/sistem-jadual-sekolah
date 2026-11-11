@@ -57,15 +57,15 @@ aFz Jadual Waktu & Guru Ganti
 </div>
 </div>
 <nav class="flex space-x-1 sm:space-x-2 mt-3 lg:mt-0 overflow-x-auto items-center">
-<button onclick="switchTab('utama')" id="nav-btn-utama" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">🏠 Utama</button>
-<button onclick="switchTab('data')" id="nav-btn-data" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">📂 Data Asas</button>
-<button onclick="switchTab('waktu')" id="nav-btn-waktu" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">⏱️ Waktu & Rehat</button>
-<button onclick="switchTab('guru_matapelajaran')" id="nav-btn-guru_matapelajaran" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">👨‍🏫 Guru & Mata Pelajaran</button>
-<button onclick="switchTab('tetapan_masa_subjek')" id="nav-btn-tetapan_masa_subjek" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">⚙️ Tetapan Masa Subjek</button>
-<button onclick="switchTab('jana')" id="nav-btn-jana" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">⚡ Jana Jadual</button>
-<button onclick="switchTab('jadual_induk')" id="nav-btn-jadual_induk" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">📅 Jadual Induk</button>
-<button onclick="switchTab('jadual_guru_ganti')" id="nav-btn-jadual_guru_ganti" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">📋 Jadual Guru Ganti</button>
-<button onclick="switchTab('tetapan')" id="nav-btn-tetapan" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">🛠️ Tetapan</button>
+<button type="button" onclick="window.switchTab('utama')" id="nav-btn-utama" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition cursor-pointer">🏠 Utama</button>
+<button type="button" onclick="window.switchTab('data')" id="nav-btn-data" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition cursor-pointer">📂 Data Asas</button>
+<button type="button" onclick="window.switchTab('waktu')" id="nav-btn-waktu" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition cursor-pointer">⏱️ Waktu & Rehat</button>
+<button type="button" onclick="window.switchTab('guru_matapelajaran')" id="nav-btn-guru_matapelajaran" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition cursor-pointer">👨‍🏫 Guru & Mata Pelajaran</button>
+<button type="button" onclick="window.switchTab('tetapan_masa_subjek')" id="nav-btn-tetapan_masa_subjek" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition cursor-pointer">⚙️ Tetapan Masa Subjek</button>
+<button type="button" onclick="window.switchTab('jana')" id="nav-btn-jana" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition cursor-pointer">⚡ Jana Jadual</button>
+<button type="button" onclick="window.switchTab('jadual_induk')" id="nav-btn-jadual_induk" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition cursor-pointer">📅 Jadual Induk</button>
+<button type="button" onclick="window.switchTab('jadual_guru_ganti')" id="nav-btn-jadual_guru_ganti" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition cursor-pointer">📋 Jadual Guru Ganti</button>
+<button type="button" onclick="window.switchTab('tetapan')" id="nav-btn-tetapan" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition cursor-pointer">🛠️ Tetapan</button>
 </nav>
 </div>
 </header>
@@ -99,20 +99,20 @@ aFz Jadual Waktu & Guru Ganti
 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
 <!-- Urutan sub-tab -->
 <div class="flex flex-wrap gap-2 border-b pb-4">
-<button onclick="switchDataSubTab('subjek')" id="subtab-btn-subjek" class="px-4 py-2 rounded-xl text-xs font-bold bg-[#0b1b3d] text-white transition shadow">📖 Mata Pelajaran</button>
-<button onclick="switchDataSubTab('senarai_guru')" id="subtab-btn-senarai_guru" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">📋 Guru</button>
-<button onclick="switchDataSubTab('kelas')" id="subtab-btn-kelas" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">🏫 Kelas</button>
-<button onclick="switchDataSubTab('agihan_waktu')" id="subtab-btn-agihan_waktu" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">⏰ Agihan Waktu Mata Pelajaran</button>
-<button onclick="switchDataSubTab('guru')" id="subtab-btn-guru" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">👨‍🏫 Guru & Mata Pelajaran</button>
-<button onclick="switchDataSubTab('bilik')" id="subtab-btn-bilik" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">🚪 Bilik Khas</button>
-<button onclick="switchDataSubTab('kunci_slot')" id="subtab-btn-kunci_slot" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">🔒 Kunci Slot</button>
+<button type="button" onclick="window.switchDataSubTab('subjek')" id="subtab-btn-subjek" class="px-4 py-2 rounded-xl text-xs font-bold bg-[#0b1b3d] text-white transition shadow cursor-pointer">📖 Mata Pelajaran</button>
+<button type="button" onclick="window.switchDataSubTab('senarai_guru')" id="subtab-btn-senarai_guru" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">📋 Guru</button>
+<button type="button" onclick="window.switchDataSubTab('kelas')" id="subtab-btn-kelas" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">🏫 Kelas</button>
+<button type="button" onclick="window.switchDataSubTab('agihan_waktu')" id="subtab-btn-agihan_waktu" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">⏰ Agihan Waktu Mata Pelajaran</button>
+<button type="button" onclick="window.switchDataSubTab('guru')" id="subtab-btn-guru" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">👨‍🏫 Guru & Mata Pelajaran</button>
+<button type="button" onclick="window.switchDataSubTab('bilik')" id="subtab-btn-bilik" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">🚪 Bilik Khas</button>
+<button type="button" onclick="window.switchDataSubTab('kunci_slot')" id="subtab-btn-kunci_slot" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer">🔒 Kunci Slot</button>
 </div>
 ​<!-- Kandungan Sub-tab: Agihan Waktu Mata Pelajaran -->
 <div id="subtab-content-agihan_waktu" class="hidden space-y-4">
 <div class="flex flex-wrap justify-between items-center bg-slate-50 p-4 rounded-xl border border-slate-200 gap-4">
 <div class="flex items-center space-x-3">
 <span class="font-bold text-[#0b1b3d] text-sm">Pilih Tingkatan:</span>
-<select id="agihan-select-tingkatan" onchange="renderAgihanWaktuTable()" class="px-3 py-2 border rounded-xl bg-white font-bold text-[#0b1b3d] text-xs">
+<select id="agihan-select-tingkatan" onchange="window.renderAgihanWaktuTable()" class="px-3 py-2 border rounded-xl bg-white font-bold text-[#0b1b3d] text-xs">
 <option value="TINGKATAN 1">TINGKATAN 1</option>
 <option value="TINGKATAN 2">TINGKATAN 2</option>
 <option value="TINGKATAN 3">TINGKATAN 3</option>
@@ -120,7 +120,7 @@ aFz Jadual Waktu & Guru Ganti
 <option value="TINGKATAN 5">TINGKATAN 5</option>
 </select>
 </div>
-<button onclick="saveAgihanWaktuData()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow transition">Simpan</button>
+<button type="button" onclick="window.saveAgihanWaktuData()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow transition cursor-pointer">Simpan</button>
 </div>
 <div class="overflow-x-auto">
 <table class="w-full border-collapse border border-slate-300 text-xs text-center bg-white">
@@ -144,7 +144,7 @@ aFz Jadual Waktu & Guru Ganti
 <div class="flex flex-wrap justify-between items-center bg-slate-50 p-4 rounded-xl border border-slate-200 gap-4">
 <div class="flex items-center space-x-3">
 <span class="font-bold text-[#0b1b3d] text-sm">Pilih Kelas untuk Dikunci Slot:</span>
-<select id="lock-select-class" onchange="renderLockSlotTable()" class="px-3 py-2 border rounded-xl bg-white font-bold text-[#0b1b3d] text-xs">
+<select id="lock-select-class" onchange="window.renderLockSlotTable()" class="px-3 py-2 border rounded-xl bg-white font-bold text-[#0b1b3d] text-xs">
 <!-- Dinamik diproses melalui JS -->
 </select>
 </div>
@@ -164,11 +164,11 @@ aFz Jadual Waktu & Guru Ganti
 <!-- Kandungan Sub-tab Standard -->
 <div id="standard-data-section" class="space-y-4">
 <div class="flex flex-wrap justify-between items-center gap-4">
-<button onclick="openAddModal()" class="bg-[#0b1b3d] hover:bg-[#132d60] text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow flex items-center space-x-2 transition">
+<button type="button" onclick="window.openAddModal()" class="bg-[#0b1b3d] hover:bg-[#132d60] text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow flex items-center space-x-2 transition cursor-pointer">
 <span>+ Tambah Rekod Baharu</span>
 </button>
 <div class="flex items-center space-x-2 w-full sm:w-72">
-<input type="text" id="search-data-input" onkeyup="filterTableData()" placeholder="Cari rekod..." class="w-full px-3 py-2 border rounded-xl text-xs bg-slate-50 focus:bg-white">
+<input type="text" id="search-data-input" onkeyup="window.filterTableData()" placeholder="Cari rekod..." class="w-full px-3 py-2 border rounded-xl text-xs bg-slate-50 focus:bg-white">
 </div>
 </div>
 <div class="overflow-x-auto">
@@ -198,7 +198,7 @@ aFz Jadual Waktu & Guru Ganti
 </div>
 <div class="flex items-center space-x-3">
 <label class="text-xs font-semibold text-slate-700">Hari Mula:</label>
-<select id="select-start-day" onchange="updateSchoolDaysOrder()" class="px-3 py-2 border rounded-lg text-xs bg-white font-bold text-[#0b1b3d]">
+<select id="select-start-day" onchange="window.updateSchoolDaysOrder()" class="px-3 py-2 border rounded-lg text-xs bg-white font-bold text-[#0b1b3d]">
 <option value="Ahad" selected>Ahad (Ahad - Khamis)</option>
 <option value="Isnin">Isnin (Isnin - Jumaat)</option>
 </select>
@@ -213,10 +213,10 @@ aFz Jadual Waktu & Guru Ganti
 </div>
 </div>
 <div class="flex space-x-2">
-<button onclick="openAutoTimeModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow flex items-center space-x-2 transition">
+<button type="button" onclick="window.openAutoTimeModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow flex items-center space-x-2 transition cursor-pointer">
 <span>⚡</span><span>Jana Pantas Waktu</span>
 </button>
-<button onclick="addNewTimeRow()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow flex items-center space-x-2 transition">
+<button type="button" onclick="window.addNewTimeRow()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow flex items-center space-x-2 transition cursor-pointer">
 <span>+ Tambah Waktu</span>
 </button>
 </div>
@@ -247,7 +247,7 @@ aFz Jadual Waktu & Guru Ganti
 </div>
 <div id="daily-slots-container" class="grid grid-cols-2 sm:grid-cols-5 gap-4"></div>
 <div class="flex justify-end pt-2">
-<button onclick="saveDailySlotsConfig()" class="bg-[#0b1b3d] hover:bg-[#132d60] text-white px-5 py-2.5 rounded-xl text-xs font-semibold shadow transition">Simpan Tetapan Harian</button>
+<button type="button" onclick="window.saveDailySlotsConfig()" class="bg-[#0b1b3d] hover:bg-[#132d60] text-white px-5 py-2.5 rounded-xl text-xs font-semibold shadow transition cursor-pointer">Simpan Tetapan Harian</button>
 </div>
 </div>
 </section>
@@ -339,10 +339,10 @@ aFz Jadual Waktu & Guru Ganti
 </label>
 </div>
 <div class="pt-3 space-y-2">
-<button onclick="startAutoGeneration()" class="w-full bg-[#0b1b3d] hover:bg-[#132d60] text-white py-3 rounded-xl text-xs font-bold shadow transition flex justify-center items-center space-x-2">
+<button type="button" onclick="window.startAutoGeneration()" class="w-full bg-[#0b1b3d] hover:bg-[#132d60] text-white py-3 rounded-xl text-xs font-bold shadow transition flex justify-center items-center space-x-2 cursor-pointer">
 <span>🚀 MULA JANA JADUAL PINTAR</span>
 </button>
-<button onclick="resetAllSchedules()" class="w-full bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 py-2.5 rounded-xl text-xs font-semibold transition flex justify-center items-center space-x-1">
+<button type="button" onclick="window.resetAllSchedules()" class="w-full bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 py-2.5 rounded-xl text-xs font-semibold transition flex justify-center items-center space-x-1 cursor-pointer">
 <span>🗑️ Reset (Kosongkan Jadual)</span>
 </button>
 </div>
@@ -358,7 +358,7 @@ aFz Jadual Waktu & Guru Ganti
 <p class="text-slate-600">Muat naik fail jadual (format CSV/JSON) untuk memasukkan jadual waktu dengan cepat.</p>
 <label class="block w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-semibold shadow transition text-center cursor-pointer">
 Buka Import Jadual Excel
-<input type="file" id="import-excel-file" accept=".csv, .json" onchange="importExcelOrCsv(event)" class="hidden">
+<input type="file" id="import-excel-file" accept=".csv, .json" onchange="window.importExcelOrCsv(event)" class="hidden">
 </label>
 </div>
 </div>
@@ -370,7 +370,7 @@ Buka Import Jadual Excel
 </div>
 <div class="space-y-3 text-xs">
 <input type="text" id="backup-version-name" placeholder="Nama Versi (Contoh: Draf 1)" class="w-full px-3 py-2 border rounded-xl bg-slate-50">
-<button onclick="saveBackupVersion()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-xl font-semibold shadow transition">Simpan Jadual Semasa</button>
+<button type="button" onclick="window.saveBackupVersion()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-xl font-semibold shadow transition cursor-pointer">Simpan Jadual Semasa</button>
 ​<div id="saved-versions-container" class="space-y-1.5 pt-2 border-t">
 <label class="font-bold text-slate-700 block">Senarai Versi Tersimpan:</label>
 <div id="versions-list-box" class="max-h-36 overflow-y-auto space-y-1 font-medium">
@@ -403,16 +403,16 @@ Buka Import Jadual Excel
 <section id="tab-jadual_induk" class="hidden space-y-6">
 <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex flex-wrap justify-between items-center gap-4">
 <div class="flex bg-slate-100 p-1 rounded-xl">
-<button onclick="switchMasterTab('kelas')" id="master-btn-kelas" class="px-4 py-2 rounded-lg text-xs font-bold bg-[#0b1b3d] text-white shadow transition">Jadual Mengikut Kelas</button>
-<button onclick="switchMasterTab('guru')" id="master-btn-guru" class="px-4 py-2 rounded-lg text-xs font-bold text-slate-700 hover:bg-slate-200 transition">Jadual Mengikut Guru</button>
+<button type="button" onclick="window.switchMasterTab('kelas')" id="master-btn-kelas" class="px-4 py-2 rounded-lg text-xs font-bold bg-[#0b1b3d] text-white shadow transition cursor-pointer">Jadual Mengikut Kelas</button>
+<button type="button" onclick="window.switchMasterTab('guru')" id="master-btn-guru" class="px-4 py-2 rounded-lg text-xs font-bold text-slate-700 hover:bg-slate-200 transition cursor-pointer">Jadual Mengikut Guru</button>
 </div>
 <div class="flex items-center space-x-3">
 <div class="flex items-center space-x-2">
 <label id="master-dropdown-label" class="text-xs font-semibold text-slate-700">Pilih Kelas:</label>
-<select id="master-select-target" onchange="renderMasterTimetable()" class="px-3 py-2 border rounded-xl text-xs bg-white font-bold text-[#0b1b3d] min-w-[200px]"></select>
+<select id="master-select-target" onchange="window.renderMasterTimetable()" class="px-3 py-2 border rounded-xl text-xs bg-white font-bold text-[#0b1b3d] min-w-[200px]"></select>
 </div>
 <!-- Butang Cetak Jadual Baru -->
-<button onclick="window.print()" class="bg-[#0b1b3d] hover:bg-[#132d60] text-white px-4 py-2 rounded-xl text-xs font-bold shadow transition flex items-center space-x-2">
+<button type="button" onclick="window.print()" class="bg-[#0b1b3d] hover:bg-[#132d60] text-white px-4 py-2 rounded-xl text-xs font-bold shadow transition flex items-center space-x-2 cursor-pointer">
 <span>🖨️</span><span>Cetak Jadual</span>
 </button>
 </div>
@@ -448,7 +448,7 @@ Buka Import Jadual Excel
 <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-tr from-emerald-500 to-teal-400 text-white rounded-2xl shadow-md text-3xl mb-1">🪪</div>
 <h3 class="font-bold text-[#0b1b3d] text-base">1. Penetapan Guru Ganti</h3>
 <p class="text-xs text-slate-500">Tetapkan guru tidak hadir, guru dikecualikan, dan pilih penugasan guru ganti harian.</p>
-<button onclick="openReliefSubView('harian')" class="w-full bg-[#0b1b3d] hover:bg-[#132d60] text-white py-3 rounded-xl text-xs font-bold shadow transition flex items-center justify-center space-x-2">
+<button type="button" onclick="window.openReliefSubView('harian')" class="w-full bg-[#0b1b3d] hover:bg-[#132d60] text-white py-3 rounded-xl text-xs font-bold shadow transition flex items-center justify-center space-x-2 cursor-pointer">
 <span>📅</span><span>Guru Ganti (Harian)</span>
 </button>
 </div>
@@ -457,7 +457,7 @@ Buka Import Jadual Excel
 <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-tr from-indigo-500 to-blue-500 text-white rounded-2xl shadow-md text-3xl mb-1">📊</div>
 <h3 class="font-bold text-[#0b1b3d] text-base">2. Laporan Penugasan Relief</h3>
 <p class="text-xs text-slate-500">Lihat ringkasan penugasan harian/mingguan, cetak laporan dan analisis log simpanan.</p>
-<button onclick="openReliefSubView('laporan')" class="w-full bg-[#0b1b3d] hover:bg-[#132d60] text-white py-3 rounded-xl text-xs font-bold shadow transition flex items-center justify-center space-x-2">
+<button type="button" onclick="window.openReliefSubView('laporan')" class="w-full bg-[#0b1b3d] hover:bg-[#132d60] text-white py-3 rounded-xl text-xs font-bold shadow transition flex items-center justify-center space-x-2 cursor-pointer">
 <span>📈</span><span>Laporan (Harian/Mingguan)</span>
 </button>
 </div>
@@ -466,7 +466,7 @@ Buka Import Jadual Excel
 <!-- Sub-View 1: Tetapan Guru Ganti Harian -->
 <div id="relief-harian-subview" class="hidden space-y-6">
 <div class="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200">
-<button onclick="backToReliefLanding()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center space-x-1">
+<button type="button" onclick="window.backToReliefLanding()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center space-x-1 cursor-pointer">
 <span>⬅️ Kembali ke Pusat Pengurusan</span>
 </button>
 <span class="text-xs font-bold text-[#0b1b3d]">Penetapan Relief Harian</span>
@@ -482,7 +482,7 @@ Buka Import Jadual Excel
 </div>
 <div class="space-y-2 text-xs">
 <label class="font-semibold text-slate-700 block">Pilih Tarikh Bertugas:</label>
-<input type="date" id="relief-date-picker" onchange="onReliefDateChange()" class="w-full px-3 py-2 border rounded-xl bg-slate-50 font-bold text-[#0b1b3d]">
+<input type="date" id="relief-date-picker" onchange="window.onReliefDateChange()" class="w-full px-3 py-2 border rounded-xl bg-slate-50 font-bold text-[#0b1b3d]">
 <div class="p-2.5 bg-slate-100 rounded-xl text-xs font-bold text-slate-700 flex justify-between">
 <span>Hari Semasa:</span>
 <span id="relief-current-day" class="text-indigo-900 font-extrabold">-</span>
@@ -496,7 +496,7 @@ Buka Import Jadual Excel
 <h3 class="text-sm font-bold text-[#0b1b3d]">Guru Tidak Hadir (Cuti / Kursus)</h3>
 </div>
 <div class="space-y-3 text-xs">
-<input type="text" id="search-absent-teacher" onkeyup="filterAbsentTeachers()" placeholder="Cari nama guru..." class="w-full px-3 py-2 border rounded-xl bg-slate-50">
+<input type="text" id="search-absent-teacher" onkeyup="window.filterAbsentTeachers()" placeholder="Cari nama guru..." class="w-full px-3 py-2 border rounded-xl bg-slate-50">
 <div id="absent-teachers-list" class="max-h-56 overflow-y-auto space-y-2 pr-1 grid grid-cols-1 gap-2"></div>
 </div>
 </div>
@@ -508,7 +508,7 @@ Buka Import Jadual Excel
 </div>
 <p class="text-[11px] text-slate-500">Pilih guru yang sedia ada di sekolah tetapi tidak patut ditugaskan ganti untuk slot ini (Kekal tersimpan).</p>
 <div class="space-y-3 text-xs">
-<input type="text" id="search-exempt-teacher" onkeyup="filterExemptTeachers()" placeholder="Guru Dikecualikan Carian..." class="w-full px-3 py-2 border rounded-xl bg-slate-50">
+<input type="text" id="search-exempt-teacher" onkeyup="window.filterExemptTeachers()" placeholder="Guru Dikecualikan Carian..." class="w-full px-3 py-2 border rounded-xl bg-slate-50">
 <div id="exempt-teachers-list" class="max-h-56 overflow-y-auto space-y-2 pr-1 grid grid-cols-1 gap-2"></div>
 </div>
 </div>
@@ -523,7 +523,7 @@ Buka Import Jadual Excel
 <p class="text-[11px] text-slate-500">Papar waktu kelas guru tidak hadir dan pilih guru ganti yang bebas.</p>
 </div>
 </div>
-<button onclick="saveReliefAssignments()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-bold shadow transition flex items-center space-x-1">
+<button type="button" onclick="window.saveReliefAssignments()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-bold shadow transition flex items-center space-x-1 cursor-pointer">
 <span>✓</span><span>Sahkan & Simpan Tugasan</span>
 </button>
 </div>
@@ -550,11 +550,11 @@ Buka Import Jadual Excel
 <!-- Sub-View 2: Laporan Relief -->
 <div id="relief-laporan-subview" class="hidden space-y-6">
 <div class="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200">
-<button onclick="backToReliefLanding()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center space-x-1">
+<button type="button" onclick="window.backToReliefLanding()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center space-x-1 cursor-pointer">
 <span>⬅️ Kembali ke Pusat Pengurusan</span>
 </button>
 <div class="flex space-x-2">
-<button onclick="window.print()" class="px-3 py-1.5 bg-slate-800 text-white rounded-lg text-xs font-bold shadow">🖨️ Cetak Laporan</button>
+<button type="button" onclick="window.print()" class="px-3 py-1.5 bg-slate-800 text-white rounded-lg text-xs font-bold shadow cursor-pointer">🖨️ Cetak Laporan</button>
 </div>
 </div>
 <div id="printable-area" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -648,7 +648,7 @@ Buka Import Jadual Excel
 <input type="email" id="setting-school-email" value="smuakhairiahbs@yik.edu.my" class="w-full px-3 py-2 border rounded-xl bg-white font-medium text-slate-800 focus:ring-2 focus:ring-[#0b1b3d] outline-none">
 </div>
 <div class="pt-2">
-<button onclick="saveSchoolInfoSettings()" class="w-full bg-[#0b1b3d] hover:bg-[#132d60] text-white py-2.5 px-4 rounded-xl font-bold text-xs shadow transition">
+<button type="button" onclick="window.saveSchoolInfoSettings()" class="w-full bg-[#0b1b3d] hover:bg-[#132d60] text-white py-2.5 px-4 rounded-xl font-bold text-xs shadow transition cursor-pointer">
 Simpan Maklumat Sekolah
 </button>
 </div>
@@ -668,9 +668,9 @@ Muat naik fail logo sekolah baharu (PNG/JPG). Logo ini akan bertukar secara auto
 <div class="flex flex-col sm:flex-row items-center gap-3 pt-2">
 <label class="w-full sm:w-auto flex-1 bg-sky-600 hover:bg-sky-700 text-white py-2.5 px-4 rounded-xl font-bold text-xs shadow transition text-center cursor-pointer">
 📁 Pilih Fail Logo Baharu
-<input type="file" id="upload-logo-input" accept="image/*" onchange="uploadSchoolLogo(event)" class="hidden">
+<input type="file" id="upload-logo-input" accept="image/*" onchange="window.uploadSchoolLogo(event)" class="hidden">
 </label>
-<button onclick="resetDefaultLogo()" class="w-full sm:w-auto bg-slate-200 hover:bg-slate-300 text-slate-800 py-2.5 px-4 rounded-xl font-bold text-xs shadow transition text-center">
+<button type="button" onclick="window.resetDefaultLogo()" class="w-full sm:w-auto bg-slate-200 hover:bg-slate-300 text-slate-800 py-2.5 px-4 rounded-xl font-bold text-xs shadow transition text-center cursor-pointer">
 Set Asal
 </button>
 </div>
@@ -687,12 +687,12 @@ Set Asal
 Buat salinan data sandaran pendaftaran sekolah atau muat naik semula fail sandaran dengan mudah.
 </p>
 <div class="flex flex-wrap gap-3 pt-2">
-<button onclick="exportJsonData()" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-4 rounded-xl font-bold text-xs shadow transition text-center">
+<button type="button" onclick="window.exportJsonData()" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-4 rounded-xl font-bold text-xs shadow transition text-center cursor-pointer">
 Eksport JSON
 </button>
 <label class="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-800 py-3 px-4 rounded-xl font-bold text-xs shadow transition text-center cursor-pointer">
 Import JSON
-<input type="file" id="import-json-file" accept=".json" onchange="importJsonData(event)" class="hidden">
+<input type="file" id="import-json-file" accept=".json" onchange="window.importJsonData(event)" class="hidden">
 </label>
 </div>
 </div>
@@ -709,24 +709,24 @@ Import JSON
 <input type="text" id="custom-modal-input" class="w-full px-3 py-2 border rounded-xl text-xs bg-slate-50">
 </div>
 <div class="flex justify-end space-x-2 pt-3 border-t">
-<button id="custom-modal-btn-cancel" onclick="closeCustomModal(false)" class="px-4 py-2 border rounded-xl text-xs font-semibold hover:bg-slate-50 transition">Batal</button>
-<button id="custom-modal-btn-ok" onclick="closeCustomModal(true)" class="px-5 py-2 bg-[#0b1b3d] hover:bg-[#132d60] text-white rounded-xl text-xs font-semibold shadow transition">Teruskan</button>
+<button type="button" id="custom-modal-btn-cancel" onclick="window.closeCustomModal(false)" class="px-4 py-2 border rounded-xl text-xs font-semibold hover:bg-slate-50 transition cursor-pointer">Batal</button>
+<button type="button" id="custom-modal-btn-ok" onclick="window.closeCustomModal(true)" class="px-5 py-2 bg-[#0b1b3d] hover:bg-[#132d60] text-white rounded-xl text-xs font-semibold shadow transition cursor-pointer">Teruskan</button>
 </div>
 </div>
 </div>
 <!-- MENU KLIK KANAN KUSTOM (CONTEXT MENU) UNTUK MATRIKS -->
 <div id="custom-context-menu" class="fixed hidden bg-white shadow-xl border border-slate-200 rounded-xl py-1.5 z-50 min-w-[150px] text-xs font-medium">
-<button onclick="handleContextAction('tukar')" class="w-full text-left px-4 py-2 hover:bg-slate-100 flex items-center space-x-2 text-slate-700">
+<button type="button" onclick="window.handleContextAction('tukar')" class="w-full text-left px-4 py-2 hover:bg-slate-100 flex items-center space-x-2 text-slate-700 cursor-pointer">
 <span>✏️</span><span>Tukar</span>
 </button>
-<button onclick="handleContextAction('salin')" class="w-full text-left px-4 py-2 hover:bg-slate-100 flex items-center space-x-2 text-slate-700">
+<button type="button" onclick="window.handleContextAction('salin')" class="w-full text-left px-4 py-2 hover:bg-slate-100 flex items-center space-x-2 text-slate-700 cursor-pointer">
 <span>📋</span><span>Salin</span>
 </button>
-<button onclick="handleContextAction('tampal')" class="w-full text-left px-4 py-2 hover:bg-slate-100 flex items-center space-x-2 text-slate-700">
+<button type="button" onclick="window.handleContextAction('tampal')" class="w-full text-left px-4 py-2 hover:bg-slate-100 flex items-center space-x-2 text-slate-700 cursor-pointer">
 <span>📑</span><span>Tampal</span>
 </button>
 <div class="border-t my-1"></div>
-<button onclick="handleContextAction('padam')" class="w-full text-left px-4 py-2 hover:bg-rose-50 flex items-center space-x-2 text-rose-600 font-semibold">
+<button type="button" onclick="window.handleContextAction('padam')" class="w-full text-left px-4 py-2 hover:bg-rose-50 flex items-center space-x-2 text-rose-600 font-semibold cursor-pointer">
 <span>❌</span><span>Padam</span>
 </button>
 </div>
@@ -744,7 +744,7 @@ Import JSON
 </div>
 </div>
 <div class="flex justify-end pt-2">
-<button onclick="cancelGeneration()" class="px-4 py-2 border rounded-xl text-xs font-semibold hover:bg-slate-50 transition">Batal</button>
+<button type="button" onclick="window.cancelGeneration()" class="px-4 py-2 border rounded-xl text-xs font-semibold hover:bg-slate-50 transition cursor-pointer">Batal</button>
 </div>
 </div>
 </div>
@@ -753,7 +753,7 @@ Import JSON
 <div class="bg-white w-full max-w-5xl p-6 rounded-2xl shadow-2xl border space-y-5 max-h-[95vh] overflow-y-auto">
 <div class="flex justify-between items-center border-b pb-3">
 <h3 class="text-base font-bold text-[#0b1b3d]">Menghadagang jadual</h3>
-<button onclick="closeBlockModal()" class="w-8 h-8 rounded-full bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-sm flex items-center justify-center shadow-md transition transform active:scale-95" style="box-shadow: 0 4px 6px -1px rgba(225, 29, 72, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.2);">✕</button>
+<button type="button" onclick="window.closeBlockModal()" class="w-8 h-8 rounded-full bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-sm flex items-center justify-center shadow-md transition transform active:scale-95 cursor-pointer" style="box-shadow: 0 4px 6px -1px rgba(225, 29, 72, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.2);">✕</button>
 </div>
 <input type="hidden" id="block-edit-id" value="">
 <div class="space-y-4 text-xs">
@@ -781,10 +781,10 @@ Import JSON
 </div>
 <div class="flex justify-between items-center pt-3 border-t">
 <div class="flex space-x-2">
-<button onclick="clearAllHadMasa()" class="px-4 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-xl text-xs font-semibold transition">Padam</button>
-<button onclick="saveBlockRecord()" class="px-5 py-2 bg-[#0b1b3d] hover:bg-[#132d60] text-white rounded-xl text-xs font-semibold shadow transition">Simpan</button>
+<button type="button" onclick="window.clearAllHadMasa()" class="px-4 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-xl text-xs font-semibold transition cursor-pointer">Padam</button>
+<button type="button" onclick="window.saveBlockRecord()" class="px-5 py-2 bg-[#0b1b3d] hover:bg-[#132d60] text-white rounded-xl text-xs font-semibold shadow transition cursor-pointer">Simpan</button>
 </div>
-<button onclick="closeBlockModal()" class="px-5 py-2 border rounded-xl text-xs font-semibold hover:bg-slate-50 transition">Tutup</button>
+<button type="button" onclick="window.closeBlockModal()" class="px-5 py-2 border rounded-xl text-xs font-semibold hover:bg-slate-50 transition cursor-pointer">Tutup</button>
 </div>
 </div>
 </div>
@@ -793,7 +793,7 @@ Import JSON
 <div class="bg-white w-full max-w-3xl p-6 rounded-2xl shadow-2xl border space-y-5 max-h-[90vh] overflow-y-auto">
 <div class="flex justify-between items-center border-b pb-3">
 <h3 id="modal-title" class="text-base font-bold text-[#0b1b3d]">Tambah Rekod</h3>
-<button onclick="closeDataModal()" class="w-8 h-8 rounded-full bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-sm flex items-center justify-center shadow-md transition transform active:scale-95" style="box-shadow: 0 4px 6px -1px rgba(225, 29, 72, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.2);">✕</button>
+<button type="button" onclick="window.closeDataModal()" class="w-8 h-8 rounded-full bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-sm flex items-center justify-center shadow-md transition transform active:scale-95 cursor-pointer" style="box-shadow: 0 4px 6px -1px rgba(225, 29, 72, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.2);">✕</button>
 </div>
 <input type="hidden" id="modal-edit-id" value="">
 <div class="space-y-4 text-xs">
@@ -801,7 +801,7 @@ Import JSON
 <div>
 <label id="label-input-name" class="font-semibold text-slate-700 block mb-1">Nama / Maklumat Utama</label>
 <input type="text" id="modal-input-name" placeholder="Masukkan nama..." class="w-full px-3 py-2 border rounded-lg bg-slate-50 font-medium">
-<select id="modal-select-name" onchange="onTeacherDropdownChange()" class="w-full px-3 py-2 border rounded-lg bg-slate-50 font-medium hidden">
+<select id="modal-select-name" onchange="window.onTeacherDropdownChange()" class="w-full px-3 py-2 border rounded-lg bg-slate-50 font-medium hidden">
 <option value="">-- Sila Pilih Guru --</option>
 </select>
 </div>
@@ -836,8 +836,8 @@ Import JSON
 </div>
 </div>
 <div class="flex justify-end space-x-2 pt-3 border-t">
-<button onclick="closeDataModal()" class="px-4 py-2 border rounded-xl text-xs font-semibold">Batal</button>
-<button onclick="saveModalData()" class="px-5 py-2 bg-[#0b1b3d] text-white rounded-xl text-xs font-semibold shadow">Simpan Rekod</button>
+<button type="button" onclick="window.closeDataModal()" class="px-4 py-2 border rounded-xl text-xs font-semibold cursor-pointer">Batal</button>
+<button type="button" onclick="window.saveModalData()" class="px-5 py-2 bg-[#0b1b3d] text-white rounded-xl text-xs font-semibold shadow cursor-pointer">Simpan Rekod</button>
 </div>
 </div>
 </div>
@@ -846,7 +846,7 @@ Import JSON
 <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-2xl border space-y-5">
 <div class="flex justify-between items-center border-b pb-3">
 <h3 class="text-base font-bold text-[#0b1b3d]">Jana Pantas Waktu</h3>
-<button onclick="closeAutoTimeModal()" class="w-8 h-8 rounded-full bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-sm flex items-center justify-center shadow-md transition transform active:scale-95" style="box-shadow: 0 4px 6px -1px rgba(225, 29, 72, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.2);">✕</button>
+<button type="button" onclick="window.closeAutoTimeModal()" class="w-8 h-8 rounded-full bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-sm flex items-center justify-center shadow-md transition transform active:scale-95 cursor-pointer" style="box-shadow: 0 4px 6px -1px rgba(225, 29, 72, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.2);">✕</button>
 </div>
 <div class="space-y-4 text-xs">
 <div>
@@ -871,8 +871,8 @@ Import JSON
 </div>
 </div>
 <div class="flex justify-end space-x-2 pt-3 border-t">
-<button onclick="closeAutoTimeModal()" class="px-4 py-2 border rounded-xl text-xs font-semibold text-slate-700">Batal</button>
-<button onclick="generateAutoTimes()" class="px-5 py-2 bg-[#0b1b3d] text-white rounded-xl text-xs font-semibold shadow">Jana</button>
+<button type="button" onclick="window.closeAutoTimeModal()" class="px-4 py-2 border rounded-xl text-xs font-semibold text-slate-700 cursor-pointer">Batal</button>
+<button type="button" onclick="window.generateAutoTimes()" class="px-5 py-2 bg-[#0b1b3d] text-white rounded-xl text-xs font-semibold shadow cursor-pointer">Jana</button>
 </div>
 </div>
 </div>
@@ -1291,7 +1291,7 @@ return;
 }
 box.innerHTML = '';
 savedTimetableVersions.forEach((ver, index) => {
-box.innerHTML += <div class="flex items-center justify-between bg-slate-50 border p-2 rounded-lg text-xs"> <div> <div class="font-bold text-[#0b1b3d]">${ver.name}</div> <div class="text-[10px] text-slate-500">${ver.timestamp}</div> </div> <div class="flex space-x-1"> <button onclick="restoreBackupVersion(${ver.id})" class="px-2 py-1 bg-sky-600 hover:bg-sky-700 text-white rounded font-bold text-[10px]" title="Muat semula versi ini">Pulih</button> <button onclick="deleteBackupVersion(${ver.id})" class="px-2 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded font-bold text-[10px]" title="Padam versi">Padam</button> </div> </div>;
+box.innerHTML += <div class="flex items-center justify-between bg-slate-50 border p-2 rounded-lg text-xs"> <div> <div class="font-bold text-[#0b1b3d]">${ver.name}</div> <div class="text-[10px] text-slate-500">${ver.timestamp}</div> </div> <div class="flex space-x-1"> <button type="button" onclick="window.restoreBackupVersion(${ver.id})" class="px-2 py-1 bg-sky-600 hover:bg-sky-700 text-white rounded font-bold text-[10px] cursor-pointer" title="Muat semula versi ini">Pulih</button> <button type="button" onclick="window.deleteBackupVersion(${ver.id})" class="px-2 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded font-bold text-[10px] cursor-pointer" title="Padam versi">Padam</button> </div> </div>;
 });
 }
 window.restoreBackupVersion = function(id) {
@@ -1453,7 +1453,7 @@ if(!displayTeacherName && isCellActive && selectedActiveSubItem.teacher) {
 let foundG = (databaseRecords.senarai_guru || []).find(g => g.name.toLowerCase() === selectedActiveSubItem.teacher.toLowerCase());
 displayTeacherName = foundG ? foundG.code : selectedActiveSubItem.teacher;
 }
-bodyHTML += <td class="border border-slate-300 p-1.5 text-center relative cursor-pointer transition ${bgCellClass}" oncontextmenu="onMatrixCellContextMenu(event, '${cls.name}', '${s.code}')" onclick="onMatrixCellClick(event, '${cls.name}', '${s.code}', '${assignedTeacher}')"> <div class="flex items-center justify-center space-x-0.5 font-medium"> ${displayTeacherName ?<span class="text-[11px] font-bold">${displayTeacherName}</span>: '<span class="text-slate-300 text-[10px]">-</span>'} </div> </td>;
+bodyHTML += <td class="border border-slate-300 p-1.5 text-center relative cursor-pointer transition ${bgCellClass}" oncontextmenu="window.onMatrixCellContextMenu(event, '${cls.name}', '${s.code}')" onclick="window.onMatrixCellClick(event, '${cls.name}', '${s.code}', '${assignedTeacher}')"> <div class="flex items-center justify-center space-x-0.5 font-medium"> ${displayTeacherName ?<span class="text-[11px] font-bold">${displayTeacherName}</span>: '<span class="text-slate-300 text-[10px]">-</span>'} </div> </td>;
 });
 bodyHTML += </tr>;
 });
@@ -1553,12 +1553,12 @@ selectedActiveSubItem.subjekCode.toLowerCase() === sCode.toLowerCase();
 let itemClass = isSubSelected
 ? 'bg-[#fef08a] text-slate-950 font-bold px-1.5 py-0.5 rounded border border-dashed border-amber-600 shadow-sm'
 : 'text-slate-700 hover:bg-slate-200/60 px-1 py-0.5 rounded';
-subDetailsHTML += <div class="tree-line my-0.5"> <span onclick="selectSubTreeItem('${sg.name}', '${cName}', '${sCode}')" class="cursor-pointer inline-block ${itemClass}"> .. ${sNameOrCode}-${cName}[${masa}] </span> </div>;
+subDetailsHTML += <div class="tree-line my-0.5"> <span onclick="window.selectSubTreeItem('${sg.name}', '${cName}', '${sCode}')" class="cursor-pointer inline-block ${itemClass}"> .. ${sNameOrCode}-${cName}[${masa}] </span> </div>;
 });
 }
 });
 }
-container.innerHTML += <div class="tree-node mb-1"> <div class="font-bold text-[#0b1b3d] flex items-center space-x-1 cursor-pointer select-none"> <span onclick="toggleTeacherExpand('${sg.name}')" class="px-1 bg-slate-200 hover:bg-slate-300 rounded text-slate-700 text-xs font-mono"> [${isExpanded ? '-' : '+'}] </span> <span onclick="toggleTeacherExpand('${sg.name}')" class="hover:text-emerald-700"> ${sg.name.toUpperCase()}[${totalMasa}] </span> </div> <div class="${isExpanded ? 'block' : 'hidden'} tree-children pl-2"> ${subDetailsHTML || '<div class="text-[10px] text-slate-400 pl-4 border-l my-0.5">.. Tiada Subjek</div>'} </div> </div>;
+container.innerHTML += <div class="tree-node mb-1"> <div class="font-bold text-[#0b1b3d] flex items-center space-x-1 cursor-pointer select-none"> <span onclick="window.toggleTeacherExpand('${sg.name}')" class="px-1 bg-slate-200 hover:bg-slate-300 rounded text-slate-700 text-xs font-mono"> [${isExpanded ? '-' : '+'}] </span> <span onclick="window.toggleTeacherExpand('${sg.name}')" class="hover:text-emerald-700"> ${sg.name.toUpperCase()}[${totalMasa}] </span> </div> <div class="${isExpanded ? 'block' : 'hidden'} tree-children pl-2"> ${subDetailsHTML || '<div class="text-[10px] text-slate-400 pl-4 border-l my-0.5">.. Tiada Subjek</div>'} </div> </div>;
 });
 }
 window.toggleTeacherExpand = function(teacherName) {
@@ -1618,12 +1618,12 @@ let btnKelas = document.getElementById('master-btn-kelas');
 let btnGuru = document.getElementById('master-btn-guru');
 let label = document.getElementById('master-dropdown-label');
 if(mode === 'kelas') {
-btnKelas.className = "px-4 py-2 rounded-lg text-xs font-bold bg-[#0b1b3d] text-white shadow transition";
-btnGuru.className = "px-4 py-2 rounded-lg text-xs font-bold text-slate-700 hover:bg-slate-200 transition";
+btnKelas.className = "px-4 py-2 rounded-lg text-xs font-bold bg-[#0b1b3d] text-white shadow transition cursor-pointer";
+btnGuru.className = "px-4 py-2 rounded-lg text-xs font-bold text-slate-700 hover:bg-slate-200 transition cursor-pointer";
 if(label) label.innerText = "Pilih Kelas:";
 } else {
-btnGuru.className = "px-4 py-2 rounded-lg text-xs font-bold bg-[#0b1b3d] text-white shadow transition";
-btnKelas.className = "px-4 py-2 rounded-lg text-xs font-bold text-slate-700 hover:bg-slate-200 transition";
+btnGuru.className = "px-4 py-2 rounded-lg text-xs font-bold bg-[#0b1b3d] text-white shadow transition cursor-pointer";
+btnKelas.className = "px-4 py-2 rounded-lg text-xs font-bold text-slate-700 hover:bg-slate-200 transition cursor-pointer";
 if(label) label.innerText = "Pilih Guru:";
 }
 populateMasterDropdown();
@@ -1766,7 +1766,7 @@ filledCount++;
 });
 }
 let percent = (hasBasicData && totalSlotsCount > 0) ? Math.round((filledCount / totalSlotsCount) * 100) : 0;
-​tbody.innerHTML += <tr class="border-b border-slate-200 hover:bg-slate-50 transition"> <td class="border border-slate-300 p-2.5 text-left pl-4 font-bold text-[#0b1b3d]">${k.name}</td> <td class="border border-slate-300 p-2.5"> <div class="space-y-1"> <div class="flex justify-between text-[11px] font-semibold text-slate-600"> <span>${percent}%</span> <span>${hasBasicData ? filledCount : 0} / ${totalSlotsCount} Slot</span> </div> <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden"> <div class="bg-emerald-600 h-2 rounded-full transition-all duration-300" style="width: ${percent}%;"></div> </div> </div> </td> <td class="border border-slate-300 p-2.5 text-center"> <div class="flex justify-center space-x-1.5"> <button onclick="janaSingleClass('${k.name}')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg shadow text-[11px] font-bold">Jana Kelas</button> <button onclick="switchTab('jadual_induk'); currentMasterMode='kelas'; populateMasterDropdown(); document.getElementById('master-select-target').value='${k.name}'; renderMasterTimetable();" class="px-2.5 py-1 bg-sky-600 hover:bg-sky-700 text-white rounded-lg shadow text-[11px] font-bold">Lihat</button> </div> </td> </tr>;
+​tbody.innerHTML += <tr class="border-b border-slate-200 hover:bg-slate-50 transition"> <td class="border border-slate-300 p-2.5 text-left pl-4 font-bold text-[#0b1b3d]">${k.name}</td> <td class="border border-slate-300 p-2.5"> <div class="space-y-1"> <div class="flex justify-between text-[11px] font-semibold text-slate-600"> <span>${percent}%</span> <span>${hasBasicData ? filledCount : 0} / ${totalSlotsCount} Slot</span> </div> <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden"> <div class="bg-emerald-600 h-2 rounded-full transition-all duration-300" style="width: ${percent}%;"></div> </div> </div> </td> <td class="border border-slate-300 p-2.5 text-center"> <div class="flex justify-center space-x-1.5"> <button type="button" onclick="window.janaSingleClass('${k.name}')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg shadow text-[11px] font-bold cursor-pointer">Jana Kelas</button> <button type="button" onclick="window.switchTab('jadual_induk'); window.currentMasterMode='kelas'; window.populateMasterDropdown(); document.getElementById('master-select-target').value='${k.name}'; window.renderMasterTimetable();" class="px-2.5 py-1 bg-sky-600 hover:bg-sky-700 text-white rounded-lg shadow text-[11px] font-bold cursor-pointer">Lihat</button> </div> </td> </tr>;
 });
 }
 window.startAutoGeneration = function() {
@@ -1912,7 +1912,7 @@ learningSlots.forEach((slot, idx) => {
 let slotName = Waktu ${idx + 1};
 let isBlocked = existingData && existingData.blockedList && existingData.blockedList.some(b => b.day === dayFull && b.slot === slotName);
 let cellBg = isBlocked ? 'bg-rose-50' : 'bg-white';
-bodyHTML += <td class="border p-2 text-center cursor-pointer transition ${cellBg}" onclick="toggleHadMasaCell(this, '${dayFull}', '${slotName}')"> <div class="flex items-center justify-center h-8"> ${isBlocked ? '<span class="text-rose-600 font-extrabold text-lg select-none" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.15);">✕</span>' : '<span class="text-slate-200 text-xs">·</span>'} </div> </td>;
+bodyHTML += <td class="border p-2 text-center cursor-pointer transition ${cellBg}" onclick="window.toggleHadMasaCell(this, '${dayFull}', '${slotName}')"> <div class="flex items-center justify-center h-8"> ${isBlocked ? '<span class="text-rose-600 font-extrabold text-lg select-none" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.15);">✕</span>' : '<span class="text-slate-200 text-xs">·</span>'} </div> </td>;
 });
 bodyHTML += </tr>;
 });
@@ -1983,7 +1983,7 @@ showCustomAlert('Tetapan had masa guru berjaya disimpan!');
 currentSubTab = subTab;
 ['subjek', 'senarai_guru', 'kelas', 'agihan_waktu', 'guru', 'bilik', 'kunci_slot'].forEach(t => {
 let btn = document.getElementById(subtab-btn-${t});
-if(btn) btn.className = (t === subTab) ? "px-4 py-2 rounded-xl text-xs font-bold bg-[#0b1b3d] text-white transition shadow" : "px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition";
+if(btn) btn.className = (t === subTab) ? "px-4 py-2 rounded-xl text-xs font-bold bg-[#0b1b3d] text-white transition shadow cursor-pointer" : "px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition cursor-pointer";
 });
 ​let agihanSec = document.getElementById('subtab-content-agihan_waktu');
 let kunciSlotSec = document.getElementById('subtab-content-kunci_slot');
@@ -2056,7 +2056,7 @@ guruList.forEach(g => {
 let isSel = g.name === selectedTeach ? 'selected' : '';
 teachOptions += <option value="${g.name}" ${isSel}>${g.name}</option>;
 });
-trHTML += <td class="border border-slate-300 p-1.5 bg-white space-y-1"> <select onchange="updateLockedSlot('${className}', '${day}', '${slot.label}', this, 'sub')" class="w-full px-1 py-1 border rounded text-[11px] font-bold bg-slate-50"> ${subOptions} </select> <select onchange="updateLockedSlot('${className}', '${day}', '${slot.label}', this, 'teach')" class="w-full px-1 py-1 border rounded text-[10px] bg-slate-50"> ${teachOptions} </select> </td>;
+trHTML += <td class="border border-slate-300 p-1.5 bg-white space-y-1"> <select onchange="window.updateLockedSlot('${className}', '${day}', '${slot.label}', this, 'sub')" class="w-full px-1 py-1 border rounded text-[11px] font-bold bg-slate-50"> ${subOptions} </select> <select onchange="window.updateLockedSlot('${className}', '${day}', '${slot.label}', this, 'teach')" class="w-full px-1 py-1 border rounded text-[10px] bg-slate-50"> ${teachOptions} </select> </td>;
 });
 tbody.innerHTML += <tr>${trHTML}</tr>;
 });
@@ -2070,16 +2070,13 @@ let subCode = subSelect.value;
 let teachName = teachSelect.value;
 ​if(!lockedSlotsData[className]) lockedSlotsData[className] = {};
 if(!lockedSlotsData[className][day]) lockedSlotsData[className][day] = {};
-​// Pemadaman Data Dua Hala: Jika pilihan subjek dikosongkan (kosong),
-// padam data dari lockedSlotsData serta-merta dan kosongkan/ubah petak pada Jadual Induk (generatedTimetableData).
-if(!subCode) {
+​if(!subCode) {
 if(lockedSlotsData[className][day]) {
 delete lockedSlotsData[className][day][slotLabel];
 if(Object.keys(lockedSlotsData[className][day]).length === 0) delete lockedSlotsData[className][day];
 }
 if(Object.keys(lockedSlotsData[className]).length === 0) delete lockedSlotsData[className];
-​// Padam serta-merta pada Jadual Induk (generatedTimetableData)
-if(generatedTimetableData[className] && generatedTimetableData[className][day]) {
+​if(generatedTimetableData[className] && generatedTimetableData[className][day]) {
 delete generatedTimetableData[className][day][slotLabel];
 if(Object.keys(generatedTimetableData[className][day]).length === 0) delete generatedTimetableData[className][day];
 }
@@ -2114,7 +2111,7 @@ if(!agihanWaktuData[tingkatan]) agihanWaktuData[tingkatan] = {};
 subjekList.forEach(s => {
 let currentVals = agihanWaktuData[tingkatan][s.code] || { single: 1, double: 0, triple: 0 };
 let totalMasa = (parseInt(currentVals.single) || 0) * 1 + (parseInt(currentVals.double) || 0) * 2 + (parseInt(currentVals.triple) || 0) * 3;
-tbody.innerHTML += <tr class="border-b border-slate-200 hover:bg-slate-50"> <td class="border border-slate-300 p-2.5 text-left pl-4 font-bold text-[#0b1b3d]">${s.name}</td> <td class="border border-slate-300 p-2.5 font-bold text-slate-700">${s.code}</td> <td class="border border-slate-300 p-2 text-center"> <input type="number" min="0" max="10" value="${currentVals.single}" data-ting="${tingkatan}" data-code="${s.code}" data-type="single" oninput="calculateAgihanTotals()" class="w-16 px-2 py-1 border rounded text-center font-bold text-xs bg-white agihan-input-single"> </td> <td class="border border-slate-300 p-2 text-center"> <input type="number" min="0" max="10" value="${currentVals.double}" data-ting="${tingkatan}" data-code="${s.code}" data-type="double" oninput="calculateAgihanTotals()" class="w-16 px-2 py-1 border rounded text-center font-bold text-xs bg-white agihan-input-double"> </td> <td class="border border-slate-300 p-2 text-center"> <input type="number" min="0" max="10" value="${currentVals.triple}" data-ting="${tingkatan}" data-code="${s.code}" data-type="triple" oninput="calculateAgihanTotals()" class="w-16 px-2 py-1 border rounded text-center font-bold text-xs bg-white agihan-input-triple"> </td> <td class="border border-slate-300 p-2 text-center font-extrabold text-[#0b1b3d] bg-slate-50 agihan-row-total"> ${totalMasa} </td> </tr>;
+tbody.innerHTML += <tr class="border-b border-slate-200 hover:bg-slate-50"> <td class="border border-slate-300 p-2.5 text-left pl-4 font-bold text-[#0b1b3d]">${s.name}</td> <td class="border border-slate-300 p-2.5 font-bold text-slate-700">${s.code}</td> <td class="border border-slate-300 p-2 text-center"> <input type="number" min="0" max="10" value="${currentVals.single}" data-ting="${tingkatan}" data-code="${s.code}" data-type="single" oninput="window.calculateAgihanTotals()" class="w-16 px-2 py-1 border rounded text-center font-bold text-xs bg-white agihan-input-single"> </td> <td class="border border-slate-300 p-2 text-center"> <input type="number" min="0" max="10" value="${currentVals.double}" data-ting="${tingkatan}" data-code="${s.code}" data-type="double" oninput="window.calculateAgihanTotals()" class="w-16 px-2 py-1 border rounded text-center font-bold text-xs bg-white agihan-input-double"> </td> <td class="border border-slate-300 p-2 text-center"> <input type="number" min="0" max="10" value="${currentVals.triple}" data-ting="${tingkatan}" data-code="${s.code}" data-type="triple" oninput="window.calculateAgihanTotals()" class="w-16 px-2 py-1 border rounded text-center font-bold text-xs bg-white agihan-input-triple"> </td> <td class="border border-slate-300 p-2 text-center font-extrabold text-[#0b1b3d] bg-slate-50 agihan-row-total"> ${totalMasa} </td> </tr>;
 });
 calculateAgihanTotals();
 }
@@ -2180,7 +2177,7 @@ let records = [...(databaseRecords['senarai_guru'] || [])].sort((a, b) => a.name
 if(totalCountEl) totalCountEl.innerText = records.length;
 if(records.length === 0) { tbody.innerHTML = <tr><td colspan="5" class="p-6 text-slate-400 italic">Tiada rekod guru dijumpai.</td></tr>; return; }
 records.forEach((item, index) => {
-tbody.innerHTML += <tr class="border-b border-slate-200 hover:bg-slate-50 transition"> <td class="border border-slate-300 p-2.5 font-bold text-slate-600">${index + 1}</td> <td class="border border-slate-300 p-2.5 font-semibold text-slate-700">${item.code}</td> <td class="border border-slate-300 p-2.5 text-left pl-4 font-bold text-[#0b1b3d]"> <span>${item.name}</span> </td> <td class="border border-slate-300 p-2.5 bg-rose-50/30"> <div class="flex justify-center items-center"> <button onclick="openBlockModalForTeacher('${item.name}')" class="px-3 py-1 bg-rose-100 hover:bg-rose-200 text-rose-800 rounded-lg shadow-sm text-xs font-bold transition border border-rose-200">Had Masa</button> </div> </td> <td class="border border-slate-300 p-2.5"> <div class="flex justify-center space-x-1.5"> <button onclick="editRecord(${item.id})" class="p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow transition" title="Kemaskini">✏️</button> <button onclick="deleteMasterTeacher('${item.name}', '${item.code}')" class="p-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow transition" title="Padam Induk">🗑️</button> </div> </td> </tr>;
+tbody.innerHTML += <tr class="border-b border-slate-200 hover:bg-slate-50 transition"> <td class="border border-slate-300 p-2.5 font-bold text-slate-600">${index + 1}</td> <td class="border border-slate-300 p-2.5 font-semibold text-slate-700">${item.code}</td> <td class="border border-slate-300 p-2.5 text-left pl-4 font-bold text-[#0b1b3d]"> <span>${item.name}</span> </td> <td class="border border-slate-300 p-2.5 bg-rose-50/30"> <div class="flex justify-center items-center"> <button type="button" onclick="window.openBlockModalForTeacher('${item.name}')" class="px-3 py-1 bg-rose-100 hover:bg-rose-200 text-rose-800 rounded-lg shadow-sm text-xs font-bold transition border border-rose-200 cursor-pointer">Had Masa</button> </div> </td> <td class="border border-slate-300 p-2.5"> <div class="flex justify-center space-x-1.5"> <button type="button" onclick="window.editRecord(${item.id})" class="p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow transition cursor-pointer" title="Kemaskini">✏️</button> <button type="button" onclick="window.deleteMasterTeacher('${item.name}', '${item.code}')" class="p-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow transition cursor-pointer" title="Padam Induk">🗑️</button> </div> </td> </tr>;
 });
 return;
 }
@@ -2192,7 +2189,7 @@ let records = [...(databaseRecords['guru'] || [])].sort((a, b) => a.name.localeC
 if(totalCountEl) totalCountEl.innerText = records.length;
 if(records.length === 0) { tbody.innerHTML = <tr><td colspan="5" class="p-6 text-slate-400 italic">Tiada rekod agihan guru.</td></tr>; return; }
 records.forEach((item, index) => {
-tbody.innerHTML += <tr class="border-b border-slate-200 hover:bg-slate-50 transition"> <td class="border border-slate-300 p-2.5 font-bold text-slate-600">${index + 1}</td> <td class="border border-slate-300 p-2.5 text-left pl-4 font-bold text-[#0b1b3d]">${item.name}</td> <td class="border border-slate-300 p-2.5 font-semibold text-slate-700">${item.code}</td> <td class="border border-slate-300 p-2.5 text-slate-600 text-left pl-3">${item.category}</td> <td class="border border-slate-300 p-2.5"> <div class="flex justify-center space-x-1.5"> <button onclick="editRecordByName('${item.name}')" class="p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow" title="Kemaskini">✏️</button> </div> </td> </tr>;
+tbody.innerHTML += <tr class="border-b border-slate-200 hover:bg-slate-50 transition"> <td class="border border-slate-300 p-2.5 font-bold text-slate-600">${index + 1}</td> <td class="border border-slate-300 p-2.5 text-left pl-4 font-bold text-[#0b1b3d]">${item.name}</td> <td class="border border-slate-300 p-2.5 font-semibold text-slate-700">${item.code}</td> <td class="border border-slate-300 p-2.5 text-slate-600 text-left pl-3">${item.category}</td> <td class="border border-slate-300 p-2.5"> <div class="flex justify-center space-x-1.5"> <button type="button" onclick="window.editRecordByName('${item.name}')" class="p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow cursor-pointer" title="Kemaskini">✏️</button> </div> </td> </tr>;
 });
 return;
 }
@@ -2206,7 +2203,7 @@ let records = databaseRecords[currentSubTab] || [];
 if(totalCountEl) totalCountEl.innerText = records.length;
 if(records.length === 0) { tbody.innerHTML = <tr><td colspan="5" class="p-6 text-slate-400 italic">Tiada rekod dijumpai.</td></tr>; return; }
 records.forEach((item, index) => {
-tbody.innerHTML += <tr class="border-b border-slate-200 hover:bg-slate-50 transition"> <td class="border border-slate-300 p-2.5 font-bold text-slate-600">${index + 1}</td> <td class="border border-slate-300 p-2.5 text-left pl-4 font-bold text-[#0b1b3d]">${item.name}</td> <td class="border border-slate-300 p-2.5 font-semibold text-slate-700">${item.code}</td> <td class="border border-slate-300 p-2.5 text-slate-600 text-left pl-3">${item.category}</td> <td class="border border-slate-300 p-2.5"> <div class="flex justify-center space-x-1.5"> <button onclick="editRecord(${item.id})" class="p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow" title="Kemaskini">✏️</button> <button onclick="deleteRecord(${item.id})" class="p-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow" title="Padam">🗑️</button> </div> </td> </tr>;
+tbody.innerHTML += <tr class="border-b border-slate-200 hover:bg-slate-50 transition"> <td class="border border-slate-300 p-2.5 font-bold text-slate-600">${index + 1}</td> <td class="border border-slate-300 p-2.5 text-left pl-4 font-bold text-[#0b1b3d]">${item.name}</td> <td class="border border-slate-300 p-2.5 font-semibold text-slate-700">${item.code}</td> <td class="border border-slate-300 p-2.5 text-slate-600 text-left pl-3">${item.category}</td> <td class="border border-slate-300 p-2.5"> <div class="flex justify-center space-x-1.5"> <button type="button" onclick="window.editRecord(${item.id})" class="p-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow cursor-pointer" title="Kemaskini">✏️</button> <button type="button" onclick="window.deleteRecord(${item.id})" class="p-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow cursor-pointer" title="Padam">🗑️</button> </div> </td> </tr>;
 });
 }
 window.deleteMasterTeacher = function(teacherName, teacherCode) {
@@ -2321,7 +2318,7 @@ subjekList.forEach(sub => {
 let cellInfo = (selectedDataMap[cls.name] && selectedDataMap[cls.name][sub.code]) || { checked: false, masa: 4 };
 let isChecked = cellInfo.checked ? 'checked' : '';
 let masaVal = cellInfo.masa || 4;
-bodyHTML += <td class="border p-2 text-center space-y-1"> <input type="checkbox" name="matrix-cb" data-kelas="${cls.name}" data-subjek="${sub.code}" onchange="toggleMasaInput(this)" class="w-4 h-4 rounded border-slate-300" ${isChecked}> <div class="mt-1"> <input type="number" name="matrix-masa" data-kelas="${cls.name}" data-subjek="${sub.code}" value="${masaVal}" min="1" max="10" placeholder="Masa" class="w-14 px-1 py-0.5 border rounded text-center text-xs font-bold bg-white ${isChecked ? '' : 'hidden'}"> </div> </td>;
+bodyHTML += <td class="border p-2 text-center space-y-1"> <input type="checkbox" name="matrix-cb" data-kelas="${cls.name}" data-subjek="${sub.code}" onchange="window.toggleMasaInput(this)" class="w-4 h-4 rounded border-slate-300" ${isChecked}> <div class="mt-1"> <input type="number" name="matrix-masa" data-kelas="${cls.name}" data-subjek="${sub.code}" value="${masaVal}" min="1" max="10" placeholder="Masa" class="w-14 px-1 py-0.5 border rounded text-center text-xs font-bold bg-white ${isChecked ? '' : 'hidden'}"> </div> </td>;
 });
 bodyHTML += </tr>;
 });
@@ -2522,7 +2519,7 @@ tbody.innerHTML = '';
 let lessonCounter = 1;
 timeSlotsData.forEach((slot, index) => {
 const isRehat = slot.type === 'Rehat';
-tbody.innerHTML += <tr class="border-b border-slate-200 text-center ${isRehat ? 'bg-amber-50/80 font-bold' : ''}"> <td class="border border-slate-300 p-2 font-bold text-slate-600">${isRehat ? '-' : lessonCounter++}</td> <td class="border border-slate-300 p-2"><input type="text" value="${slot.label}" onchange="updateSlot(${index}, 'label', this.value)" class="w-full px-2 py-1 border rounded text-center bg-white"></td> <td class="border border-slate-300 p-2"><input type="time" value="${slot.start}" onchange="updateSlot(${index}, 'start', this.value)" class="w-full px-2 py-1 border rounded bg-white"></td> <td class="border border-slate-300 p-2"><input type="time" value="${slot.end}" onchange="updateSlot(${index}, 'end', this.value)" class="w-full px-2 py-1 border rounded bg-white"></td> <td class="border border-slate-300 p-2"><select onchange="updateSlot(${index}, 'type', this.value)" class="w-full px-2 py-1 border rounded bg-white font-medium"><option value="Waktu belajar" ${slot.type === 'Waktu belajar' ? 'selected' : ''}>Waktu belajar</option><option value="Rehat" ${slot.type === 'Rehat' ? 'selected' : ''}>Rehat</option></select></td> <td class="border border-slate-300 p-2"><div class="flex justify-center space-x-1.5"><button onclick="moveSlot(${index}, -1)" class="p-1.5 border rounded bg-slate-50" title="Naik ke atas">⬆️</button><button onclick="moveSlot(${index}, 1)" class="p-1.5 border rounded bg-slate-50" title="Turun ke bawah">⬇️</button><button onclick="deleteSlot(${index})" class="p-1.5 text-red-600 border rounded bg-slate-50" title="Padam">🗑️</button></div></td> </tr>;
+tbody.innerHTML += <tr class="border-b border-slate-200 text-center ${isRehat ? 'bg-amber-50/80 font-bold' : ''}"> <td class="border border-slate-300 p-2 font-bold text-slate-600">${isRehat ? '-' : lessonCounter++}</td> <td class="border border-slate-300 p-2"><input type="text" value="${slot.label}" onchange="window.updateSlot(${index}, 'label', this.value)" class="w-full px-2 py-1 border rounded text-center bg-white"></td> <td class="border border-slate-300 p-2"><input type="time" value="${slot.start}" onchange="window.updateSlot(${index}, 'start', this.value)" class="w-full px-2 py-1 border rounded bg-white"></td> <td class="border border-slate-300 p-2"><input type="time" value="${slot.end}" onchange="window.updateSlot(${index}, 'end', this.value)" class="w-full px-2 py-1 border rounded bg-white"></td> <td class="border border-slate-300 p-2"><select onchange="window.updateSlot(${index}, 'type', this.value)" class="w-full px-2 py-1 border rounded bg-white font-medium"><option value="Waktu belajar" ${slot.type === 'Waktu belajar' ? 'selected' : ''}>Waktu belajar</option><option value="Rehat" ${slot.type === 'Rehat' ? 'selected' : ''}>Rehat</option></select></td> <td class="border border-slate-300 p-2"><div class="flex justify-center space-x-1.5"><button type="button" onclick="window.moveSlot(${index}, -1)" class="p-1.5 border rounded bg-slate-50 cursor-pointer" title="Naik ke atas">⬆️</button><button type="button" onclick="window.moveSlot(${index}, 1)" class="p-1.5 border rounded bg-slate-50 cursor-pointer" title="Turun ke bawah">⬇️</button><button type="button" onclick="window.deleteSlot(${index})" class="p-1.5 text-red-600 border rounded bg-slate-50 cursor-pointer" title="Padam">🗑️</button></div></td> </tr>;
 });
 }
 window.updateSlot = (i, f, v) => { timeSlotsData[i][f] = v; saveDatabaseToCloud(); }
@@ -2624,7 +2621,7 @@ let isChecked = reliefAbsentTeachers.includes(g.name);
 let cardClass = isChecked
 ? 'bg-rose-500 text-white font-bold border-rose-600 shadow-sm'
 : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border-slate-200';
-​container.innerHTML += <div class="flex items-center justify-between p-2.5 rounded-xl border transition ${cardClass} cursor-pointer" onclick="toggleAbsentTeacher('${g.name}')"> <div class="flex items-center space-x-2"> <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${isChecked ? 'bg-white text-rose-600' : 'bg-slate-300 text-slate-600'}"> ${isChecked ? '✕' : 'O'} </span> <span class="text-xs font-bold">${g.name} (${g.code})</span> </div> <div class="relative inline-block w-10 align-middle select-none" onclick="event.stopPropagation()"> <input type="checkbox" id="absent-toggle-${g.id}" onchange="toggleAbsentTeacher('${g.name}')" ${isChecked ? 'checked' : ''} class="toggle-switch-checkbox hidden"> <label for="absent-toggle-${g.id}" class="toggle-switch-label block overflow-hidden h-5 rounded-full bg-slate-300 cursor-pointer transition-colors duration-200"> <span class="toggle-switch-dot block w-4 h-4 rounded-full bg-white shadow transform transition-transform duration-200 mt-0.5 ml-0.5"></span> </label> </div> </div>;
+​container.innerHTML += <div class="flex items-center justify-between p-2.5 rounded-xl border transition ${cardClass} cursor-pointer" onclick="window.toggleAbsentTeacher('${g.name}')"> <div class="flex items-center space-x-2"> <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${isChecked ? 'bg-white text-rose-600' : 'bg-slate-300 text-slate-600'}"> ${isChecked ? '✕' : 'O'} </span> <span class="text-xs font-bold">${g.name} (${g.code})</span> </div> <div class="relative inline-block w-10 align-middle select-none" onclick="event.stopPropagation()"> <input type="checkbox" id="absent-toggle-${g.id}" onchange="window.toggleAbsentTeacher('${g.name}')" ${isChecked ? 'checked' : ''} class="toggle-switch-checkbox hidden"> <label for="absent-toggle-${g.id}" class="toggle-switch-label block overflow-hidden h-5 rounded-full bg-slate-300 cursor-pointer transition-colors duration-200"> <span class="toggle-switch-dot block w-4 h-4 rounded-full bg-white shadow transform transition-transform duration-200 mt-0.5 ml-0.5"></span> </label> </div> </div>;
 });
 }
 function renderExemptTeachersList() {
@@ -2641,7 +2638,7 @@ let isChecked = reliefExemptTeachers.includes(g.name);
 let cardClass = isChecked
 ? 'bg-slate-800 text-white font-bold border-slate-700 shadow-sm'
 : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border-slate-200';
-container.innerHTML += <div class="flex items-center justify-between p-2.5 rounded-xl border transition ${cardClass} cursor-pointer" onclick="toggleExemptTeacher('${g.name}')"> <div class="flex items-center space-x-2"> <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${isChecked ? 'bg-emerald-500 text-white' : 'bg-slate-300 text-slate-500'}"> ${isChecked ? '✓' : ''} </span> <span class="text-xs font-bold">${g.name}</span> </div> <div class="relative inline-block w-10 align-middle select-none" onclick="event.stopPropagation()"> <input type="checkbox" id="exempt-toggle-${g.id}" onchange="toggleExemptTeacher('${g.name}')" ${isChecked ? 'checked' : ''} class="toggle-switch-checkbox hidden"> <label for="exempt-toggle-${g.id}" class="toggle-switch-label block overflow-hidden h-5 rounded-full bg-slate-300 cursor-pointer transition-colors duration-200"> <span class="toggle-switch-dot block w-4 h-4 rounded-full bg-white shadow transform transition-transform duration-200 mt-0.5 ml-0.5"></span> </label> </div> </div>;
+container.innerHTML += <div class="flex items-center justify-between p-2.5 rounded-xl border transition ${cardClass} cursor-pointer" onclick="window.toggleExemptTeacher('${g.name}')"> <div class="flex items-center space-x-2"> <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${isChecked ? 'bg-emerald-500 text-white' : 'bg-slate-300 text-slate-500'}"> ${isChecked ? '✓' : ''} </span> <span class="text-xs font-bold">${g.name}</span> </div> <div class="relative inline-block w-10 align-middle select-none" onclick="event.stopPropagation()"> <input type="checkbox" id="exempt-toggle-${g.id}" onchange="window.toggleExemptTeacher('${g.name}')" ${isChecked ? 'checked' : ''} class="toggle-switch-checkbox hidden"> <label for="exempt-toggle-${g.id}" class="toggle-switch-label block overflow-hidden h-5 rounded-full bg-slate-300 cursor-pointer transition-colors duration-200"> <span class="toggle-switch-dot block w-4 h-4 rounded-full bg-white shadow transform transition-transform duration-200 mt-0.5 ml-0.5"></span> </label> </div> </div>;
 });
 }
 window.toggleAbsentTeacher = function(teacherName) {
