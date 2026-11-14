@@ -33,6 +33,35 @@
             letter-spacing: 0.025em;
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
         }
+.afz-dd-menu { position: absolute; right: 0; top: calc(100% + 6px); min-width: 230px; background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,.18); z-index: 40; padding: 6px; }
+.afz-dd-item { display: block; width: 100%; text-align: left; padding: 9px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; color: #0b1b3d; }
+.afz-dd-item:hover { background: #f1f5f9; }
+#afz-print2-area { display: none; }
+@media print {
+body.afz-print2 #printable-master-area { display: none !important; }
+body.afz-print2 #afz-print2-area { display: block !important; visibility: visible; position: absolute; left: 0; top: 0; width: 100%; color: #000; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body.afz-print2 #afz-print2-area * { visibility: visible; }
+#afz-print2-area .p2-head { text-align: center; border-bottom: 1px solid #d1d5db; padding-bottom: 6px; margin-bottom: 8px; }
+#afz-print2-area .p2-brand { font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+#afz-print2-area .p2-title { font-size: 18px; font-weight: 800; color: #0b1b3d; }
+#afz-print2-area .p2-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 4px; font-size: 11px; color: #475569; text-align: left; }
+#afz-print2-area .p2-date { font-size: 13px; font-weight: 700; color: #000; white-space: nowrap; }
+#afz-print2-area .p2-table { width: 100%; border-collapse: separate; border-spacing: 3px; table-layout: fixed; }
+#afz-print2-area .p2-table th, #afz-print2-area .p2-table td { border: 1px dashed #c9b27c; border-radius: 4px; text-align: center; vertical-align: middle; padding: 4px 2px; overflow-wrap: anywhere; }
+#afz-print2-area .p2-table th { background: #f3e3b3; color: #0b1b3d; font-size: 9px; }
+#afz-print2-area .p2-table th .p2-no { font-size: 12px; font-weight: 800; }
+#afz-print2-area .p2-table th .p2-time { font-size: 8px; font-weight: 600; color: #475569; }
+#afz-print2-area .p2-table th.p2-day { width: 7%; font-size: 11px; }
+#afz-print2-area .p2-table td.p2-dayname { background: #f3e3b3; font-weight: 800; font-size: 11px; color: #0b1b3d; }
+#afz-print2-area .p2-table td.p2-cell { background: #fff8e1; height: 46px; font-size: 10px; }
+#afz-print2-area .p2-table td.p2-cell .p2-sub { font-weight: 800; color: #0b1b3d; }
+#afz-print2-area .p2-table td.p2-cell .p2-tch { font-size: 8px; color: #64748b; font-weight: 600; }
+#afz-print2-area .p2-table td.p2-rehat { background: #e6cf94; width: 4.5%; }
+#afz-print2-area .p2-rehat-text { writing-mode: vertical-rl; transform: rotate(180deg); margin: 0 auto; font-weight: 800; letter-spacing: 4px; font-size: 12px; color: #5b4a1f; }
+#afz-print2-area .p2-footer { margin-top: 10px; font-size: 10px; color: #000; text-align: left; break-inside: avoid; }
+#afz-print2-area .p2-approve { margin-top: 6px; }
+#afz-print2-area .p2-approve-name { margin-top: 44px; font-weight: 700; }
+}
     </style>
 </head>
 <body class="bg-slate-100 text-slate-900 min-h-screen flex flex-col">
@@ -492,10 +521,16 @@
                         <label id="master-dropdown-label" class="text-xs font-semibold text-slate-700">Pilih Kelas:</label>
                         <select id="master-select-target" onchange="renderMasterTimetable()" class="px-3 py-2 border rounded-xl text-xs bg-white font-bold text-[#0b1b3d] min-w-[200px]"></select>
                     </div>
-                    <!-- Butang Cetak Jadual Baru -->
-                    <button onclick="window.print()" class="bg-[#0b1b3d] hover:bg-[#132d60] text-white px-4 py-2 rounded-xl text-xs font-bold shadow transition flex items-center space-x-2">
-                        <span>🖨️</span><span>Cetak Jadual</span>
-                    </button>
+<!-- Dropdown Bentuk Cetakan (menggantikan butang Cetak Jadual) -->
+<div class="relative" id="afz-print-dropdown">
+<button onclick="toggleAfzPrintMenu(event)" class="bg-[#0b1b3d] hover:bg-[#132d60] text-white px-4 py-2 rounded-xl text-xs font-bold shadow transition flex items-center space-x-2">
+<span>🖨️</span><span>Bentuk Cetakan</span><span>▾</span>
+</button>
+<div id="afz-print-menu" class="hidden afz-dd-menu">
+<button onclick="afzSetPrintStyle(1)" class="afz-dd-item">Cetakan 1 (Sedia ada)</button>
+<button onclick="afzSetPrintStyle(2)" class="afz-dd-item">Cetakan 2 (Gaya krim)</button>
+</div>
+</div>
                 </div>
             </div>
             <div id="printable-master-area" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
@@ -1913,6 +1948,96 @@
             });
         }
         
+// ===== BENTUK CETAKAN (DROPDOWN) =====
+window.toggleAfzPrintMenu = function(e) {
+if(e) e.stopPropagation();
+const m = document.getElementById('afz-print-menu');
+if(m) m.classList.toggle('hidden');
+};
+window.addEventListener('click', function() {
+const m = document.getElementById('afz-print-menu');
+if(m) m.classList.add('hidden');
+});
+function afzBuildPrint2() {
+const targetEl = document.getElementById('master-select-target');
+const val = targetEl ? targetEl.value : '';
+if(!val) { showCustomAlert('Sila pilih kelas atau guru terlebih dahulu.'); return false; }
+const esc = function(s) { return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); };
+const days = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis'];
+let head = '<th class="p2-day">Hari</th>';
+timeSlotsData.forEach(function(slot) {
+if(slot.type === 'Rehat') {
+head += '<th>Rehat</th>';
+} else {
+head += '<th><div class="p2-no">' + esc(slot.label) + '</div><div class="p2-time">' + esc(formatTo12Hour(slot.start)) + ' - ' + esc(formatTo12Hour(slot.end)) + '</div></th>';
+}
+});
+let body = '';
+days.forEach(function(day, dIdx) {
+let tr = '<td class="p2-dayname">' + day + '</td>';
+timeSlotsData.forEach(function(slot) {
+if(slot.type === 'Rehat') {
+if(dIdx === 0) tr += '<td class="p2-rehat" rowspan="' + days.length + '"><div class="p2-rehat-text">REHAT</div></td>';
+return;
+}
+let cellData = null;
+if(currentMasterMode === 'kelas') {
+if(generatedTimetableData[val] && generatedTimetableData[val][day] && generatedTimetableData[val][day][slot.label]) {
+cellData = generatedTimetableData[val][day][slot.label];
+}
+} else {
+for(let cName in generatedTimetableData) {
+if(generatedTimetableData[cName][day] && generatedTimetableData[cName][day][slot.label]) {
+let dt = generatedTimetableData[cName][day][slot.label];
+if(dt.teacherName === val) { cellData = { subjectCode: dt.subjectCode, teacherName: cName }; break; }
+}
+}
+}
+if(cellData) {
+let sub2 = cellData.teacherName;
+if(currentMasterMode === 'kelas') {
+let fg = (databaseRecords.senarai_guru || []).find(function(g) { return g.name.toLowerCase() === String(cellData.teacherName).toLowerCase() || g.code.toLowerCase() === String(cellData.teacherName).toLowerCase(); });
+if(fg && fg.code) sub2 = fg.code;
+}
+tr += '<td class="p2-cell"><div class="p2-sub">' + esc(cellData.subjectCode) + '</div><div class="p2-tch">' + esc(sub2) + '</div></td>';
+} else {
+tr += '<td class="p2-cell"></td>';
+}
+});
+body += '<tr>' + tr + '</tr>';
+});
+let area = document.getElementById('afz-print2-area');
+if(!area) { area = document.createElement('div'); area.id = 'afz-print2-area'; document.body.appendChild(area); }
+const titleEl = document.getElementById('master-table-title');
+const title = titleEl ? titleEl.innerText : '';
+const dateTxt = 'Tarikh: ' + new Intl.DateTimeFormat('ms-MY', { timeZone: 'Asia/Kuala_Lumpur', day: 'numeric', month: 'long', year: 'numeric' }).format(new Date());
+let pName = localStorage.getItem('afz_print_principal_name');
+if(pName === null) pName = 'ASRI B MOHD ZAIN';
+area.innerHTML = '<div class="p2-head"><div class="p2-title">' + esc(title) + '</div>' +
+'<div class="p2-meta"><span>Paparan penuh jadual mingguan mengikut slot waktu rasmi sekolah</span><span class="p2-date">' + dateTxt + '</span></div></div>' +
+'<table class="p2-table"><thead><tr>' + head + '</tr></thead><tbody>' + body + '</tbody></table>' +
+'<div class="p2-footer"><div>aFz Jadual Waktu &amp; Guru Ganti</div><div class="p2-approve"><div>Disahkan oleh,</div><div class="p2-approve-name">' + (pName ? '(' + esc(pName.toLocaleUpperCase('ms-MY')) + ')' : '') + '</div><div>Pengetua</div></div></div>';
+return true;
+}
+window.afzSetPrintStyle = function(n) {
+const m = document.getElementById('afz-print-menu');
+if(m) m.classList.add('hidden');
+if(n === 1) { document.body.classList.remove('afz-print2'); window.print(); return; }
+if(!afzBuildPrint2()) return;
+const st = document.createElement('style');
+st.id = 'afz-print2-page';
+st.textContent = '@media print { @page { size: A4 landscape; margin: 12mm; } }';
+document.head.appendChild(st);
+document.body.classList.add('afz-print2');
+const cleanup = function() {
+document.body.classList.remove('afz-print2');
+const s = document.getElementById('afz-print2-page');
+if(s) s.remove();
+window.removeEventListener('afterprint', cleanup);
+};
+window.addEventListener('afterprint', cleanup);
+window.print();
+};
         function initJanaAutoTab() {
             const selectClass = document.getElementById('auto-select-class');
             if(!selectClass) return;
