@@ -2242,11 +2242,11 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
                 setTimeout(() => {
                     modal.classList.add('hidden');
                     renderClassStatusTable();
-                    showCustomAlert('Jadual pintar berjaya dijana!');
+                    if(targetClass === 'Semua') { afzPromptSaveVersion(); } else { showCustomAlert('Jadual pintar berjaya dijana!'); }
                 }, 300);
             }, 200);
         }
-        window.janaSingleClass = function(className) {
+        window.afzPromptSaveVersion = function() { showCustomPrompt('Jadual pintar berjaya dijana! Sila isi nama versi untuk disimpan (contoh: Jadual Waktu 3 - November 2026). Tekan Batal untuk simpan kemudian.', '', function(val) { let name = (val || '').trim(); if(!name) return; let el = document.getElementById('backup-version-name'); if(el) { el.value = name; } saveBackupVersion(); }); }; window.janaSingleClass = function(className) {
             let subjects = databaseRecords.subjek || [];
             let teachers = databaseRecords.senarai_guru || [];
             if(subjects.length === 0 || teachers.length === 0) {
