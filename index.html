@@ -91,7 +91,7 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2 {
 #afz-print2-area.p2-portrait .p2-table td.p2-cell .p2-tch { font-size: 6px; }
 #afz-print2-area.p2-portrait .p2-table td.p2-rehat { width: 4%; }
 #afz-print2-area.p2-portrait .p2-rehat-text { font-size: 9px; letter-spacing: 2px; }
-#afz-print2-area.p2-portrait .p2-footer { margin-top: 4px; font-size: 8px; }
+#afz-print2-area.p2-portrait .p2-footer { margin-top: 4px; font-size: 8px; } #afz-print2-area .p2-analisa { margin-top: 8px; break-inside: avoid; color: #000; } #afz-print2-area .p2-an-title { font-weight: 800; font-size: 11px; text-align: center; margin-bottom: 4px; } #afz-print2-area .p2-an-wrap { display: flex; gap: 8px; align-items: flex-start; } #afz-print2-area .p2-an-table { flex: 1 1 0; width: 50%; border-collapse: collapse; table-layout: fixed; font-size: 8px; } #afz-print2-area .p2-an-table th, #afz-print2-area .p2-an-table td { border: 1px solid #000; padding: 2px 3px; text-align: center; height: 15px; overflow-wrap: anywhere; } #afz-print2-area .p2-an-table td.l { text-align: left; } #afz-print2-area .p2-an-table th:nth-child(1) { width: 9%; } #afz-print2-area .p2-an-table th:nth-child(4) { width: 11%; } #afz-print2-area .p2-an-table th:nth-child(5) { width: 24%; } #afz-print2-area .p2-an-total td { font-weight: 800; } #afz-print2-area.p2-portrait .p2-block.p2-has-analisa { height: 100%; }
 #afz-print2-area.p2-portrait .p2-approve { margin-top: 2px; }
 #afz-print2-area.p2-portrait .p2-approve-name { margin-top: 18px; }
 }
@@ -2005,7 +2005,7 @@ if(dt.teacherName === val) return { subjectCode: dt.subjectCode, teacherName: cN
 }
 return null;
 }
-function afzBlockHTML(style, mode, val, ctx) {
+function afzAnalisaHTML(val) { const days = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis']; const agg = {}; timeSlotsData.forEach(function(slot) { if(slot.type === 'Rehat') return; const a = String(slot.start).split(':'); const b = String(slot.end).split(':'); let mins = (parseInt(b[0], 10) * 60 + parseInt(b[1], 10)) - (parseInt(a[0], 10) * 60 + parseInt(a[1], 10)); if(isNaN(mins) || mins < 0) mins = 0; days.forEach(function(day) { const cd = afzFindCell('guru', val, day, slot.label); if(!cd) return; const k = cd.teacherName + '||' + cd.subjectCode; if(!agg[k]) agg[k] = { cls: String(cd.teacherName), sub: String(cd.subjectCode), n: 0, m: 0 }; agg[k].n++; agg[k].m += mins; }); }); const rows = Object.keys(agg).map(function(k) { return agg[k]; }).sort(function(x, y) { return x.cls.localeCompare(y.cls, 'ms', { numeric: true, sensitivity: 'base' }) || x.sub.localeCompare(y.sub, 'ms'); }); const fmt = function(m) { const h = Math.floor(m / 60); const r = m % 60; return ((h ? h + ' jam ' : '') + (r ? r + ' min' : '')).trim() || '0 min'; }; const cap = Math.max(5, Math.ceil(rows.length / 2)); const left = rows.slice(0, cap); const right = rows.slice(cap); let totN = 0; let totM = 0; rows.forEach(function(r) { totN += r.n; totM += r.m; }); const hd = '<thead><tr><th>BIL</th><th>PERKARA</th><th>TINGKATAN</th><th>KALI</th><th>MASA</th></tr></thead>'; const mk = function(list, start, isRight) { let b = ''; for(let i = 0; i < cap; i++) { const r = list[i]; b += r ? '<tr><td>' + (start + i + 1) + '</td><td class="l">' + afzEsc(r.sub) + '</td><td>' + afzEsc(r.cls) + '</td><td>' + r.n + '</td><td>' + fmt(r.m) + '</td></tr>' : '<tr><td>&nbsp;</td><td></td><td></td><td></td><td></td></tr>'; } if(isRight) b += '<tr class="p2-an-total"><td colspan="3">JUMLAH</td><td>' + totN + '</td><td>' + fmt(totM) + '</td></tr>'; return '<table class="p2-an-table">' + hd + '<tbody>' + b + '</tbody></table>'; }; return '<div class="p2-analisa"><div class="p2-an-title">ANALISA MATA PELAJARAN</div><div class="p2-an-wrap">' + mk(left, 0, false) + mk(right, cap, true) + '</div></div>'; } function afzBlockHTML(style, mode, val, ctx) {
 const s1 = (style === 1);
 const days = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis'];
 let head = '<th class="p2-day">Hari</th>';
@@ -2040,22 +2040,22 @@ tr += s1 ? '<td class="p2-cell p2-empty">Kosong</td>' : '<td class="p2-cell"></t
 body += '<tr>' + tr + '</tr>';
 });
 const title = (mode === 'guru' ? 'Jadual Waktu Guru: ' : 'Jadual Waktu Kelas: ') + val;
-return '<div class="p2-block"><div class="p2-head"><div class="p2-title">' + afzEsc(title) + '</div>' +
+return '<div class="p2-block' + (ctx.withAnalisa ? ' p2-has-analisa' : '') + '"><div class="p2-head"><div class="p2-title">' + afzEsc(title) + '</div>' +
 '<div class="p2-meta"><span>Paparan penuh jadual mingguan mengikut slot waktu rasmi sekolah</span><span class="p2-date">' + ctx.dateTxt + '</span></div></div>' +
-'<table class="p2-table"><thead><tr>' + head + '</tr></thead><tbody>' + body + '</tbody></table>' +
+'<table class="p2-table"><thead><tr>' + head + '</tr></thead><tbody>' + body + '</tbody></table>' + (ctx.withAnalisa ? afzAnalisaHTML(val) : '') +
 '<div class="p2-footer"><div>aFz Jadual Waktu &amp; Guru Ganti</div><div class="p2-approve"><div>Disahkan oleh,</div><div class="p2-approve-name">' + (ctx.pName ? '(' + afzEsc(ctx.pName.toLocaleUpperCase('ms-MY')) + ')' : '') + '</div><div>Pengetua</div></div></div></div>';
 }
-function afzBuildPrintArea(style, mode, list) {
+function afzBuildPrintArea(style, mode, list, withAnalisa) {
 let pName = localStorage.getItem('afz_print_principal_name');
 if(pName === null) pName = 'ASRI B MOHD ZAIN';
 const ctx = {
 dateTxt: 'Tarikh: ' + new Intl.DateTimeFormat('ms-MY', { timeZone: 'Asia/Kuala_Lumpur', day: 'numeric', month: 'long', year: 'numeric' }).format(new Date()),
-pName: pName
+pName: pName, withAnalisa: !!withAnalisa
 };
 let html = '';
 if(mode === 'guru') {
 for(let i = 0; i < list.length; i += 2) {
-html += '<div class="p2-sheet">' + afzBlockHTML(style, mode, list[i], ctx) + (list[i + 1] !== undefined ? afzBlockHTML(style, mode, list[i + 1], ctx) : '<div class="p2-block"></div>') + '</div>';
+html += '<div class="p2-sheet">' + afzBlockHTML(style, mode, list[i], ctx) + (list[i + 1] !== undefined ? afzBlockHTML(style, mode, list[i + 1], ctx) : (withAnalisa ? '' : '<div class="p2-block"></div>')) + '</div>';
 }
 } else {
 html = afzBlockHTML(style, mode, list[0], ctx);
@@ -2065,8 +2065,8 @@ if(!area) { area = document.createElement('div'); area.id = 'afz-print2-area'; d
 area.className = (mode === 'guru' ? 'p2-portrait ' : '') + (style === 1 ? 'p2-s1' : 'p2-s2');
 area.innerHTML = html;
 }
-function afzRunPrint(style, mode, list) {
-afzBuildPrintArea(style, mode, list);
+function afzRunPrint(style, mode, list, withAnalisa) {
+afzBuildPrintArea(style, mode, list, withAnalisa);
 const st = document.createElement('style');
 st.id = 'afz-print2-page';
 st.textContent = '@media print { @page { size: A4 ' + (mode === 'guru' ? 'portrait' : 'landscape') + '; margin: 12mm; } }';
@@ -2121,7 +2121,7 @@ if(sorted.length === 0) { showCustomAlert('Tiada guru didaftarkan.'); return; }
 afzAskTeacherScope(val, function(scope) {
 const list = (scope === 'semua') ? sorted : (val ? [val] : []);
 if(list.length === 0) { showCustomAlert('Sila pilih guru terlebih dahulu.'); return; }
-afzRunPrint(n, 'guru', list);
+afzRunPrint(n, 'guru', list, scope === 'dipilih');
 });
 };
         function initJanaAutoTab() {
