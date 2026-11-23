@@ -116,11 +116,100 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
     body.afz-analysis-printing #analysis-report-content th,
     body.afz-analysis-printing #analysis-report-content td { border: 1px solid #475569; padding: 5px; font-size: 9pt; }
 }
+        header.glass-header {
+            background: linear-gradient(120deg, #0b1b3d 0%, #112950 55%, #0b1b3d 100%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+            overflow: visible;
+        }
+        header.glass-header > div {
+            gap: 16px;
+            align-items: center;
+        }
+        header.glass-header nav.glass-nav {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            width: auto;
+            max-width: 100%;
+            min-width: 0;
+            flex: 1 1 0%;
+            padding: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.09);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.09), 0 12px 30px rgba(2, 8, 23, 0.2);
+            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(16px);
+            scrollbar-width: thin;
+            scrollbar-color: rgba(186, 230, 253, 0.45) transparent;
+        }
+        header.glass-header nav.glass-nav button.nav-tab {
+            flex: 0 0 auto;
+            padding: 10px 12px;
+            border: 1px solid transparent;
+            border-radius: 999px;
+            background: transparent;
+            color: rgba(241, 245, 249, 0.86);
+            font-size: 12px;
+            font-weight: 650;
+            line-height: 1.15;
+            transition: color 220ms ease, background 220ms ease, border-color 220ms ease, box-shadow 220ms ease, transform 220ms ease;
+        }
+        header.glass-header nav.glass-nav button.nav-tab:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-1px);
+        }
+        header.glass-header nav.glass-nav button.nav-tab.nav-tab-active {
+            color: #0b1b3d;
+            background: linear-gradient(135deg, #ffffff 0%, #dff4ff 100%);
+            border-color: rgba(255, 255, 255, 0.78);
+            box-shadow: 0 5px 16px rgba(2, 8, 23, 0.24), inset 0 1px 0 #fff;
+        }
+        header.glass-header nav.glass-nav button.nav-tab.nav-tab-active:hover {
+            color: #0b1b3d;
+            background: linear-gradient(135deg, #fff 0%, #e8f7ff 100%);
+            transform: translateY(-1px);
+        }
+        header.glass-header nav.glass-nav button.nav-tab:focus-visible {
+            outline: 2px solid #7dd3fc;
+            outline-offset: 2px;
+        }
+        header.glass-header .header-date-badge {
+            background: rgba(255, 255, 255, 0.09);
+            border-color: rgba(255, 255, 255, 0.18);
+            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(16px);
+        }
+        @media (max-width: 1279px) {
+            header.glass-header > div { justify-content: space-between; }
+            header.glass-header nav.glass-nav {
+                order: 3;
+                flex: 1 0 100%;
+                width: 100%;
+                justify-content: flex-start;
+                overflow-x: auto;
+                margin-top: 2px;
+            }
+            header.glass-header .header-date-badge { order: 2; }
+        }
+        @media (max-width: 640px) {
+            header.glass-header > div { padding: 12px; gap: 10px; }
+            header.glass-header > div > div:first-child { min-width: 0; }
+            header.glass-header > div > div:first-child > div:first-child { width: 52px; height: 52px; }
+            header.glass-header h1 { font-size: 15px; line-height: 1.2; }
+            header.glass-header nav.glass-nav { gap: 3px; padding: 5px; border-radius: 18px; }
+            header.glass-header nav.glass-nav button.nav-tab { padding: 9px 11px; font-size: 11px; }
+            header.glass-header .header-date-badge { padding: 7px 10px; font-size: 10px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            header.glass-header nav.glass-nav button.nav-tab { transition: none; }
+        }
     </style>
 </head>
 <body class="bg-slate-100 text-slate-900 min-h-screen flex flex-col">
     <!-- Header / Navigasi Utama -->
-    <header class="bg-[#0b1b3d] text-white shadow-md border-b border-slate-800">
+    <header class="glass-header bg-[#0b1b3d] text-white shadow-md border-b border-slate-800">
         <div class="w-full px-4 py-3 flex flex-wrap justify-between items-center">
             <div class="flex items-center space-x-3.5">
                 <!-- Logo Sekolah Dinamik -->
@@ -141,17 +230,17 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
                     </p>
                 </div>
             </div>
-            <nav class="flex space-x-1 sm:space-x-2 mt-3 lg:mt-0 overflow-x-auto items-center">
-                <button onclick="switchTab('utama')" id="nav-btn-utama" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">🏠 Utama</button>
-                <button onclick="switchTab('data')" id="nav-btn-data" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">📂 Data Asas</button>
-                <button onclick="switchTab('waktu')" id="nav-btn-waktu" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">⏱️ Waktu & Rehat</button>
-                <button onclick="switchTab('guru_matapelajaran')" id="nav-btn-guru_matapelajaran" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">👨‍🏫 Guru & Mata Pelajaran</button>
-                <button onclick="switchTab('tetapan_masa_subjek')" id="nav-btn-tetapan_masa_subjek" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">⚙️ Tetapan Masa Subjek</button>
-                <button onclick="switchTab('jana')" id="nav-btn-jana" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">⚡ Jana Jadual</button>
-                <button onclick="switchTab('jadual_induk')" id="nav-btn-jadual_induk" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">📅 Jadual Induk</button>
-                <button onclick="switchTab('jadual_guru_ganti')" id="nav-btn-jadual_guru_ganti" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">📋 Jadual Guru Ganti</button>
-                <button onclick="switchTab('analisa_jadual')" id="nav-btn-analisa_jadual" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">📊 Analisa Jadual</button>
-                <button onclick="switchTab('tetapan')" id="nav-btn-tetapan" class="px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">🛠️ Tetapan</button>
+            <nav class="glass-nav flex space-x-1 sm:space-x-2 mt-3 lg:mt-0 overflow-x-auto items-center" aria-label="Navigasi utama">
+                <button onclick="switchTab('utama')" id="nav-btn-utama" class="nav-tab px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition" aria-current="page">🏠 Utama</button>
+                <button onclick="switchTab('data')" id="nav-btn-data" class="nav-tab px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">📂 Data Asas</button>
+                <button onclick="switchTab('waktu')" id="nav-btn-waktu" class="nav-tab px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">⏱️ Waktu & Rehat</button>
+                <button onclick="switchTab('guru_matapelajaran')" id="nav-btn-guru_matapelajaran" class="nav-tab px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">👨‍🏫 Guru & Mata Pelajaran</button>
+                <button onclick="switchTab('tetapan_masa_subjek')" id="nav-btn-tetapan_masa_subjek" class="nav-tab px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">⚙️ Tetapan Masa Subjek</button>
+                <button onclick="switchTab('jana')" id="nav-btn-jana" class="nav-tab px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">⚡ Jana Jadual</button>
+                <button onclick="switchTab('jadual_induk')" id="nav-btn-jadual_induk" class="nav-tab px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">📅 Jadual Induk</button>
+                <button onclick="switchTab('jadual_guru_ganti')" id="nav-btn-jadual_guru_ganti" class="nav-tab px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">📋 Jadual Guru Ganti</button>
+                <button onclick="switchTab('analisa_jadual')" id="nav-btn-analisa_jadual" class="nav-tab px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">📊 Analisa Jadual</button>
+                <button onclick="switchTab('tetapan')" id="nav-btn-tetapan" class="nav-tab px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-[#132d60] transition">🛠️ Tetapan</button>
             </nav>
         </div>
     </header>
@@ -1669,6 +1758,8 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
                 let btn = document.getElementById(`nav-btn-${t}`);
                 if (el) el.classList.add('hidden');
                 if (btn) {
+                    btn.classList.remove('nav-tab-active');
+                    btn.removeAttribute('aria-current');
                     btn.classList.remove('bg-[#132d60]');
                     btn.classList.add('hover:bg-[#132d60]');
                 }
@@ -1677,6 +1768,8 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
             let targetBtn = document.getElementById(`nav-btn-${tabId}`);
             if (targetEl) targetEl.classList.remove('hidden');
             if (targetBtn) {
+                targetBtn.classList.add('nav-tab-active');
+                targetBtn.setAttribute('aria-current', 'page');
                 targetBtn.classList.add('bg-[#132d60]');
                 targetBtn.classList.remove('hover:bg-[#132d60]');
             }
