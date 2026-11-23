@@ -793,7 +793,7 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
                         <p class="text-xs text-slate-500 mt-1">Ringkasan berdasarkan jadual dan rekod guru ganti semasa.</p>
                     </div>
                     <div class="analysis-controls flex items-center gap-2">
-                        <button onclick="renderScheduleAnalysis()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold transition">↻ Segar Semula</button>
+                        <button id="analysis-refresh-button" onclick="refreshScheduleAnalysis()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold transition">↻ Segar Semula</button>
                         <button onclick="printScheduleAnalysis()" class="px-4 py-2 bg-[#0b1b3d] hover:bg-[#132d60] text-white rounded-lg text-xs font-bold shadow transition">🖨️ Cetak</button>
                     </div>
                 </div>
@@ -1284,6 +1284,12 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
             if(!db) {
                 let localData = localStorage.getItem('school_database');
                 if(localData) databaseRecords = JSON.parse(localData);
+                let localTimeSlots = localStorage.getItem('school_time_slots');
+                if(localTimeSlots) timeSlotsData = JSON.parse(localTimeSlots);
+                let localBlockedTimes = localStorage.getItem('school_blocked_times');
+                if(localBlockedTimes) blockedTimesData = JSON.parse(localBlockedTimes);
+                let localTimetable = localStorage.getItem('school_generated_timetable');
+                if(localTimetable) generatedTimetableData = JSON.parse(localTimetable);
                 let localGMP = localStorage.getItem('school_gmp_allocations');
                 if(localGMP) gmpAllocations = JSON.parse(localGMP);
                 let localAgihan = localStorage.getItem('school_agihan_waktu');
@@ -1314,7 +1320,7 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
                 renderDataTable();
                 renderSavedVersionsList();
                 updateMainDashboardStats();
-                return;
+                return true;
             }
             try {
                 const docRef = doc(db, "sekolah_data", "pusat_data");
@@ -1347,10 +1353,12 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
                 }
             } catch (e) {
                 console.error("Gagal memuat data dari pangkalan data awan:", e);
+                return false;
             }
             renderDataTable();
             renderSavedVersionsList();
             updateMainDashboardStats();
+            return true;
         }
         function updateMainDashboardStats() {
             let totalGuruEl = document.getElementById('stat-total-guru');
@@ -1865,6 +1873,33 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
                     ? 'Tiada penempatan bilik direkodkan dalam jadual semasa. Bilik berdaftar: ' + roomNames.join(', ')
                     : 'Tiada penempatan atau maklumat bilik berdaftar untuk dipaparkan.';
                 message.classList.remove('hidden');
+            }
+        };
+        window.refreshScheduleAnalysis = async function() {
+            const button = document.getElementById('analysis-refresh-button');
+            if(button && button.disabled) return;
+            const originalText = button ? button.textContent : '';
+            if(button) {
+                button.disabled = true;
+                button.textContent = '⏳ Memuat...';
+                button.classList.add('opacity-60', 'cursor-wait');
+            }
+            try {
+                const loaded = await loadDatabaseFromCloud();
+                if(!loaded) {
+                    showCustomAlert('Data tidak dapat dimuat semula. Sila semak sambungan internet dan cuba lagi.');
+                    return;
+                }
+                renderScheduleAnalysis();
+            } catch(error) {
+                console.error('Gagal menyegarkan analisa jadual:', error);
+                showCustomAlert('Ralat berlaku semasa memuat semula data analisa jadual.');
+            } finally {
+                if(button) {
+                    button.disabled = false;
+                    button.textContent = originalText;
+                    button.classList.remove('opacity-60', 'cursor-wait');
+                }
             }
         };
         window.printScheduleAnalysis = function() {
