@@ -205,11 +205,294 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
         @media (prefers-reduced-motion: reduce) {
             header.glass-header nav.glass-nav button.nav-tab { transition: none; }
         }
+        body.app-shell-body {
+            display: block;
+            min-height: 100vh;
+            background: #f3f5f9;
+        }
+        header.app-sidebar {
+            position: fixed;
+            inset: 0 auto 0 0;
+            z-index: 50;
+            width: 272px;
+            color: #172033;
+            background: #fff;
+            border: 0;
+            border-right: 1px solid #e6eaf0;
+            border-radius: 0;
+            box-shadow: 8px 0 28px rgba(15, 23, 42, 0.045);
+            overflow: hidden;
+        }
+        header.app-sidebar > div {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: flex-start;
+            flex-wrap: nowrap;
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            gap: 0;
+            padding: 22px 16px 18px;
+        }
+        header.app-sidebar > div > div:first-child {
+            flex: 0 0 auto;
+            align-items: flex-start;
+            gap: 12px;
+            min-width: 0;
+            margin: 0 0 18px;
+            padding: 0 5px 20px;
+            border-bottom: 1px solid #edf0f4;
+        }
+        header.app-sidebar > div > div:first-child > div:first-child {
+            flex: 0 0 48px;
+            width: 48px;
+            height: 48px;
+            padding: 4px;
+            background: #eef2ff;
+            border: 1px solid #e0e7ff;
+            border-radius: 14px;
+            box-shadow: none;
+        }
+        header.app-sidebar #header-school-name {
+            color: #172033;
+            font-size: 13px;
+            line-height: 1.35;
+            letter-spacing: 0;
+            text-shadow: none;
+        }
+        header.app-sidebar #header-school-address {
+            margin-top: 3px;
+            color: #7b8495;
+            font-size: 10px;
+        }
+        header.app-sidebar .header-sub-fancy {
+            margin-top: 7px;
+            color: #4f46e5;
+            font-size: 11px;
+            text-shadow: none;
+        }
+        header.app-sidebar > div > div:first-child > div:last-child > p:last-child {
+            color: #98a1af;
+            font-size: 9px;
+            white-space: normal;
+        }
+        header.app-sidebar nav.glass-nav {
+            order: 0;
+            display: flex;
+            flex: 1 1 auto;
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: flex-start;
+            gap: 4px;
+            width: 100%;
+            max-width: none;
+            min-height: 0;
+            margin: 0;
+            padding: 0 3px;
+            overflow-x: hidden;
+            overflow-y: auto;
+            border: 0;
+            border-radius: 0;
+            background: transparent;
+            box-shadow: none;
+            -webkit-backdrop-filter: none;
+            backdrop-filter: none;
+            scrollbar-width: thin;
+            scrollbar-color: #d7dce5 transparent;
+        }
+        header.app-sidebar nav.glass-nav button.nav-tab,
+        header.app-sidebar nav.glass-nav button.nav-tab:hover,
+        header.app-sidebar nav.glass-nav button.nav-tab.nav-tab-active,
+        header.app-sidebar nav.glass-nav button.nav-tab.nav-tab-active:hover {
+            display: flex;
+            flex: 0 0 auto;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+            box-sizing: border-box;
+            min-height: 42px;
+            padding: 10px 12px;
+            border: 1px solid transparent;
+            border-radius: 11px;
+            text-align: left;
+            font-size: 12px;
+            transform: none;
+            box-shadow: none;
+        }
+        header.app-sidebar nav.glass-nav button.nav-tab {
+            color: #697386;
+            background: transparent;
+        }
+        header.app-sidebar nav.glass-nav button.nav-tab:hover {
+            color: #202b42;
+            background: #f5f6fa;
+        }
+        header.app-sidebar nav.glass-nav button.nav-tab.nav-tab-active,
+        header.app-sidebar nav.glass-nav button.nav-tab.nav-tab-active:hover {
+            color: #3730a3;
+            background: #eef2ff;
+            border-color: #e2e7ff;
+            box-shadow: inset 3px 0 #6366f1;
+        }
+        header.app-sidebar .header-date-badge {
+            order: 0;
+            flex: 0 0 auto;
+            justify-content: flex-start;
+            margin: 18px 0 0;
+            padding: 10px 12px;
+            border: 1px solid #edf0f4;
+            border-radius: 12px;
+            color: #596477;
+            background: #f8f9fb;
+            font-size: 10px;
+            white-space: normal;
+            -webkit-backdrop-filter: none;
+            backdrop-filter: none;
+        }
+        body.app-shell-body > main.app-shell-main {
+            box-sizing: border-box;
+            width: calc(100% - 272px);
+            min-width: 0;
+            margin-left: 272px;
+            padding: 30px clamp(22px, 3vw, 48px);
+            background: #f3f5f9;
+        }
+        #tab-utama > div:first-child {
+            padding: 8px 0 4px;
+            text-align: left;
+        }
+        #tab-utama > div:first-child h2 {
+            color: #202b42;
+            font-size: clamp(22px, 2.2vw, 30px);
+            letter-spacing: -0.035em;
+        }
+        #tab-utama > div:first-child p {
+            color: #818a9a;
+        }
+        #tab-utama > div:nth-of-type(2) > div {
+            min-height: 154px;
+            padding: 22px;
+            border: 1px solid #e8ebf1;
+            border-radius: 17px;
+            color: #172033 !important;
+            background: #fff !important;
+            box-shadow: 0 5px 18px rgba(20, 33, 61, 0.045);
+        }
+        #tab-utama > div:nth-of-type(2) > div > div:first-child > div:first-child > div:first-child {
+            color: #778194 !important;
+        }
+        #tab-utama > div:nth-of-type(2) > div > div:first-child > div:first-child > div:nth-child(2) {
+            color: #202b42 !important;
+        }
+        #tab-utama > div:nth-of-type(2) > div > div:first-child > div:last-child {
+            color: #4f46e5 !important;
+            background: #eef2ff !important;
+        }
+        #tab-utama > div:nth-of-type(2) > div > div:last-child {
+            border-color: #edf0f4 !important;
+            color: #818a9a !important;
+        }
+        #tab-utama > div:nth-of-type(3) button {
+            justify-content: flex-start;
+            min-height: 58px;
+            padding: 16px 18px;
+            border: 1px solid #e8ebf1;
+            border-radius: 14px;
+            color: #344158 !important;
+            background: #fff !important;
+            box-shadow: 0 4px 14px rgba(20, 33, 61, 0.04);
+        }
+        #tab-utama > div:nth-of-type(3) button:hover {
+            border-color: #cfd7e6;
+            background: #f9fafc !important;
+            transform: translateY(-1px);
+        }
+        @media (max-width: 900px) {
+            header.app-sidebar {
+                position: sticky;
+                inset: auto;
+                width: 100%;
+                height: auto;
+                border-right: 0;
+                border-bottom: 1px solid #e6eaf0;
+                border-radius: 0;
+                box-shadow: 0 5px 20px rgba(15, 23, 42, 0.045);
+            }
+            header.app-sidebar > div {
+                height: auto;
+                padding: 12px 16px 10px;
+            }
+            header.app-sidebar > div > div:first-child {
+                width: 100%;
+                margin: 0 0 10px;
+                padding: 0 2px 10px;
+                border-bottom: 0;
+            }
+            header.app-sidebar > div > div:first-child > div:first-child {
+                width: 44px;
+                height: 44px;
+                flex-basis: 44px;
+            }
+            header.app-sidebar nav.glass-nav {
+                order: 0;
+                flex: 0 0 auto;
+                flex-direction: row;
+                gap: 4px;
+                width: 100%;
+                min-height: auto;
+                padding: 5px;
+                overflow-x: auto;
+                overflow-y: hidden;
+                border: 1px solid #e8ebf1;
+                border-radius: 13px;
+                background: #f8f9fb;
+            }
+            header.app-sidebar nav.glass-nav button.nav-tab,
+            header.app-sidebar nav.glass-nav button.nav-tab:hover,
+            header.app-sidebar nav.glass-nav button.nav-tab.nav-tab-active,
+            header.app-sidebar nav.glass-nav button.nav-tab.nav-tab-active:hover {
+                flex: 0 0 auto;
+                width: auto;
+                min-height: 38px;
+                padding: 9px 11px;
+                white-space: nowrap;
+                box-shadow: none;
+            }
+            header.app-sidebar nav.glass-nav button.nav-tab.nav-tab-active,
+            header.app-sidebar nav.glass-nav button.nav-tab.nav-tab-active:hover {
+                color: #3730a3;
+                background: #eef2ff;
+                border-color: #e2e7ff;
+            }
+            header.app-sidebar .header-date-badge {
+                align-self: flex-end;
+                margin: 8px 0 0;
+                padding: 6px 9px;
+            }
+            body.app-shell-body > main.app-shell-main {
+                width: 100%;
+                margin-left: 0;
+                padding: 24px clamp(16px, 4vw, 30px);
+            }
+        }
+        @media (max-width: 540px) {
+            header.app-sidebar > div { padding: 10px 12px 9px; }
+            header.app-sidebar #header-school-name { font-size: 12px; }
+            header.app-sidebar .header-date-badge { font-size: 9px; }
+            body.app-shell-body > main.app-shell-main { padding: 20px 14px; }
+            #tab-utama > div:nth-of-type(2) > div { min-height: 130px; padding: 18px; }
+            #tab-utama > div:nth-of-type(3) button { min-height: 50px; }
+        }
+        @media print {
+            header.app-sidebar { display: none !important; }
+            body.app-shell-body > main.app-shell-main { width: 100% !important; margin: 0 !important; padding: 0 !important; }
+        }
     </style>
 </head>
-<body class="bg-slate-100 text-slate-900 min-h-screen flex flex-col">
+<body class="app-shell-body bg-slate-100 text-slate-900 min-h-screen flex flex-col">
     <!-- Header / Navigasi Utama -->
-    <header class="glass-header bg-[#0b1b3d] text-white shadow-md border-b border-slate-800">
+    <header class="app-sidebar glass-header bg-[#0b1b3d] text-white shadow-md border-b border-slate-800">
         <div class="w-full px-4 py-3 flex flex-wrap justify-between items-center">
             <div class="flex items-center space-x-3.5">
                 <!-- Logo Sekolah Dinamik -->
@@ -245,7 +528,7 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
         </div>
     </header>
     <!-- Kandungan Utama -->
-    <main class="flex-grow w-full px-4 py-6 space-y-6">
+    <main class="app-shell-main flex-grow w-full px-4 py-6 space-y-6">
         
         <!-- Tab Utama (Dikemaskini 100% Mengikut Gambar 1) -->
         <section id="tab-utama" class="space-y-6">
