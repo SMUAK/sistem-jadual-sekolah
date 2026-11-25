@@ -503,6 +503,28 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
             #tab-utama > div:nth-of-type(2) > div { min-height: 130px; padding: 18px; }
             #tab-utama > div:nth-of-type(3) button { min-height: 50px; }
         }
+        #data-modal.data-modal-wide > div {
+            width: 98vw;
+            max-width: 1500px;
+            padding: 12px;
+        }
+        @media (min-width: 1100px) {
+            #data-modal.data-modal-wide #modal-container-matrix > div { overflow-x: hidden; }
+            #data-modal.data-modal-wide #modal-container-matrix table { width: 100%; table-layout: fixed; }
+            #data-modal.data-modal-wide #matrix-thead th:first-child,
+            #data-modal.data-modal-wide #matrix-tbody td:first-child { width: 82px; }
+            #data-modal.data-modal-wide #matrix-thead th:not(:first-child),
+            #data-modal.data-modal-wide #matrix-tbody td:not(:first-child) { padding: 4px 1px !important; }
+            #data-modal.data-modal-wide #matrix-thead th:not(:first-child) { font-size: 10px; }
+            #data-modal.data-modal-wide #matrix-tbody input[name="matrix-masa"] {
+                width: 28px !important;
+                padding-left: 1px !important;
+                padding-right: 1px !important;
+            }
+        }
+        @media (max-width: 1099px) {
+            #data-modal.data-modal-wide #modal-container-matrix > div { overflow-x: auto; }
+        }
         @media print {
             header.app-sidebar { display: none !important; }
             body.app-shell-body > main.app-shell-main { width: 100% !important; margin: 0 !important; padding: 0 !important; }
@@ -3626,7 +3648,10 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
                 }
             }
             let dataModalEl = document.getElementById('data-modal');
-            if(dataModalEl) dataModalEl.classList.remove('hidden');
+            if(dataModalEl) {
+                dataModalEl.classList.toggle('data-modal-wide', currentSubTab === 'guru');
+                dataModalEl.classList.remove('hidden');
+            }
         }
         function buildMatrixTable(selectedDataMap = {}) {
             let thead = document.getElementById('matrix-thead');
@@ -3702,7 +3727,11 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
                 buildMatrixTable(parsedMap);
             }
         }
-        window.closeDataModal = () => document.getElementById('data-modal').classList.add('hidden');
+        window.closeDataModal = () => {
+            const modal = document.getElementById('data-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('data-modal-wide');
+        };
         
         window.saveModalData = function() {
             let editIdEl = document.getElementById('modal-edit-id');
