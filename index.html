@@ -1465,22 +1465,32 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
         </div>
     </div>
     <!-- Skrip Aplikasi Utama -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        
+    <script>
         let db = null;
-        try {
-            const app = initializeApp({
-                apiKey: "AIzaSyDOJ3y4_vK3cVBTX8TmG_9DmDFvZ25MBkc",
-                authDomain: "sistem-jadual-sekolah.firebaseapp.com",
-                projectId: "sistem-jadual-sekolah",
-                storageBucket: "sistem-jadual-sekolah.firebasestorage.app",
-                messagingSenderId: "548727396573",
-                appId: "1:548727396573:web:7a4a478f15b61ba038a334"
-            });
-            db = getFirestore(app);
-        } catch (e) { console.error("Ralat permulaan Firebase:", e); }
+        let initializeApp, getFirestore, doc, getDoc, setDoc;
+        async function initialiseFirebaseForLocalAndOnlineUse() {
+            try {
+                const appModule = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js");
+                const firestoreModule = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js");
+                initializeApp = appModule.initializeApp;
+                getFirestore = firestoreModule.getFirestore;
+                doc = firestoreModule.doc;
+                getDoc = firestoreModule.getDoc;
+                setDoc = firestoreModule.setDoc;
+                const app = initializeApp({
+                    apiKey: "AIzaSyDOJ3y4_vK3cVBTX8TmG_9DmDFvZ25MBkc",
+                    authDomain: "sistem-jadual-sekolah.firebaseapp.com",
+                    projectId: "sistem-jadual-sekolah",
+                    storageBucket: "sistem-jadual-sekolah.firebasestorage.app",
+                    messagingSenderId: "548727396573",
+                    appId: "1:548727396573:web:7a4a478f15b61ba038a334"
+                });
+                db = getFirestore(app);
+            } catch (error) {
+                console.warn("Firebase tidak tersedia; sistem menggunakan storan tempatan.", error);
+            }
+        }
+        initialiseFirebaseForLocalAndOnlineUse();
         let currentSubTab = 'subjek';
         let currentMasterMode = 'kelas';
         let databaseRecords = {
@@ -1525,6 +1535,7 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
         
         // DATA MODUL GURU GANTI (RELIEF)
         let reliefAbsentTeachers = [];
+        let reliefAbsentTeachersByDate = {};
         let reliefExemptTeachers = [];
         let reliefAssignmentsData = {};
         let reliefLogsData = [];
@@ -1672,42 +1683,39 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
             }
         };
         async function loadDatabaseFromCloud() {
-            if(!db) {
-                let localData = localStorage.getItem('school_database');
-                if(localData) databaseRecords = JSON.parse(localData);
-                let localTimeSlots = localStorage.getItem('school_time_slots');
-                if(localTimeSlots) timeSlotsData = JSON.parse(localTimeSlots);
-                let localBlockedTimes = localStorage.getItem('school_blocked_times');
-                if(localBlockedTimes) blockedTimesData = JSON.parse(localBlockedTimes);
-                let localTimetable = localStorage.getItem('school_generated_timetable');
-                if(localTimetable) generatedTimetableData = JSON.parse(localTimetable);
-                let localGMP = localStorage.getItem('school_gmp_allocations');
-                if(localGMP) gmpAllocations = JSON.parse(localGMP);
-                let localAgihan = localStorage.getItem('school_agihan_waktu');
-                if(localAgihan) agihanWaktuData = JSON.parse(localAgihan);
-                let localLocked = localStorage.getItem('school_locked_slots');
-                if(localLocked) lockedSlotsData = JSON.parse(localLocked);
-                let localVersions = localStorage.getItem('school_saved_versions');
-                if(localVersions) savedTimetableVersions = JSON.parse(localVersions);
-                let localReliefAss = localStorage.getItem('school_relief_assignments');
-                if(localReliefAss) reliefAssignmentsData = JSON.parse(localReliefAss);
-                let localReliefLogs = localStorage.getItem('school_relief_logs');
-                if(localReliefLogs) reliefLogsData = JSON.parse(localReliefLogs);
-                let localExempt = localStorage.getItem('school_relief_exempt');
-                if(localExempt) reliefExemptTeachers = JSON.parse(localExempt);
-                let localLogo = localStorage.getItem('school_custom_logo');
-                if(localLogo) {
-                    customSchoolLogo = localLogo;
+            const safeParse = function(key, fallback) {
+                try {
+                    const raw = localStorage.getItem(key);
+                    return raw ? JSON.parse(raw) : fallback;
+                } catch (error) {
+                    console.warn(`Data tempatan tidak sah: ${key}`, error);
+                    return fallback;
+                }
+            };
+            const loadLocalFallback = function() {
+                databaseRecords = safeParse('school_database', databaseRecords);
+                timeSlotsData = safeParse('school_time_slots', timeSlotsData);
+                blockedTimesData = safeParse('school_blocked_times', blockedTimesData);
+                generatedTimetableData = safeParse('school_generated_timetable', generatedTimetableData);
+                gmpAllocations = safeParse('school_gmp_allocations', gmpAllocations);
+                agihanWaktuData = safeParse('school_agihan_waktu', agihanWaktuData);
+                lockedSlotsData = safeParse('school_locked_slots', lockedSlotsData);
+                savedTimetableVersions = safeParse('school_saved_versions', savedTimetableVersions);
+                reliefAssignmentsData = safeParse('school_relief_assignments', reliefAssignmentsData);
+                reliefLogsData = safeParse('school_relief_logs', reliefLogsData);
+                reliefExemptTeachers = safeParse('school_relief_exempt', reliefExemptTeachers);
+                reliefAbsentTeachersByDate = safeParse('school_relief_absent_by_date', reliefAbsentTeachersByDate);
+                customSchoolLogo = localStorage.getItem('school_custom_logo') || customSchoolLogo;
+                schoolInfoSettings = safeParse('school_info_settings', schoolInfoSettings);
+                if(customSchoolLogo) {
                     const headerImg = document.getElementById('header-school-logo');
                     if(headerImg) headerImg.src = customSchoolLogo;
                 }
-                let localSchoolInfo = localStorage.getItem('school_info_settings');
-                if(localSchoolInfo) {
-                    schoolInfoSettings = JSON.parse(localSchoolInfo);
-                }
                 updateHeaderSchoolInfoDisplay();
-                
                 syncGMPAllocationsToGuruData();
+            };
+            if(!db) {
+                loadLocalFallback();
                 renderDataTable();
                 renderSavedVersionsList();
                 updateMainDashboardStats();
@@ -1729,6 +1737,7 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
                     if(cloudData.reliefAssignmentsData) reliefAssignmentsData = cloudData.reliefAssignmentsData;
                     if(cloudData.reliefLogsData) reliefLogsData = cloudData.reliefLogsData;
                     if(cloudData.reliefExemptTeachers) reliefExemptTeachers = cloudData.reliefExemptTeachers;
+                    if(cloudData.reliefAbsentTeachersByDate) reliefAbsentTeachersByDate = cloudData.reliefAbsentTeachersByDate;
                     if(cloudData.customSchoolLogo) {
                         customSchoolLogo = cloudData.customSchoolLogo;
                         const headerImg = document.getElementById('header-school-logo');
@@ -1744,7 +1753,7 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
                 }
             } catch (e) {
                 console.error("Gagal memuat data dari pangkalan data awan:", e);
-                return false;
+                loadLocalFallback();
             }
             renderDataTable();
             renderSavedVersionsList();
@@ -1845,11 +1854,12 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
             localStorage.setItem('school_relief_assignments', JSON.stringify(reliefAssignmentsData));
             localStorage.setItem('school_relief_logs', JSON.stringify(reliefLogsData));
             localStorage.setItem('school_relief_exempt', JSON.stringify(reliefExemptTeachers));
+            localStorage.setItem('school_relief_absent_by_date', JSON.stringify(reliefAbsentTeachersByDate));
             localStorage.setItem('school_info_settings', JSON.stringify(schoolInfoSettings));
             if(customSchoolLogo) localStorage.setItem('school_custom_logo', customSchoolLogo);
             else localStorage.removeItem('school_custom_logo');
             updateMainDashboardStats();
-            if(!db) return;
+            if(!db) return false;
             try {
                 await setDoc(doc(db, "sekolah_data", "pusat_data"), {
                     databaseRecords,
@@ -1863,12 +1873,15 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
                     reliefAssignmentsData,
                     reliefLogsData,
                     reliefExemptTeachers,
+                    reliefAbsentTeachersByDate,
                     customSchoolLogo,
                     schoolInfoSettings,
                     updatedAt: new Date().toISOString()
                 });
+                return true;
             } catch (e) {
                 console.error("Gagal menyimpan data ke pangkalan data awan:", e);
+                return false;
             }
         }
         window.importExcelOrCsv = function(event) {
@@ -1989,6 +2002,7 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
                 reliefAssignmentsData,
                 reliefLogsData,
                 reliefExemptTeachers,
+                reliefAbsentTeachersByDate,
                 customSchoolLogo,
                 schoolInfoSettings,
                 exportDate: new Date().toISOString()
@@ -2019,6 +2033,7 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
                     if(imported.reliefAssignmentsData) reliefAssignmentsData = imported.reliefAssignmentsData;
                     if(imported.reliefLogsData) reliefLogsData = imported.reliefLogsData;
                     if(imported.reliefExemptTeachers) reliefExemptTeachers = imported.reliefExemptTeachers;
+                    if(imported.reliefAbsentTeachersByDate) reliefAbsentTeachersByDate = imported.reliefAbsentTeachersByDate;
                     if(imported.customSchoolLogo) {
                         customSchoolLogo = imported.customSchoolLogo;
                         const headerImg = document.getElementById('header-school-logo');
@@ -2855,6 +2870,122 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
                 `;
             });
         }
+        function afzNormaliseSlotLabel(slotLabel) {
+            return String(slotLabel || '').replace(/^Waktu\s+/i, '').trim();
+        }
+        function afzTeacherNameFromCode(code) {
+            if(!code) return '';
+            let allTeachers = databaseRecords.senarai_guru || [];
+            let match = allTeachers.find(g => String(g.code || '').trim().toLowerCase() === String(code).trim().toLowerCase());
+            if(match) return match.name;
+            match = allTeachers.find(g => String(g.name || '').trim().toLowerCase() === String(code).trim().toLowerCase());
+            return match ? match.name : '';
+        }
+        function afzIsTeacherBlocked(teacherName, day, slot) {
+            if(!teacherName) return false;
+            let record = (blockedTimesData || []).find(x => String(x.teacher || '').trim().toLowerCase() === String(teacherName).trim().toLowerCase());
+            if(!record) return false;
+            let slotLabel = afzNormaliseSlotLabel(slot.label);
+            return (record.blockedList || []).some(b => b.day === day &&
+                afzNormaliseSlotLabel(b.slot) === slotLabel);
+        }
+        function afzClassSubjectPool(className) {
+            let subjects = databaseRecords.subjek || [];
+            let classes = databaseRecords.kelas || [];
+            let classRecord = classes.find(k => k.name === className);
+            let tingkatan = classRecord && /TINGKATAN/i.test(classRecord.name)
+                ? classRecord.name.toUpperCase()
+                : 'TINGKATAN 1';
+            if(!agihanWaktuData[tingkatan]) {
+                let exact = Object.keys(agihanWaktuData).find(k => k.toUpperCase() === className.toUpperCase());
+                if(exact) tingkatan = exact;
+            }
+            let pool = [];
+            subjects.forEach(sub => {
+                let allocation = agihanWaktuData[tingkatan] && agihanWaktuData[tingkatan][sub.code];
+                let count = allocation
+                    ? (parseInt(allocation.single) || 0) + (parseInt(allocation.double) || 0) * 2 + (parseInt(allocation.triple) || 0) * 3
+                    : 1;
+                for(let i = 0; i < count; i++) pool.push(sub);
+            });
+            return pool;
+        }
+        function afzGenerateOneClass(className, resetMode) {
+            if(!generatedTimetableData[className]) generatedTimetableData[className] = {};
+            let days = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis'];
+            let learningSlots = timeSlotsData.filter(s => s.type === 'Waktu belajar');
+            let pool = afzClassSubjectPool(className);
+            let busy = {};
+            for(let cName in generatedTimetableData) {
+                if(cName === className) continue;
+                days.forEach(day => {
+                    learningSlots.forEach(slot => {
+                        let cell = generatedTimetableData[cName] && generatedTimetableData[cName][day]
+                            ? generatedTimetableData[cName][day][slot.label] : null;
+                        if(cell && cell.teacherName) {
+                            if(!busy[day]) busy[day] = {};
+                            if(!busy[day][slot.label]) busy[day][slot.label] = new Set();
+                            busy[day][slot.label].add(String(cell.teacherName).trim().toLowerCase());
+                        }
+                    });
+                });
+            }
+            days.forEach((day, dayIndex) => {
+                if(!generatedTimetableData[className][day]) generatedTimetableData[className][day] = {};
+                learningSlots.forEach((slot, slotIndex) => {
+                    let isLocked = lockedSlotsData[className] && lockedSlotsData[className][day] &&
+                        lockedSlotsData[className][day][slot.label];
+                    if(isLocked) {
+                        generatedTimetableData[className][day][slot.label] = lockedSlotsData[className][day][slot.label];
+                        let lockedTeacher = lockedSlotsData[className][day][slot.label].teacherName;
+                        if(lockedTeacher) {
+                            if(!busy[day]) busy[day] = {};
+                            if(!busy[day][slot.label]) busy[day][slot.label] = new Set();
+                            busy[day][slot.label].add(String(lockedTeacher).trim().toLowerCase());
+                        }
+                        return;
+                    }
+                    if(!resetMode && generatedTimetableData[className][day][slot.label]) return;
+                    let sub = pool.length ? pool[(dayIndex * learningSlots.length + slotIndex) % pool.length] : null;
+                    if(!sub) {
+                        delete generatedTimetableData[className][day][slot.label];
+                        return;
+                    }
+                    let key = `${className}_${sub.code}`;
+                    let allocationCode = gmpAllocations[key] || '';
+                    let teacherName = afzTeacherNameFromCode(allocationCode);
+                    if(!teacherName) teacherName = allocationCode;
+                    if(!teacherName) {
+                        let teacher = (databaseRecords.senarai_guru || []).find(g => g.code === sub.code);
+                        teacherName = teacher ? teacher.name : '';
+                    }
+                    let blocked = afzIsTeacherBlocked(teacherName, day, slot);
+                    let occupied = teacherName && busy[day] && busy[day][slot.label] &&
+                        busy[day][slot.label].has(String(teacherName).trim().toLowerCase());
+                    if(!teacherName || blocked || occupied) {
+                        teacherName = (databaseRecords.senarai_guru || []).find(g => {
+                            let name = String(g.name || '').trim();
+                            if(!name) return false;
+                            if(afzIsTeacherBlocked(name, day, slot)) return false;
+                            let occupiedFallback = busy[day] && busy[day][slot.label] &&
+                                busy[day][slot.label].has(name.toLowerCase());
+                            return !occupiedFallback;
+                        })?.name || '';
+                    }
+                    if(!teacherName) {
+                        delete generatedTimetableData[className][day][slot.label];
+                        return;
+                    }
+                    generatedTimetableData[className][day][slot.label] = {
+                        subjectCode: sub.code,
+                        teacherName
+                    };
+                    if(!busy[day]) busy[day] = {};
+                    if(!busy[day][slot.label]) busy[day][slot.label] = new Set();
+                    busy[day][slot.label].add(String(teacherName).trim().toLowerCase());
+                });
+            });
+        }
         window.startAutoGeneration = function() {
             let subjects = databaseRecords.subjek || [];
             let teachers = databaseRecords.senarai_guru || [];
@@ -2864,53 +2995,23 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
             }
             let targetClass = document.getElementById('auto-select-class').value;
             let classesToProcess = targetClass === 'Semua' ? classes : classes.filter(k => k.name === targetClass);
-            
             let modal = document.getElementById('generation-progress-modal');
             let bar = document.getElementById('progress-bar-fill');
             let statusText = document.getElementById('progress-status-text');
             let percentText = document.getElementById('progress-percent-text');
-            
-            modal.classList.remove('hidden');
-            bar.style.width = '0%';
-            percentText.innerText = '0%';
-            setTimeout(() => {
-                let days = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis'];
-                let learningSlots = timeSlotsData.filter(s => s.type === 'Waktu belajar');
-                
-                classesToProcess.forEach(k => {
-                    if(!generatedTimetableData[k.name]) generatedTimetableData[k.name] = {};
-                    let cName = k.name;
-                    days.forEach(day => {
-                        if(!generatedTimetableData[cName][day]) generatedTimetableData[cName][day] = {};
-                        let slotIndex = 1;
-                        learningSlots.forEach(slot => {
-                            let isLocked = lockedSlotsData[cName] && lockedSlotsData[cName][day] && lockedSlotsData[cName][day][slot.label];
-                            if(isLocked) {
-                                generatedTimetableData[cName][day][slot.label] = lockedSlotsData[cName][day][slot.label];
-                            } else {
-                                let currentVal = generatedTimetableData[cName][day][slot.label];
-                                let modRadio = document.querySelector('input[name="auto-mode"]:checked');
-                                let isResetMode = modRadio && modRadio.value === 'reset';
-                                
-                                if(isResetMode || !currentVal) {
-                                    let sub = subjects[(slotIndex - 1) % subjects.length];
-                                    let assignedTeacher = teachers[0] ? teachers[0].name : "Cikgu Umum";
-                                    generatedTimetableData[cName][day][slot.label] = {
-                                        subjectCode: sub ? sub.code : "BM",
-                                        teacherName: assignedTeacher
-                                    };
-                                }
-                            }
-                            slotIndex++;
-                        });
-                    });
-                });
-                saveDatabaseToCloud();
-                bar.style.width = '100%';
-                percentText.innerText = '100%';
-                statusText.innerText = 'Penjanaan selesai!';
+            if(modal) modal.classList.remove('hidden');
+            if(bar) bar.style.width = '0%';
+            if(percentText) percentText.innerText = '0%';
+            setTimeout(async () => {
+                let modRadio = document.querySelector('input[name="auto-mode"]:checked');
+                let resetMode = modRadio && modRadio.value === 'reset';
+                classesToProcess.forEach(k => afzGenerateOneClass(k.name, resetMode));
+                await saveDatabaseToCloud();
+                if(bar) bar.style.width = '100%';
+                if(percentText) percentText.innerText = '100%';
+                if(statusText) statusText.innerText = 'Penjanaan selesai!';
                 setTimeout(() => {
-                    modal.classList.add('hidden');
+                    if(modal) modal.classList.add('hidden');
                     renderClassStatusTable();
                     if(targetClass === 'Semua') { afzPromptSaveVersion(); } else { showCustomAlert('Jadual pintar berjaya dijana!'); }
                 }, 300);
@@ -2924,33 +3025,14 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
             }
             let modal = document.getElementById('generation-progress-modal');
             let bar = document.getElementById('progress-bar-fill');
-            modal.classList.remove('hidden');
-            bar.style.width = '0%';
-            setTimeout(() => {
-                let days = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis'];
-                let learningSlots = timeSlotsData.filter(s => s.type === 'Waktu belajar');
-                if(!generatedTimetableData[className]) generatedTimetableData[className] = {};
-                days.forEach(day => {
-                    if(!generatedTimetableData[className][day]) generatedTimetableData[className][day] = {};
-                    let sIdx = 1;
-                    learningSlots.forEach(slot => {
-                        let isLocked = lockedSlotsData[className] && lockedSlotsData[className][day] && lockedSlotsData[className][day][slot.label];
-                        if(isLocked) {
-                            generatedTimetableData[className][day][slot.label] = lockedSlotsData[className][day][slot.label];
-                        } else {
-                            let sub = subjects[(sIdx - 1) % subjects.length];
-                            generatedTimetableData[className][day][slot.label] = {
-                                subjectCode: sub.code,
-                                teacherName: teachers[0] ? teachers[0].name : 'ASRI B MOHD ZAIN'
-                            };
-                        }
-                        sIdx++;
-                    });
-                });
-                saveDatabaseToCloud();
-                bar.style.width = '100%';
+            if(modal) modal.classList.remove('hidden');
+            if(bar) bar.style.width = '0%';
+            setTimeout(async () => {
+                afzGenerateOneClass(className, true);
+                await saveDatabaseToCloud();
+                if(bar) bar.style.width = '100%';
                 setTimeout(() => {
-                    modal.classList.add('hidden');
+                    if(modal) modal.classList.add('hidden');
                     renderClassStatusTable();
                     showCustomAlert(`Jadual bagi kelas ${className} berjaya dijana!`);
                 }, 300);
@@ -3595,8 +3677,13 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
             let inputNameEl = document.getElementById('modal-input-name');
             let name = currentSubTab === 'guru' ? (selectNameEl ? selectNameEl.value : '') : (inputNameEl ? inputNameEl.value : '');
             let codeEl = document.getElementById('modal-input-code');
-            let code = codeEl ? codeEl.value : '';
+            let code = codeEl ? codeEl.value.trim() : '';
+            name = (name || '').trim();
             if(!name) return showCustomAlert('Sila masukkan atau pilih nama terlebih dahulu.');
+            let duplicate = (databaseRecords[currentSubTab] || []).find(x =>
+                x.id != editId && String(x.name || '').trim().toLowerCase() === name.toLowerCase()
+            );
+            if(duplicate) return showCustomAlert('Rekod dengan nama tersebut telah wujud.');
             
             if(currentSubTab === 'guru') {
                 let foundG = (databaseRecords.senarai_guru || []).find(g => g.name.toLowerCase() === name.toLowerCase());
@@ -3637,12 +3724,62 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
                 let item = databaseRecords[currentSubTab].find(x => x.id == editId);
                 if(item) { 
                     let oldName = item.name;
+                    let oldCode = item.code;
                     item.name = name; 
                     item.code = code; 
                     item.category = categoryValue; 
                     if(currentSubTab === 'senarai_guru' && databaseRecords['guru']) {
                         let gItem = databaseRecords['guru'].find(g => g.name.trim().toLowerCase() === oldName.trim().toLowerCase());
                         if(gItem) { gItem.name = name; gItem.code = code; }
+                    }
+                    if(currentSubTab === 'kelas') {
+                        let renamedGenerated = generatedTimetableData[oldName];
+                        if(renamedGenerated) {
+                            delete generatedTimetableData[oldName];
+                            generatedTimetableData[name] = renamedGenerated;
+                        }
+                        let renamedLocked = lockedSlotsData[oldName];
+                        if(renamedLocked) {
+                            delete lockedSlotsData[oldName];
+                            lockedSlotsData[name] = renamedLocked;
+                        }
+                        let renamedGmp = {};
+                        Object.keys(gmpAllocations).forEach(key => {
+                            let prefix = oldName + '_';
+                            if(key.startsWith(prefix)) {
+                                renamedGmp[name + key.slice(prefix.length)] = gmpAllocations[key];
+                            } else {
+                                renamedGmp[key] = gmpAllocations[key];
+                            }
+                        });
+                        gmpAllocations = renamedGmp;
+                        if(agihanWaktuData[oldName]) {
+                            agihanWaktuData[name] = agihanWaktuData[oldName];
+                            delete agihanWaktuData[oldName];
+                        }
+                    }
+                    if(currentSubTab === 'subjek') {
+                        for(let className in generatedTimetableData) {
+                            for(let day in generatedTimetableData[className]) {
+                                for(let slot in generatedTimetableData[className][day]) {
+                                    let cell = generatedTimetableData[className][day][slot];
+                                    if(cell && cell.subjectCode === oldCode) cell.subjectCode = code;
+                                }
+                            }
+                        }
+                        for(let ting in agihanWaktuData) {
+                            if(agihanWaktuData[ting][oldCode]) {
+                                agihanWaktuData[ting][code] = agihanWaktuData[ting][oldCode];
+                                delete agihanWaktuData[ting][oldCode];
+                            }
+                        }
+                        let renamedGmp = {};
+                        Object.keys(gmpAllocations).forEach(key => {
+                            let suffix = '_' + oldCode;
+                            if(key.endsWith(suffix)) renamedGmp[key.slice(0, -suffix.length) + '_' + code] = gmpAllocations[key];
+                            else renamedGmp[key] = gmpAllocations[key];
+                        });
+                        gmpAllocations = renamedGmp;
                     }
                 }
             } else {
@@ -3696,7 +3833,40 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
         window.deleteRecord = function(id) {
             showCustomConfirm('Adakah anda pasti ingin memadam rekod ini?', function(confirmed) {
                 if(confirmed) {
+                    let item = (databaseRecords[currentSubTab] || []).find(x => x.id == id);
                     databaseRecords[currentSubTab] = databaseRecords[currentSubTab].filter(x => x.id !== id);
+                    if(item && currentSubTab === 'kelas') {
+                        delete generatedTimetableData[item.name];
+                        delete lockedSlotsData[item.name];
+                        Object.keys(gmpAllocations).forEach(key => {
+                            if(key.startsWith(item.name + '_')) delete gmpAllocations[key];
+                        });
+                        delete agihanWaktuData[item.name];
+                    }
+                    if(item && currentSubTab === 'subjek') {
+                        for(let className in generatedTimetableData) {
+                            for(let day in generatedTimetableData[className]) {
+                                for(let slot in generatedTimetableData[className][day]) {
+                                    if(generatedTimetableData[className][day][slot]?.subjectCode === item.code) {
+                                        delete generatedTimetableData[className][day][slot];
+                                    }
+                                }
+                            }
+                        }
+                        Object.keys(gmpAllocations).forEach(key => {
+                            if(key.endsWith('_' + item.code)) delete gmpAllocations[key];
+                        });
+                        for(let ting in agihanWaktuData) delete agihanWaktuData[ting][item.code];
+                    }
+                    if(item && currentSubTab === 'senarai_guru') {
+                        databaseRecords.guru = (databaseRecords.guru || []).filter(g => g.name !== item.name);
+                        Object.keys(gmpAllocations).forEach(key => {
+                            if(String(gmpAllocations[key]).toLowerCase() === String(item.code).toLowerCase()) delete gmpAllocations[key];
+                        });
+                        blockedTimesData = (blockedTimesData || []).filter(b =>
+                            String(b.teacher).toLowerCase() !== String(item.name).toLowerCase()
+                        );
+                    }
                     saveDatabaseToCloud();
                     renderDataTable();
                 }
@@ -3716,7 +3886,13 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
             const container = document.getElementById('daily-slots-container');
             if(!container) return;
             let daysList = startDay === 'Ahad' ? ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis'] : ['Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat'];
-            let savedDailySlots = JSON.parse(localStorage.getItem('school_daily_slots_config')) || {};
+            let savedDailySlots = {};
+            try {
+                savedDailySlots = JSON.parse(localStorage.getItem('school_daily_slots_config') || '{}');
+            } catch (error) {
+                console.warn('Konfigurasi slot harian tidak sah.', error);
+            }
+            if(schoolInfoSettings.dailySlots) savedDailySlots = schoolInfoSettings.dailySlots;
             container.innerHTML = '';
             daysList.forEach(day => {
                 let val = savedDailySlots[day] !== undefined ? savedDailySlots[day] : 8;
@@ -3733,6 +3909,8 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
                 if(input) dailyConfig[day] = parseInt(input.value) || 8;
             });
             localStorage.setItem('school_daily_slots_config', JSON.stringify(dailyConfig));
+            schoolInfoSettings.dailySlots = dailyConfig;
+            saveDatabaseToCloud();
             showCustomAlert('Tetapan harian berjaya disimpan!');
         }
         function renderTimeSlotsTable() {
@@ -3829,6 +4007,9 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
             let dateStr = picker ? picker.value : '';
             let dayLabelEl = document.getElementById('relief-current-day');
             if(!dateStr) return;
+            reliefAbsentTeachers = Array.isArray(reliefAbsentTeachersByDate[dateStr])
+                ? [...reliefAbsentTeachersByDate[dateStr]]
+                : [];
             let dt = new Date(dateStr);
             let dayIndex = dt.getDay();
             let daysNames = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat', 'Sabtu'];
@@ -3909,6 +4090,10 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
             } else {
                 reliefAbsentTeachers.push(teacherName);
             }
+            let picker = document.getElementById('relief-date-picker');
+            let dateStr = picker ? picker.value : '';
+            if(dateStr) reliefAbsentTeachersByDate[dateStr] = [...reliefAbsentTeachers];
+            saveDatabaseToCloud();
             renderAbsentTeachersList();
             renderReliefAssignmentsTable();
         };
@@ -4007,6 +4192,9 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
                     busyTeacherNames.push(generatedTimetableData[cName][dayName][slotLabel].teacherName);
                 }
             }
+            document.querySelectorAll('#relief-assignments-tbody select').forEach(sel => {
+                if(sel.value) busyTeacherNames.push(sel.value);
+            });
             return allGuru.filter(g => !busyTeacherNames.includes(g.name) && !reliefAbsentTeachers.includes(g.name));
         }
         window.saveReliefAssignments = function() {
@@ -4015,8 +4203,9 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
             if(!dateStr) return showCustomAlert('Sila pilih tarikh bertugas terlebih dahulu.');
             let selects = document.querySelectorAll('#relief-assignments-tbody select');
             if(selects.length === 0) return showCustomAlert('Tiada tugasan jadual untuk disimpan.');
-            if(!reliefAssignmentsData[dateStr]) reliefAssignmentsData[dateStr] = {};
+            reliefAssignmentsData[dateStr] = {};
             let savedCount = 0;
+            let assignedTeachers = new Set();
             selects.forEach(sel => {
                 let slotKey = sel.getAttribute('data-key');
                 let subTeacher = sel.value;
@@ -4025,6 +4214,10 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
                 let absentTeacher = sel.getAttribute('data-absent');
                 let subjectCode = sel.getAttribute('data-subject');
                 if(subTeacher) {
+                    if(assignedTeachers.has(subTeacher)) {
+                        return;
+                    }
+                    assignedTeachers.add(subTeacher);
                     reliefAssignmentsData[dateStr][slotKey] = {
                         className,
                         slotLabel,
