@@ -2747,7 +2747,19 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
                             for(let cName in generatedTimetableData) {
                                 if(generatedTimetableData[cName][day] && generatedTimetableData[cName][day][slot.label]) {
                                     let dt = generatedTimetableData[cName][day][slot.label];
-                                    if(dt.teacherName === selectTarget) {
+                                    let teacherMatchesTarget = false;
+                                    let selectedTeacher = (databaseRecords.senarai_guru || []).find(g =>
+                                        g.name.trim().toLowerCase() === String(selectTarget).trim().toLowerCase()
+                                    );
+                                    if(selectedTeacher) {
+                                        teacherMatchesTarget =
+                                            String(dt.teacherName || '').trim().toLowerCase() === selectedTeacher.name.trim().toLowerCase() ||
+                                            String(dt.teacherName || '').trim().toLowerCase() === String(selectedTeacher.code || '').trim().toLowerCase();
+                                    } else {
+                                        teacherMatchesTarget =
+                                            String(dt.teacherName || '').trim().toLowerCase() === String(selectTarget).trim().toLowerCase();
+                                    }
+                                    if(teacherMatchesTarget) {
                                         cellData = { subjectCode: dt.subjectCode, teacherName: cName };
                                         break;
                                     }
@@ -3005,13 +3017,7 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
             let subjects = databaseRecords.subjek || [];
             let classes = databaseRecords.kelas || [];
             let classRecord = classes.find(k => k.name === className);
-            let tingkatan = classRecord && /TINGKATAN/i.test(classRecord.name)
-                ? classRecord.name.toUpperCase()
-                : 'TINGKATAN 1';
-            if(!agihanWaktuData[tingkatan]) {
-                let exact = Object.keys(agihanWaktuData).find(k => k.toUpperCase() === className.toUpperCase());
-                if(exact) tingkatan = exact;
-            }
+            let tingkatan = getAgihanTingkatanKeyForClass(className);
             let pool = [];
             subjects.forEach(sub => {
                 let allocation = agihanWaktuData[tingkatan] && agihanWaktuData[tingkatan][sub.code];
@@ -3075,7 +3081,17 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
                     let occupied = teacherName && busy[day] && busy[day][slot.label] &&
                         busy[day][slot.label].has(String(teacherName).trim().toLowerCase());
                     if(!teacherName || blocked || occupied) {
-                        teacherName = (databaseRecords.senarai_guru || []).find(g => {
+                        let subjectTeacherCodes = Object.keys(gmpAllocations).filter(key =>
+                            key.endsWith(`_${sub.code}`)
+                        ).map(key => gmpAllocations[key]);
+                        let candidateTeachers = (databaseRecords.senarai_guru || []).filter(g =>
+                            subjectTeacherCodes.some(code =>
+                                String(code).trim().toLowerCase() === String(g.code || '').trim().toLowerCase() ||
+                                String(code).trim().toLowerCase() === String(g.name || '').trim().toLowerCase()
+                            )
+                        );
+                        if(candidateTeachers.length === 0) candidateTeachers = databaseRecords.senarai_guru || [];
+                        teacherName = candidateTeachers.find(g => {
                             let name = String(g.name || '').trim();
                             if(!name) return false;
                             if(afzIsTeacherBlocked(name, day, slot)) return false;
