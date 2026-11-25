@@ -1400,7 +1400,7 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
                 </div>
                 <div id="modal-container-matrix" class="space-y-2 hidden">
                     <label class="font-semibold text-slate-700 block">Matriks Pilihan Tingkatan, Subjek & Bilangan Masa Seminggu:</label>
-                    <p class="text-[11px] text-slate-500">Tanda petak persilangan dan masukkan jumlah masa seminggu bagi subjek yang diajar.</p>
+                    <p class="text-[11px] text-slate-500">Tanda subjek yang diajar. Bilangan masa dipaparkan automatik mengikut Agihan Waktu Mata Pelajaran.</p>
                     <div class="overflow-x-auto border rounded-xl max-h-72">
                         <table class="w-full border-collapse text-xs text-center bg-white">
                             <thead>
@@ -1810,6 +1810,27 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
                 totalReliefPendingEl.innerText = Object.keys(todayData).length > 0 ? Object.keys(todayData).length : 4;
             }
         }
+        function getAgihanTingkatanKeyForClass(className) {
+            let match = String(className || '').match(/TINGKATAN\s*(\d+)/i);
+            if(!match) return '';
+            let expectedKey = `TINGKATAN ${match[1]}`;
+            return Object.keys(agihanWaktuData || {}).find(key =>
+                String(key).trim().toUpperCase() === expectedKey
+            ) || expectedKey;
+        }
+        function getAgihanWaktuForClassSubject(className, subjectCode) {
+            let tingkatanKey = getAgihanTingkatanKeyForClass(className);
+            let allocation = tingkatanKey && agihanWaktuData[tingkatanKey]
+                ? agihanWaktuData[tingkatanKey][subjectCode]
+                : null;
+            if(!tingkatanKey) return 0;
+            if(!allocation) return 1;
+            return Math.max(0,
+                (parseInt(allocation.single, 10) || 0) +
+                (parseInt(allocation.double, 10) || 0) * 2 +
+                (parseInt(allocation.triple, 10) || 0) * 3
+            );
+        }
         function syncGMPAllocationsToGuruData() {
             let teacherMap = {};
             (databaseRecords.senarai_guru || []).forEach(sg => {
@@ -1828,12 +1849,7 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
                 if(!teacherMap[fullTeacherName]) teacherMap[fullTeacherName] = {};
                 if(!teacherMap[fullTeacherName][kelas]) teacherMap[fullTeacherName][kelas] = [];
                 
-                let masaCount = 2;
-                if(agihanWaktuData[kelas && kelas.toUpperCase().includes('TINGKATAN') ? kelas.toUpperCase() : 'TINGKATAN 1'] && agihanWaktuData[kelas && kelas.toUpperCase().includes('TINGKATAN') ? kelas.toUpperCase() : 'TINGKATAN 1'][subCode]) {
-                    let av = agihanWaktuData[kelas && kelas.toUpperCase().includes('TINGKATAN') ? kelas.toUpperCase() : 'TINGKATAN 1'][subCode];
-                    masaCount = (parseInt(av.single) || 0) * 1 + (parseInt(av.double) || 0) * 2 + (parseInt(av.triple) || 0) * 3;
-                    if(masaCount === 0) masaCount = 2;
-                }
+                let masaCount = getAgihanWaktuForClassSubject(kelas, subCode);
                 teacherMap[fullTeacherName][kelas].push(`${subCode} (${masaCount} Masa)`);
             }
             if(!databaseRecords.guru) databaseRecords.guru = [];
@@ -3633,12 +3649,13 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
                 subjekList.forEach(sub => {
                     let cellInfo = (selectedDataMap[cls.name] && selectedDataMap[cls.name][sub.code]) || { checked: false, masa: 4 };
                     let isChecked = cellInfo.checked ? 'checked' : '';
-                    let masaVal = cellInfo.masa || 4;
+                    let masaVal = getAgihanWaktuForClassSubject(cls.name, sub.code);
+                    let disabled = masaVal === 0 && !cellInfo.checked ? 'disabled' : '';
                     bodyHTML += `
                         <td class="border p-2 text-center space-y-1">
-                            <input type="checkbox" name="matrix-cb" data-kelas="${cls.name}" data-subjek="${sub.code}" onchange="toggleMasaInput(this)" class="w-4 h-4 rounded border-slate-300" ${isChecked}>
+                            <input type="checkbox" name="matrix-cb" data-kelas="${cls.name}" data-subjek="${sub.code}" onchange="toggleMasaInput(this)" class="w-4 h-4 rounded border-slate-300" ${isChecked} ${disabled}>
                             <div class="mt-1">
-                                <input type="number" name="matrix-masa" data-kelas="${cls.name}" data-subjek="${sub.code}" value="${masaVal}" min="1" max="10" placeholder="Masa" class="w-14 px-1 py-0.5 border rounded text-center text-xs font-bold bg-white ${isChecked ? '' : 'hidden'}">
+                                <input type="number" name="matrix-masa" data-kelas="${cls.name}" data-subjek="${sub.code}" value="${masaVal}" min="0" max="30" readonly aria-label="Jumlah masa seminggu: ${masaVal}" class="w-14 px-1 py-0.5 border rounded text-center text-xs font-bold bg-slate-100 ${isChecked ? '' : 'hidden'}">
                             </div>
                         </td>
                     `;
@@ -3650,6 +3667,7 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
         window.toggleMasaInput = function(cb) {
             let tr = cb.closest('td');
             let masaInput = tr.querySelector('input[name="matrix-masa"]');
+            if(!masaInput) return;
             if(cb.checked) {
                 masaInput.classList.remove('hidden');
             } else {
@@ -3676,13 +3694,7 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
                             let fName = foundG ? foundG.name : allocatedCode;
                             if(fName.toLowerCase() === teacherName.toLowerCase()) {
                                 if(!parsedMap[cls.name]) parsedMap[cls.name] = {};
-                                let masaCount = 2;
-                                if(agihanWaktuData[cls.name && cls.name.toUpperCase().includes('TINGKATAN') ? cls.name.toUpperCase() : 'TINGKATAN 1'] && agihanWaktuData[cls.name && cls.name.toUpperCase().includes('TINGKATAN') ? cls.name.toUpperCase() : 'TINGKATAN 1'][sub.code]) {
-                                    let av = agihanWaktuData[cls.name && cls.name.toUpperCase().includes('TINGKATAN') ? cls.name.toUpperCase() : 'TINGKATAN 1'][sub.code];
-                                    masaCount = (parseInt(av.single) || 0) * 1 + (parseInt(av.double) || 0) * 2 + (parseInt(av.triple) || 0) * 3;
-                                    if(masaCount === 0) masaCount = 2;
-                                }
-                                parsedMap[cls.name][sub.code] = { checked: true, masa: masaCount };
+                                parsedMap[cls.name][sub.code] = { checked: true };
                             }
                         }
                     });
