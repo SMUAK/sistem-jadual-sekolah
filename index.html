@@ -1444,7 +1444,7 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
                     <label class="font-semibold text-slate-700 block">Matriks Pilihan Tingkatan, Subjek & Bilangan Masa Seminggu:</label>
                     <p class="text-[11px] text-slate-500">Tanda subjek yang diajar. Bilangan masa dipaparkan automatik mengikut Agihan Waktu Mata Pelajaran.</p>
                     <div class="inline-flex items-center gap-1.5 rounded-lg border border-blue-200 bg-blue-50 px-3 py-1.5 text-xs font-bold text-[#0b1b3d]" role="status" aria-live="polite">
-                        <span>Jumlah subjek dipilih (ikut kelas):</span>
+                        <span>Jumlah subjek (semua kelas):</span>
                         <span id="matrix-selected-count">0</span>
                     </div>
                     <div class="overflow-x-auto border rounded-xl max-h-[55vh]">
@@ -3718,7 +3718,10 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
         function updateMatrixSelectedCount() {
             let countEl = document.getElementById('matrix-selected-count');
             if(!countEl) return;
-            countEl.textContent = String(document.querySelectorAll('#matrix-tbody input[name="matrix-cb"]:checked').length);
+            let selectedSubjects = new Set(
+                Array.from(document.querySelectorAll('#matrix-tbody input[name="matrix-cb"]:checked'), cb => cb.dataset.subjek)
+            );
+            countEl.textContent = String(selectedSubjects.size);
         }
         window.toggleMasaInput = function(cb) {
             let tr = cb.closest('td');
