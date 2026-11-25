@@ -507,6 +507,26 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
             width: 98vw;
             max-width: 1500px;
             padding: 12px;
+            max-height: 98vh;
+        }
+        #data-modal.data-modal-wide #modal-container-matrix > div {
+            max-height: 72vh;
+        }
+        #data-modal.data-modal-wide #matrix-tbody td {
+            padding-top: 2px !important;
+            padding-bottom: 2px !important;
+        }
+        #data-modal.data-modal-wide #matrix-tbody td > div.mt-1 {
+            margin-top: 1px !important;
+        }
+        #data-modal.data-modal-wide #matrix-tbody input[name="matrix-masa"] {
+            height: 18px;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+        }
+        #data-modal.data-modal-wide #matrix-tbody input[name="matrix-cb"] {
+            width: 14px;
+            height: 14px;
         }
         @media (min-width: 1100px) {
             #data-modal.data-modal-wide #modal-container-matrix > div { overflow-x: hidden; }
@@ -1423,7 +1443,7 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
                 <div id="modal-container-matrix" class="space-y-2 hidden">
                     <label class="font-semibold text-slate-700 block">Matriks Pilihan Tingkatan, Subjek & Bilangan Masa Seminggu:</label>
                     <p class="text-[11px] text-slate-500">Tanda subjek yang diajar. Bilangan masa dipaparkan automatik mengikut Agihan Waktu Mata Pelajaran.</p>
-                    <div class="overflow-x-auto border rounded-xl max-h-72">
+                    <div class="overflow-x-auto border rounded-xl max-h-[55vh]">
                         <table class="w-full border-collapse text-xs text-center bg-white">
                             <thead>
                                 <tr id="matrix-thead" class="bg-slate-100 text-slate-700 font-bold">
