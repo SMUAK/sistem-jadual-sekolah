@@ -9,7 +9,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const headerRow = document.querySelector("header.app-sidebar > div");
-            if (!headerRow || document.getElementById("sidebar-app-brand")) return;
+            if (!headerRow ||  document.getElementById("sidebar-app-brand")) return;
             const brand = document.createElement("div");
             brand.id = "sidebar-app-brand";
             brand.className = "sidebar-app-brand";
@@ -2412,6 +2412,14 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
             if(!thead || !tbody) return;
             let subjekList = databaseRecords.subjek || [];
             let kelasList = databaseRecords.kelas || [];
+            const teacherCodeForDisplay = function(value) {
+                if(!value) return '';
+                const teacher = (databaseRecords.senarai_guru || []).find(g =>
+                    String(g.code || '').trim().toLowerCase() === String(value).trim().toLowerCase() ||
+                    String(g.name || '').trim().toLowerCase() === String(value).trim().toLowerCase()
+                );
+                return teacher ? (teacher.code || '') : String(value).trim();
+            };
             let headHTML = `<th class="border border-slate-300 p-2 text-left min-w-[120px]">Kelas/Program</th>`;
             subjekList.forEach(s => {
                 headHTML += `<th class="border border-slate-300 p-2 min-w-[45px] text-center">${s.code}</th>`;
@@ -2438,6 +2446,7 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
                         let foundG = (databaseRecords.senarai_guru || []).find(g => g.name.toLowerCase() === selectedActiveSubItem.teacher.toLowerCase());
                         displayTeacherName = foundG ? foundG.code : selectedActiveSubItem.teacher;
                     }
+                    displayTeacherName = teacherCodeForDisplay(displayTeacherName);
                     bodyHTML += `
                         <td class="border border-slate-300 p-1.5 text-center relative cursor-pointer transition ${bgCellClass}"
                             oncontextmenu="onMatrixCellContextMenu(event, '${cls.name}', '${s.code}')"
