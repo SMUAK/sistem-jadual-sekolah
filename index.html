@@ -1878,6 +1878,22 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
             );
         }
         function syncGMPAllocationsToGuruData() {
+            (databaseRecords.guru || []).forEach(teacher => {
+                if(!teacher.category || teacher.category === 'Tiada Opsyen Dipilih') return;
+                String(teacher.category).split(' | ').forEach(segment => {
+                    let match = segment.match(/^(.*?)\s*\[(.*?)\]$/);
+                    if(!match) return;
+                    let kelas = match[1].trim();
+                    match[2].split(', ').forEach(detail => {
+                        let subjectMatch = detail.match(/^(.*?)\s*\(\d+\s*Masa\)$/);
+                        let subjectCode = (subjectMatch ? subjectMatch[1] : detail).trim();
+                        let key = `${kelas}_${subjectCode}`;
+                        if(kelas && subjectCode && !gmpAllocations[key]) {
+                            gmpAllocations[key] = teacher.code || teacher.name;
+                        }
+                    });
+                });
+            });
             let teacherMap = {};
             (databaseRecords.senarai_guru || []).forEach(sg => {
                 teacherMap[sg.name] = {};
@@ -1885,9 +1901,9 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
             for(let key in gmpAllocations) {
                 let tCode = gmpAllocations[key];
                 if(!tCode || tCode.trim() === '' || tCode.trim() === '-') continue;
-                let parts = key.split('_');
-                let kelas = parts[0];
-                let subCode = parts[1];
+                let separatorIndex = key.lastIndexOf('_');
+                let kelas = separatorIndex >= 0 ? key.slice(0, separatorIndex) : key;
+                let subCode = separatorIndex >= 0 ? key.slice(separatorIndex + 1) : '';
                 
                 let foundG = (databaseRecords.senarai_guru || []).find(g => g.code.toLowerCase() === tCode.toLowerCase() || g.name.toLowerCase().includes(tCode.toLowerCase()));
                 let fullTeacherName = foundG ? foundG.name : tCode;
@@ -1924,6 +1940,9 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
                 });
             });
             databaseRecords.guru = newGuruRecords;
+            if(typeof localStorage !== 'undefined') {
+                localStorage.setItem('school_gmp_allocations', JSON.stringify(gmpAllocations));
+            }
         }
         async function saveDatabaseToCloud() {
             syncGMPAllocationsToGuruData();
