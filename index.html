@@ -1490,7 +1490,7 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
                 console.warn("Firebase tidak tersedia; sistem menggunakan storan tempatan.", error);
             }
         }
-        initialiseFirebaseForLocalAndOnlineUse();
+        const firebaseReady = initialiseFirebaseForLocalAndOnlineUse();
         let currentSubTab = 'subjek';
         let currentMasterMode = 'kelas';
         let databaseRecords = {
@@ -1719,7 +1719,7 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
                 renderDataTable();
                 renderSavedVersionsList();
                 updateMainDashboardStats();
-                return true;
+                return false;
             }
             try {
                 const docRef = doc(db, "sekolah_data", "pusat_data");
@@ -1749,11 +1749,33 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
                     updateHeaderSchoolInfoDisplay();
                     syncGMPAllocationsToGuruData();
                 } else {
-                    await saveDatabaseToCloud();
+                    const localDatabase = safeParse('school_database', null);
+                    const hasLocalRecords = localDatabase && Object.keys(localDatabase).some(key =>
+                        Array.isArray(localDatabase[key]) && localDatabase[key].length > 0
+                    );
+                    if(hasLocalRecords) {
+                        loadLocalFallback();
+                        const savedToCloud = await saveDatabaseToCloud();
+                        if(!savedToCloud) {
+                            renderDataTable();
+                            renderSavedVersionsList();
+                            updateMainDashboardStats();
+                            return false;
+                        }
+                    } else {
+                        renderDataTable();
+                        renderSavedVersionsList();
+                        updateMainDashboardStats();
+                        return false;
+                    }
                 }
             } catch (e) {
                 console.error("Gagal memuat data dari pangkalan data awan:", e);
                 loadLocalFallback();
+                renderDataTable();
+                renderSavedVersionsList();
+                updateMainDashboardStats();
+                return false;
             }
             renderDataTable();
             renderSavedVersionsList();
@@ -4284,10 +4306,13 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
                 }
             }
         }
-        window.onload = () => {
-            loadDatabaseFromCloud().then(() => {
-                switchTab('utama');
-            });
+        window.onload = async () => {
+            await firebaseReady;
+            const cloudDataLoaded = await loadDatabaseFromCloud();
+            switchTab('utama');
+            if(!cloudDataLoaded) {
+                showCustomAlert('Data awan belum ditemui atau tidak dapat dicapai. Sistem mungkin memaparkan data pada komputer ini sahaja. Untuk berkongsi data, pastikan Firebase dibenarkan dan gunakan Sandaran JSON jika perlu.');
+            }
         };
     </script>
 </body>
