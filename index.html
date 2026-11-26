@@ -1870,7 +1870,7 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
                 ? agihanWaktuData[tingkatanKey][subjectCode]
                 : null;
             if(!tingkatanKey) return 0;
-            if(!allocation) return 1;
+            if(!allocation) return 0;
             return Math.max(0,
                 (parseInt(allocation.single, 10) || 0) +
                 (parseInt(allocation.double, 10) || 0) * 2 +
@@ -2982,7 +2982,8 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
                 if(hasBasicData && generatedTimetableData[k.name]) {
                     ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis'].forEach(day => {
                         learningSlots.forEach(slot => {
-                            if(generatedTimetableData[k.name][day] && generatedTimetableData[k.name][day][slot.label]) {
+                            const cell = generatedTimetableData[k.name][day] && generatedTimetableData[k.name][day][slot.label];
+                            if(cell && cell.subjectCode && cell.teacherName) {
                                 filledCount++;
                             }
                         });
@@ -3019,11 +3020,8 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
         }
         function afzTeacherNameFromCode(code) {
             if(!code) return '';
-            let allTeachers = databaseRecords.senarai_guru || [];
-            let match = allTeachers.find(g => String(g.code || '').trim().toLowerCase() === String(code).trim().toLowerCase());
-            if(match) return match.name;
-            match = allTeachers.find(g => String(g.name || '').trim().toLowerCase() === String(code).trim().toLowerCase());
-            return match ? match.name : '';
+            let teacher = afzResolveTeacherRecord(code);
+            return teacher ? teacher.name : '';
         }
         function afzIsTeacherBlocked(teacherName, day, slot) {
             if(!teacherName) return false;
@@ -3035,104 +3033,287 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
         }
         function afzClassSubjectPool(className) {
             let subjects = databaseRecords.subjek || [];
-            let classes = databaseRecords.kelas || [];
-            let classRecord = classes.find(k => k.name === className);
-            let tingkatan = getAgihanTingkatanKeyForClass(className);
             let pool = [];
             subjects.forEach(sub => {
-                let allocation = agihanWaktuData[tingkatan] && agihanWaktuData[tingkatan][sub.code];
-                let count = allocation
-                    ? (parseInt(allocation.single) || 0) + (parseInt(allocation.double) || 0) * 2 + (parseInt(allocation.triple) || 0) * 3
-                    : 1;
+                let count = getAgihanWaktuForClassSubject(className, sub.code);
                 for(let i = 0; i < count; i++) pool.push(sub);
             });
             return pool;
         }
-        function afzGenerateOneClass(className, resetMode) {
-            if(!generatedTimetableData[className]) generatedTimetableData[className] = {};
-            let days = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis'];
-            let learningSlots = timeSlotsData.filter(s => s.type === 'Waktu belajar');
-            let pool = afzClassSubjectPool(className);
-            let busy = {};
-            for(let cName in generatedTimetableData) {
-                if(cName === className) continue;
+        function afzValidateGeneration(classesToProcess, resetMode) {
+            const issues = [];
+            const issueSet = new Set();
+            const days = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis'];
+            const learningSlots = timeSlotsData.filter(slot => slot.type === 'Waktu belajar');
+            const expectedSlots = learningSlots.length * days.length;
+            const addIssue = message => {
+                if(!issueSet.has(message)) {
+                    issueSet.add(message);
+                    issues.push(message);
+                }
+            };
+            classesToProcess.forEach(classRecord => {
+                const className = classRecord.name;
+                const pool = afzClassSubjectPool(className);
+                if(pool.length !== expectedSlots) {
+                    addIssue(`${className}: agihan ${pool.length} waktu, sepatutnya ${expectedSlots}.`);
+                }
+                const subjectCounts = new Map();
+                pool.forEach(subject => subjectCounts.set(subject.code, (subjectCounts.get(subject.code) || 0) + 1));
+                subjectCounts.forEach((count, subjectCode) => {
+                    if(!afzTeacherNameFromCode(gmpAllocations[`${className}_${subjectCode}`])) {
+                        addIssue(`${className} - ${subjectCode}: pilih guru berdaftar dalam Guru & Mata Pelajaran.`);
+                    }
+                });
                 days.forEach(day => {
                     learningSlots.forEach(slot => {
-                        let cell = generatedTimetableData[cName] && generatedTimetableData[cName][day]
-                            ? generatedTimetableData[cName][day][slot.label] : null;
-                        if(cell && cell.teacherName) {
-                            if(!busy[day]) busy[day] = {};
-                            if(!busy[day][slot.label]) busy[day][slot.label] = new Set();
-                            busy[day][slot.label].add(String(cell.teacherName).trim().toLowerCase());
+                        const locked = lockedSlotsData[className] && lockedSlotsData[className][day]
+                            ? lockedSlotsData[className][day][slot.label] : null;
+                        const current = !resetMode && generatedTimetableData[className] &&
+                            generatedTimetableData[className][day]
+                            ? generatedTimetableData[className][day][slot.label] : null;
+                        const fixed = locked || current;
+                        if(!fixed) return;
+                        if(!fixed.subjectCode || !fixed.teacherName) {
+                            addIssue(`${className}, ${day} waktu ${slot.label}: subjek atau guru bagi slot sedia ada tidak lengkap.`);
+                            return;
+                        }
+                        if(!afzTeacherNameFromCode(fixed.teacherName)) {
+                            addIssue(`${className}, ${day} waktu ${slot.label}: guru "${fixed.teacherName}" tidak berdaftar.`);
+                        }
+                        const remaining = subjectCounts.get(fixed.subjectCode) || 0;
+                        if(remaining === 0) {
+                            addIssue(`${className}: slot sedia ada bagi ${fixed.subjectCode} melebihi agihan; pilih mod Reset.`);
+                        } else {
+                            subjectCounts.set(fixed.subjectCode, remaining - 1);
+                        }
+                        if(!locked) {
+                            const assignedTeacher = afzTeacherNameFromCode(fixed.teacherName);
+                            const mappedTeacher = afzTeacherNameFromCode(gmpAllocations[`${className}_${fixed.subjectCode}`]);
+                            if(assignedTeacher && mappedTeacher &&
+                                assignedTeacher.trim().toLocaleLowerCase('ms-MY') !== mappedTeacher.trim().toLocaleLowerCase('ms-MY')) {
+                                addIssue(`${className}: guru dalam jadual sedia ada tidak sepadan dengan agihan; pilih mod Reset.`);
+                            }
                         }
                     });
                 });
-            }
-            days.forEach((day, dayIndex) => {
-                if(!generatedTimetableData[className][day]) generatedTimetableData[className][day] = {};
-                learningSlots.forEach((slot, slotIndex) => {
-                    let isLocked = lockedSlotsData[className] && lockedSlotsData[className][day] &&
-                        lockedSlotsData[className][day][slot.label];
-                    if(isLocked) {
-                        generatedTimetableData[className][day][slot.label] = lockedSlotsData[className][day][slot.label];
-                        let lockedTeacher = lockedSlotsData[className][day][slot.label].teacherName;
-                        if(lockedTeacher) {
-                            if(!busy[day]) busy[day] = {};
-                            if(!busy[day][slot.label]) busy[day][slot.label] = new Set();
-                            busy[day][slot.label].add(String(lockedTeacher).trim().toLowerCase());
+            });
+            const targetClasses = new Set(classesToProcess.map(classRecord => classRecord.name));
+            const classNames = new Set([
+                ...(databaseRecords.kelas || []).map(classRecord => classRecord.name),
+                ...Object.keys(lockedSlotsData || {}),
+                ...Object.keys(generatedTimetableData || {})
+            ]);
+            days.forEach(day => {
+                learningSlots.forEach(slot => {
+                    const assignedTeachers = new Map();
+                    classNames.forEach(className => {
+                        const locked = lockedSlotsData[className] && lockedSlotsData[className][day]
+                            ? lockedSlotsData[className][day][slot.label] : null;
+                        const current = (!targetClasses.has(className) || !resetMode) &&
+                            generatedTimetableData[className] && generatedTimetableData[className][day]
+                            ? generatedTimetableData[className][day][slot.label] : null;
+                        const fixed = locked || current;
+                        if(!fixed || !fixed.teacherName) return;
+                        const teacherName = afzTeacherNameFromCode(fixed.teacherName);
+                        if(!teacherName) return;
+                        const teacherKey = teacherName.trim().toLocaleLowerCase('ms-MY');
+                        const previousClass = assignedTeachers.get(teacherKey);
+                        if(previousClass && (targetClasses.has(className) || targetClasses.has(previousClass))) {
+                            addIssue(`${day}, waktu ${slot.label}: guru ${teacherName} dikunci pada ${previousClass} dan ${className}; betulkan slot berkunci dahulu.`);
+                        } else {
+                            assignedTeachers.set(teacherKey, className);
                         }
-                        return;
-                    }
-                    if(!resetMode && generatedTimetableData[className][day][slot.label]) return;
-                    let sub = pool.length ? pool[(dayIndex * learningSlots.length + slotIndex) % pool.length] : null;
-                    if(!sub) {
-                        delete generatedTimetableData[className][day][slot.label];
-                        return;
-                    }
-                    let key = `${className}_${sub.code}`;
-                    let allocationCode = gmpAllocations[key] || '';
-                    let teacherName = afzTeacherNameFromCode(allocationCode);
-                    if(!teacherName) teacherName = allocationCode;
-                    if(!teacherName) {
-                        let teacher = (databaseRecords.senarai_guru || []).find(g => g.code === sub.code);
-                        teacherName = teacher ? teacher.name : '';
-                    }
-                    let blocked = afzIsTeacherBlocked(teacherName, day, slot);
-                    let occupied = teacherName && busy[day] && busy[day][slot.label] &&
-                        busy[day][slot.label].has(String(teacherName).trim().toLowerCase());
-                    if(!teacherName || blocked || occupied) {
-                        let subjectTeacherCodes = Object.keys(gmpAllocations).filter(key =>
-                            key.endsWith(`_${sub.code}`)
-                        ).map(key => gmpAllocations[key]);
-                        let candidateTeachers = (databaseRecords.senarai_guru || []).filter(g =>
-                            subjectTeacherCodes.some(code =>
-                                String(code).trim().toLowerCase() === String(g.code || '').trim().toLowerCase() ||
-                                String(code).trim().toLowerCase() === String(g.name || '').trim().toLowerCase()
-                            )
-                        );
-                        if(candidateTeachers.length === 0) candidateTeachers = databaseRecords.senarai_guru || [];
-                        teacherName = candidateTeachers.find(g => {
-                            let name = String(g.name || '').trim();
-                            if(!name) return false;
-                            if(afzIsTeacherBlocked(name, day, slot)) return false;
-                            let occupiedFallback = busy[day] && busy[day][slot.label] &&
-                                busy[day][slot.label].has(name.toLowerCase());
-                            return !occupiedFallback;
-                        })?.name || '';
-                    }
-                    if(!teacherName) {
-                        delete generatedTimetableData[className][day][slot.label];
-                        return;
-                    }
-                    generatedTimetableData[className][day][slot.label] = {
-                        subjectCode: sub.code,
-                        teacherName
-                    };
-                    if(!busy[day]) busy[day] = {};
-                    if(!busy[day][slot.label]) busy[day][slot.label] = new Set();
-                    busy[day][slot.label].add(String(teacherName).trim().toLowerCase());
+                    });
                 });
             });
+            return issues;
+        }
+        function afzRunGeneration(classesToProcess, resetMode) {
+            const issues = afzValidateGeneration(classesToProcess, resetMode);
+            if(issues.length) {
+                return { success: false, message: 'Jadual belum dijana. Sila betulkan perkara berikut:\n' + issues.slice(0, 8).join('\n') };
+            }
+            const previousSchedule = JSON.parse(JSON.stringify(generatedTimetableData || {}));
+            const days = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis'];
+            const learningSlots = timeSlotsData.filter(slot => slot.type === 'Waktu belajar');
+            const periods = days.flatMap(day => learningSlots.map(slot => ({ day, slot })));
+            const targetClasses = new Set(classesToProcess.map(classRecord => classRecord.name));
+            const remaining = {};
+            if(resetMode) classesToProcess.forEach(classRecord => {
+                generatedTimetableData[classRecord.name] = {};
+            });
+            classesToProcess.forEach(classRecord => {
+                if(!generatedTimetableData[classRecord.name]) generatedTimetableData[classRecord.name] = {};
+                remaining[classRecord.name] = {};
+                afzClassSubjectPool(classRecord.name).forEach(subject => {
+                    remaining[classRecord.name][subject.code] = (remaining[classRecord.name][subject.code] || 0) + 1;
+                });
+            });
+            const teacherKey = teacherName => String(teacherName || '').trim().toLocaleLowerCase('ms-MY');
+            const fixedBusy = periods.map(() => new Set());
+            periods.forEach((period, periodIndex) => {
+                Object.keys(generatedTimetableData || {}).forEach(className => {
+                    const locked = lockedSlotsData[className] && lockedSlotsData[className][period.day]
+                        ? lockedSlotsData[className][period.day][period.slot.label] : null;
+                    const current = generatedTimetableData[className] && generatedTimetableData[className][period.day]
+                        ? generatedTimetableData[className][period.day][period.slot.label] : null;
+                    const fixed = targetClasses.has(className)
+                        ? locked || (!resetMode ? current : null)
+                        : locked || current;
+                    if(!fixed) return;
+                    if(targetClasses.has(className)) {
+                        if(locked) {
+                            if(!generatedTimetableData[className][period.day]) generatedTimetableData[className][period.day] = {};
+                            generatedTimetableData[className][period.day][period.slot.label] = locked;
+                        }
+                        remaining[className][fixed.subjectCode]--;
+                    }
+                    if(fixed.teacherName) {
+                        const knownTeacher = afzTeacherNameFromCode(fixed.teacherName) || fixed.teacherName;
+                        fixedBusy[periodIndex].add(teacherKey(knownTeacher));
+                    }
+                });
+            });
+            const teacherNames = new Map();
+            const blockedByTeacher = new Map();
+            (databaseRecords.senarai_guru || []).forEach(teacher => {
+                const key = teacherKey(teacher.name);
+                teacherNames.set(key, teacher.name);
+                blockedByTeacher.set(key, periods.map(period =>
+                    afzIsTeacherBlocked(teacher.name, period.day, period.slot)
+                ));
+            });
+            const remainingDemand = new Map();
+            classesToProcess.forEach(classRecord => {
+                Object.entries(remaining[classRecord.name]).forEach(([subjectCode, count]) => {
+                    if(count <= 0) return;
+                    const assignedTeacher = afzTeacherNameFromCode(gmpAllocations[`${classRecord.name}_${subjectCode}`]);
+                    const key = teacherKey(assignedTeacher);
+                    remainingDemand.set(key, (remainingDemand.get(key) || 0) + count);
+                });
+            });
+            const futureAvailability = new Map();
+            teacherNames.forEach((name, key) => {
+                const available = Array(periods.length + 1).fill(0);
+                const blocked = blockedByTeacher.get(key);
+                for(let index = periods.length - 1; index >= 0; index--) {
+                    available[index] = available[index + 1] + (!blocked[index] && !fixedBusy[index].has(key) ? 1 : 0);
+                }
+                futureAvailability.set(key, available);
+            });
+            const failures = [];
+            for(let periodIndex = 0; periodIndex < periods.length; periodIndex++) {
+                const period = periods[periodIndex];
+                const busy = new Set(fixedBusy[periodIndex]);
+                const pending = classesToProcess.filter(classRecord =>
+                    !(generatedTimetableData[classRecord.name][period.day] &&
+                        generatedTimetableData[classRecord.name][period.day][period.slot.label])
+                );
+                const solvePeriod = remainingClasses => {
+                    if(remainingClasses.length === 0) {
+                        for(const [key, count] of remainingDemand) {
+                            const available = futureAvailability.get(key);
+                            if(count > (available ? available[periodIndex + 1] : 0)) return false;
+                        }
+                        return true;
+                    }
+                    let bestIndex = -1;
+                    let bestOptions = null;
+                    let bestSlack = Infinity;
+                    for(let index = 0; index < remainingClasses.length; index++) {
+                        const classRecord = remainingClasses[index];
+                        const options = Object.entries(remaining[classRecord.name])
+                            .filter(([, count]) => count > 0)
+                            .map(([subjectCode]) => ({
+                                subjectCode,
+                                teacherName: afzTeacherNameFromCode(gmpAllocations[`${classRecord.name}_${subjectCode}`])
+                            }))
+                            .filter(option => {
+                                const key = teacherKey(option.teacherName);
+                                const blocked = blockedByTeacher.get(key);
+                                return option.teacherName && blocked && !blocked[periodIndex] && !busy.has(key);
+                            });
+                        const slackFor = option => {
+                            const key = teacherKey(option.teacherName);
+                            const available = futureAvailability.get(key);
+                            return (available ? available[periodIndex + 1] : 0) -
+                                ((remainingDemand.get(key) || 0) - 1);
+                        };
+                        options.sort((a, b) => slackFor(a) - slackFor(b));
+                        const slack = options.length ? slackFor(options[0]) : Infinity;
+                        if(!bestOptions || options.length < bestOptions.length ||
+                            (options.length === bestOptions.length && slack < bestSlack)) {
+                            bestIndex = index;
+                            bestOptions = options;
+                            bestSlack = slack;
+                            if(!options.length) break;
+                        }
+                    }
+                    if(!bestOptions || bestOptions.length === 0) return false;
+                    const classRecord = remainingClasses[bestIndex];
+                    const nextClasses = remainingClasses.filter((_, index) => index !== bestIndex);
+                    for(const option of bestOptions) {
+                        const key = teacherKey(option.teacherName);
+                        remaining[classRecord.name][option.subjectCode]--;
+                        remainingDemand.set(key, (remainingDemand.get(key) || 0) - 1);
+                        busy.add(key);
+                        if(!generatedTimetableData[classRecord.name][period.day]) {
+                            generatedTimetableData[classRecord.name][period.day] = {};
+                        }
+                        generatedTimetableData[classRecord.name][period.day][period.slot.label] = {
+                            subjectCode: option.subjectCode,
+                            teacherName: option.teacherName
+                        };
+                        if(solvePeriod(nextClasses)) return true;
+                        delete generatedTimetableData[classRecord.name][period.day][period.slot.label];
+                        busy.delete(key);
+                        remainingDemand.set(key, (remainingDemand.get(key) || 0) + 1);
+                        remaining[classRecord.name][option.subjectCode]++;
+                    }
+                    return false;
+                };
+                if(!solvePeriod(pending)) {
+                    failures.push(`${period.day}, waktu ${period.slot.label}: guru yang tersedia tidak cukup untuk mengisi semua kelas.`);
+                    break;
+                }
+            }
+            if(failures.length) {
+                generatedTimetableData = previousSchedule;
+                return {
+                    success: false,
+                    message: 'Jadual tidak lengkap dan perubahan dibatalkan:\n' + failures.join('\n')
+                };
+            }
+            classesToProcess.forEach(classRecord => {
+                const remainingCount = Object.values(remaining[classRecord.name]).reduce((total, count) => total + count, 0);
+                if(remainingCount !== 0) failures.push(`${classRecord.name}: agihan subjek berbaki ${remainingCount} waktu selepas penjadualan.`);
+            });
+            days.forEach(day => {
+                learningSlots.forEach(slot => {
+                    const assigned = new Map();
+                    Object.keys(generatedTimetableData || {}).forEach(className => {
+                        const cell = generatedTimetableData[className] && generatedTimetableData[className][day]
+                            ? generatedTimetableData[className][day][slot.label] : null;
+                        if(!cell || !cell.teacherName) return;
+                        const teacherName = afzTeacherNameFromCode(cell.teacherName) || cell.teacherName;
+                        const key = String(teacherName).trim().toLocaleLowerCase('ms-MY');
+                        if(assigned.has(key) && (targetClasses.has(className) || targetClasses.has(assigned.get(key)))) {
+                            failures.push(`${day}, waktu ${slot.label}: guru ${teacherName} bertindih antara kelas.`);
+                        } else {
+                            assigned.set(key, className);
+                        }
+                    });
+                });
+            });
+            if(failures.length) {
+                generatedTimetableData = previousSchedule;
+                return {
+                    success: false,
+                    message: 'Jadual tidak lengkap dan perubahan dibatalkan:\n' + [...new Set(failures)].slice(0, 8).join('\n')
+                };
+            }
+            return { success: true };
         }
         window.startAutoGeneration = function() {
             let subjects = databaseRecords.subjek || [];
@@ -3143,6 +3324,9 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
             }
             let targetClass = document.getElementById('auto-select-class').value;
             let classesToProcess = targetClass === 'Semua' ? classes : classes.filter(k => k.name === targetClass);
+            if(classesToProcess.length === 0) {
+                return showCustomAlert('Tiada kelas sah dipilih untuk dijana.');
+            }
             let modal = document.getElementById('generation-progress-modal');
             let bar = document.getElementById('progress-bar-fill');
             let statusText = document.getElementById('progress-status-text');
@@ -3153,15 +3337,27 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
             setTimeout(async () => {
                 let modRadio = document.querySelector('input[name="auto-mode"]:checked');
                 let resetMode = modRadio && modRadio.value === 'reset';
-                classesToProcess.forEach(k => afzGenerateOneClass(k.name, resetMode));
-                await saveDatabaseToCloud();
+                const result = afzRunGeneration(classesToProcess, resetMode);
+                if(!result.success) {
+                    if(modal) modal.classList.add('hidden');
+                    renderClassStatusTable();
+                    showCustomAlert(result.message);
+                    return;
+                }
+                const savedToCloud = await saveDatabaseToCloud();
                 if(bar) bar.style.width = '100%';
                 if(percentText) percentText.innerText = '100%';
-                if(statusText) statusText.innerText = 'Penjanaan selesai!';
+                if(statusText) statusText.innerText = savedToCloud ? 'Penjanaan selesai!' : 'Jadual dijana; simpanan awan gagal.';
                 setTimeout(() => {
                     if(modal) modal.classList.add('hidden');
                     renderClassStatusTable();
-                    if(targetClass === 'Semua') { afzPromptSaveVersion(); } else { showCustomAlert('Jadual pintar berjaya dijana!'); }
+                    if(!savedToCloud) {
+                        showCustomAlert('Jadual lengkap dijana dan disimpan pada peranti, tetapi gagal disimpan ke awan. Semak sambungan dan cuba simpan semula.');
+                    } else if(targetClass === 'Semua') {
+                        afzPromptSaveVersion();
+                    } else {
+                        showCustomAlert('Jadual pintar berjaya dijana!');
+                    }
                 }, 300);
             }, 200);
         }
@@ -3171,18 +3367,28 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
             if(subjects.length === 0 || teachers.length === 0) {
                 return showCustomAlert('Sila lengkapkan Data Asas (Mata Pelajaran dan Senarai Guru) terlebih dahulu.');
             }
+            const classRecord = (databaseRecords.kelas || []).find(item => item.name === className);
+            if(!classRecord) return showCustomAlert(`Kelas "${className}" tidak dijumpai.`);
             let modal = document.getElementById('generation-progress-modal');
             let bar = document.getElementById('progress-bar-fill');
             if(modal) modal.classList.remove('hidden');
             if(bar) bar.style.width = '0%';
             setTimeout(async () => {
-                afzGenerateOneClass(className, true);
-                await saveDatabaseToCloud();
+                const result = afzRunGeneration([classRecord], true);
+                if(!result.success) {
+                    if(modal) modal.classList.add('hidden');
+                    renderClassStatusTable();
+                    showCustomAlert(result.message);
+                    return;
+                }
+                const savedToCloud = await saveDatabaseToCloud();
                 if(bar) bar.style.width = '100%';
                 setTimeout(() => {
                     if(modal) modal.classList.add('hidden');
                     renderClassStatusTable();
-                    showCustomAlert(`Jadual bagi kelas ${className} berjaya dijana!`);
+                    showCustomAlert(savedToCloud
+                        ? `Jadual bagi kelas ${className} berjaya dijana!`
+                        : `Jadual bagi kelas ${className} dijana dan disimpan pada peranti, tetapi gagal disimpan ke awan.`);
                 }, 300);
             }, 200);
         }
