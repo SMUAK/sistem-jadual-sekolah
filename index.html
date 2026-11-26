@@ -2207,6 +2207,15 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
 
         let currentScheduleAnalysisTab = 'guru';
         const analysisDays = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis'];
+        function afzResolveTeacherRecord(teacherIdentifier) {
+            const identifier = String(teacherIdentifier || '').trim().toLocaleLowerCase('ms-MY');
+            if(!identifier) return null;
+            return (databaseRecords.senarai_guru || []).find(teacher =>
+                [teacher.name, teacher.code].some(value =>
+                    String(value || '').trim().toLocaleLowerCase('ms-MY') === identifier
+                )
+            ) || null;
+        }
         function getScheduleAnalysisLessons() {
             const lessons = [];
             const roomRecords = databaseRecords.bilik || [];
@@ -2232,7 +2241,7 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
                             if(!Number.isFinite(minutes) || minutes < 0) minutes = 0;
                         }
                         lessons.push({
-                            teacher: String(cell.teacherName),
+                            teacher: String((afzResolveTeacherRecord(cell.teacherName) || {}).name || cell.teacherName).trim(),
                             subject: String(cell.subjectCode || '-'),
                             className: String(className),
                             room: knownRoom ? String(knownRoom.name) : String(roomValue || ''),
@@ -2262,6 +2271,22 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
                 row.minutes += lesson.minutes;
             });
             return Array.from(groups.values()).sort((a, b) =>
+                a.group.localeCompare(b.group, 'ms', { numeric: true, sensitivity: 'base' }) ||
+                a.subject.localeCompare(b.subject, 'ms', { numeric: true, sensitivity: 'base' }) ||
+                a.detail.localeCompare(b.detail, 'ms', { numeric: true, sensitivity: 'base' })
+            );
+        }
+        function buildTeacherAnalysisRows(lessons) {
+            const rows = buildGroupedAnalysisRows(lessons, 'teacher', 'className');
+            const knownTeachers = new Set(rows.map(row => row.group.trim().toLocaleLowerCase('ms-MY')));
+            (databaseRecords.senarai_guru || []).forEach(teacher => {
+                const name = String(teacher.name || '').trim();
+                const key = name.toLocaleLowerCase('ms-MY');
+                if(!name || knownTeachers.has(key)) return;
+                knownTeachers.add(key);
+                rows.push({ group: name, subject: '-', detail: '-', periods: 0, minutes: 0 });
+            });
+            return rows.sort((a, b) =>
                 a.group.localeCompare(b.group, 'ms', { numeric: true, sensitivity: 'base' }) ||
                 a.subject.localeCompare(b.subject, 'ms', { numeric: true, sensitivity: 'base' }) ||
                 a.detail.localeCompare(b.detail, 'ms', { numeric: true, sensitivity: 'base' })
@@ -2362,7 +2387,7 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
                 title.textContent = 'Analisa Mengikut Guru';
                 content.innerHTML = renderAnalysisTable(
                     ['Bil', 'Guru', 'Mata Pelajaran', 'Kelas', 'Waktu', 'Jumlah'],
-                    buildGroupedAnalysisRows(lessons, 'teacher', 'className'), 1, false
+                    buildTeacherAnalysisRows(lessons), 1, false
                 );
                 return;
             }
@@ -2744,21 +2769,16 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
                                 cellData = generatedTimetableData[selectTarget][day][slot.label];
                             }
                         } else {
+                            let selectedTeacher = afzResolveTeacherRecord(selectTarget);
                             for(let cName in generatedTimetableData) {
                                 if(generatedTimetableData[cName][day] && generatedTimetableData[cName][day][slot.label]) {
                                     let dt = generatedTimetableData[cName][day][slot.label];
-                                    let teacherMatchesTarget = false;
-                                    let selectedTeacher = (databaseRecords.senarai_guru || []).find(g =>
-                                        g.name.trim().toLowerCase() === String(selectTarget).trim().toLowerCase()
-                                    );
-                                    if(selectedTeacher) {
-                                        teacherMatchesTarget =
-                                            String(dt.teacherName || '').trim().toLowerCase() === selectedTeacher.name.trim().toLowerCase() ||
-                                            String(dt.teacherName || '').trim().toLowerCase() === String(selectedTeacher.code || '').trim().toLowerCase();
-                                    } else {
-                                        teacherMatchesTarget =
-                                            String(dt.teacherName || '').trim().toLowerCase() === String(selectTarget).trim().toLowerCase();
-                                    }
+                                    let assignedTeacher = afzResolveTeacherRecord(dt.teacherName);
+                                    let targetName = selectedTeacher ? selectedTeacher.name : selectTarget;
+                                    let teacherMatchesTarget = assignedTeacher
+                                        ? assignedTeacher.name.trim().toLocaleLowerCase('ms-MY') === String(targetName).trim().toLocaleLowerCase('ms-MY')
+                                        : String(dt.teacherName || '').trim().toLocaleLowerCase('ms-MY') === String(selectTarget).trim().toLocaleLowerCase('ms-MY') ||
+                                            (selectedTeacher && String(dt.teacherName || '').trim().toLocaleLowerCase('ms-MY') === String(selectedTeacher.code || '').trim().toLocaleLowerCase('ms-MY'));
                                     if(teacherMatchesTarget) {
                                         cellData = { subjectCode: dt.subjectCode, teacherName: cName };
                                         break;
@@ -3386,12 +3406,19 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
             });
         }
         window.updateLockedSlot = function(className, day, slotLabel, selectEl, type) {
-            let tr = selectEl.closest('tr');
             let subCell = selectEl.closest('td');
             let subSelect = subCell.querySelectorAll('select')[0];
             let teachSelect = subCell.querySelectorAll('select')[1];
             let subCode = subSelect.value;
             let teachName = teachSelect.value;
+
+            if(subCode && !teachName) {
+                let existingLock = lockedSlotsData[className] && lockedSlotsData[className][day]
+                    ? lockedSlotsData[className][day][slotLabel] : null;
+                if(type === 'teach' && existingLock) renderLockSlotTable();
+                showCustomAlert('Sila pilih guru sebelum menetapkan slot terkunci.');
+                return;
+            }
             
             if(!lockedSlotsData[className]) lockedSlotsData[className] = {};
             if(!lockedSlotsData[className][day]) lockedSlotsData[className][day] = {};
@@ -3408,13 +3435,13 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
             } else {
                 lockedSlotsData[className][day][slotLabel] = {
                     subjectCode: subCode,
-                    teacherName: teachName || 'ASRI B MOHD ZAIN'
+                    teacherName: teachName
                 };
                 if(!generatedTimetableData[className]) generatedTimetableData[className] = {};
                 if(!generatedTimetableData[className][day]) generatedTimetableData[className][day] = {};
                 generatedTimetableData[className][day][slotLabel] = {
                     subjectCode: subCode,
-                    teacherName: teachName || 'ASRI B MOHD ZAIN'
+                    teacherName: teachName
                 };
             }
             
