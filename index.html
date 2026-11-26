@@ -978,21 +978,56 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
                         </div>
                     </div>
                 </div>
-                <div class="lg:col-span-7 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
-                    <div class="flex justify-between items-center border-b pb-3">
-                        <h3 class="text-base font-bold text-[#0b1b3d]">Status Pengisian Jadual Waktu</h3>
+                <div class="lg:col-span-7 space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                        <div class="flex justify-between items-center border-b pb-3">
+                            <h3 class="text-base font-bold text-[#0b1b3d]">Status Pengisian Jadual Waktu</h3>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full border-collapse border border-slate-200 text-xs">
+                                <thead>
+                                    <tr class="bg-slate-100 text-slate-700 font-bold text-center">
+                                        <th class="border border-slate-300 p-2.5 text-left pl-4">Kelas</th>
+                                        <th class="border border-slate-300 p-2.5 w-48">Pengisian</th>
+                                        <th class="border border-slate-300 p-2.5 w-44">Tindakan</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="class-status-tbody" class="font-medium"></tbody>
+                            </table>
+                        </div>
                     </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full border-collapse border border-slate-200 text-xs">
-                            <thead>
-                                <tr class="bg-slate-100 text-slate-700 font-bold text-center">
-                                    <th class="border border-slate-300 p-2.5 text-left pl-4">Kelas</th>
-                                    <th class="border border-slate-300 p-2.5 w-48">Pengisian</th>
-                                    <th class="border border-slate-300 p-2.5 w-44">Tindakan</th>
-                                </tr>
-                            </thead>
-                            <tbody id="class-status-tbody" class="font-medium"></tbody>
-                        </table>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                        <div class="flex items-center space-x-3 border-b pb-3">
+                            <div class="bg-indigo-100 text-indigo-900 p-2 rounded-xl text-lg font-bold">⚙️</div>
+                            <h3 class="text-base font-bold text-[#0b1b3d]">Tetapan Penjanaan</h3>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                            <div>
+                                <label for="generation-max-consecutive" class="font-semibold text-slate-700 block mb-1">Bilangan maksimum waktu mengajar berturut-turut bagi guru</label>
+                                <input id="generation-max-consecutive" type="number" min="1" max="30" step="1" class="w-full px-3 py-2 border rounded-xl bg-slate-50 font-medium text-[#0b1b3d]">
+                            </div>
+                            <div>
+                                <label for="generation-max-teacher-daily" class="font-semibold text-slate-700 block mb-1">Bilangan maksimum waktu mengajar sehari bagi guru</label>
+                                <input id="generation-max-teacher-daily" type="number" min="1" max="30" step="1" class="w-full px-3 py-2 border rounded-xl bg-slate-50 font-medium text-[#0b1b3d]">
+                            </div>
+                            <div>
+                                <label for="generation-max-subject-daily" class="font-semibold text-slate-700 block mb-1">Bilangan maksimum mata pelajaran sehari bagi kelas</label>
+                                <input id="generation-max-subject-daily" type="number" min="1" max="30" step="1" class="w-full px-3 py-2 border rounded-xl bg-slate-50 font-medium text-[#0b1b3d]">
+                            </div>
+                            <div>
+                                <label for="generation-max-heavy-daily" class="font-semibold text-slate-700 block mb-1">Bilangan maksimum mata pelajaran teras / berat sehari bagi kelas</label>
+                                <input id="generation-max-heavy-daily" type="number" min="1" max="30" step="1" class="w-full px-3 py-2 border rounded-xl bg-slate-50 font-medium text-[#0b1b3d]">
+                            </div>
+                        </div>
+                        <p class="text-[11px] text-slate-500">Had mata pelajaran mengira bilangan waktu bagi subjek yang sama dalam sehari. Subjek teras/berat dikenal pasti melalui perkataan “teras” atau “berat” dalam ruangan kategori mata pelajaran.</p>
+                        <label class="flex items-start space-x-2 cursor-pointer text-xs text-slate-700">
+                            <input type="checkbox" id="generation-balance-weekly" class="mt-0.5 rounded border-slate-300">
+                            <span>Agihkan waktu secara seragam pada setiap minggu (Jadual Anjal)</span>
+                        </label>
+                        <div class="flex justify-end gap-2 pt-2 border-t">
+                            <button type="button" onclick="cancelGenerationSettings()" class="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 font-semibold hover:bg-slate-50 transition">Batal</button>
+                            <button type="button" onclick="saveGenerationSettings()" class="px-4 py-2 bg-[#0b1b3d] hover:bg-[#132d60] text-white rounded-lg font-semibold shadow transition">Simpan</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1563,6 +1598,13 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
         let generatedTimetableData = {};
         let lockedSlotsData = {}; 
         let savedTimetableVersions = [];
+        let generationSettings = {
+            maxTeacherConsecutive: 2,
+            maxTeacherDaily: 6,
+            maxSubjectDaily: 10,
+            maxHeavyDaily: 10,
+            balanceWeekly: false
+        };
         let gmpAllocations = {};
         let agihanWaktuData = {};
         let expandedTeachersMap = {};
@@ -1743,6 +1785,7 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
                 timeSlotsData = safeParse('school_time_slots', timeSlotsData);
                 blockedTimesData = safeParse('school_blocked_times', blockedTimesData);
                 generatedTimetableData = safeParse('school_generated_timetable', generatedTimetableData);
+                generationSettings = safeParse('school_generation_settings', generationSettings);
                 gmpAllocations = safeParse('school_gmp_allocations', gmpAllocations);
                 agihanWaktuData = safeParse('school_agihan_waktu', agihanWaktuData);
                 lockedSlotsData = safeParse('school_locked_slots', lockedSlotsData);
@@ -1776,6 +1819,8 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
                     if(cloudData.timeSlotsData) timeSlotsData = cloudData.timeSlotsData;
                     if(cloudData.blockedTimesData) blockedTimesData = cloudData.blockedTimesData;
                     if(cloudData.generatedTimetableData) generatedTimetableData = cloudData.generatedTimetableData;
+                    if(cloudData.generationSettings) generationSettings = cloudData.generationSettings;
+                    else generationSettings = safeParse('school_generation_settings', generationSettings);
                     if(cloudData.gmpAllocations) gmpAllocations = cloudData.gmpAllocations;
                     if(cloudData.agihanWaktuData) agihanWaktuData = cloudData.agihanWaktuData;
                     if(cloudData.lockedSlotsData) lockedSlotsData = cloudData.lockedSlotsData;
@@ -1969,6 +2014,7 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
             localStorage.setItem('school_time_slots', JSON.stringify(timeSlotsData));
             localStorage.setItem('school_blocked_times', JSON.stringify(blockedTimesData));
             localStorage.setItem('school_generated_timetable', JSON.stringify(generatedTimetableData));
+            localStorage.setItem('school_generation_settings', JSON.stringify(generationSettings));
             localStorage.setItem('school_gmp_allocations', JSON.stringify(gmpAllocations));
             localStorage.setItem('school_agihan_waktu', JSON.stringify(agihanWaktuData));
             localStorage.setItem('school_locked_slots', JSON.stringify(lockedSlotsData));
@@ -1988,6 +2034,7 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
                     timeSlotsData,
                     blockedTimesData,
                     generatedTimetableData,
+                    generationSettings,
                     gmpAllocations,
                     agihanWaktuData,
                     lockedSlotsData,
@@ -2607,7 +2654,7 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
                             let cName = match[1].trim();
                             let sDetails = match[2].split(', ').map(s => s.trim());
                             sDetails.forEach(sd => {
-                                let subMatch = sd.match(/^(.*?)\s*\((\d+)\s*Masa\)$/) || sd.match(/^(.*?)\s*\((\d+)\)$/);
+                                let subMatch = sd.match(/^(.*?ta)\s*\((\d+)\s*Masa\)$/) || sd.match(/^(.*?)\s*\((\d+)\)$/);
                                 let sNameOrCode = subMatch ? subMatch[1].trim() : sd;
                                 let masa = subMatch ? parseInt(subMatch[2]) : 2;
                                 totalMasa += masa;
@@ -2973,13 +3020,79 @@ if(list.length === 0) { showCustomAlert('Sila pilih guru terlebih dahulu.'); ret
 afzRunPrint(n, 'guru', list, scope === 'dipilih');
 });
 };
+        function afzNormaliseGenerationSettings(settings) {
+            const defaults = {
+                maxTeacherConsecutive: 2,
+                maxTeacherDaily: 6,
+                maxSubjectDaily: 10,
+                maxHeavyDaily: 10,
+                balanceWeekly: false
+            };
+            const source = settings && typeof settings === 'object' ? settings : {};
+            const numberSetting = (key, fallback) => {
+                const value = Number(source[key]);
+                return Number.isInteger(value) && value >= 1 && value <= 30 ? value : fallback;
+            };
+            return {
+                maxTeacherConsecutive: numberSetting('maxTeacherConsecutive', defaults.maxTeacherConsecutive),
+                maxTeacherDaily: numberSetting('maxTeacherDaily', defaults.maxTeacherDaily),
+                maxSubjectDaily: numberSetting('maxSubjectDaily', defaults.maxSubjectDaily),
+                maxHeavyDaily: numberSetting('maxHeavyDaily', defaults.maxHeavyDaily),
+                balanceWeekly: source.balanceWeekly === true
+            };
+        }
+        function renderGenerationSettings() {
+            generationSettings = afzNormaliseGenerationSettings(generationSettings);
+            const fields = [
+                ['generation-max-consecutive', 'maxTeacherConsecutive'],
+                ['generation-max-teacher-daily', 'maxTeacherDaily'],
+                ['generation-max-subject-daily', 'maxSubjectDaily'],
+                ['generation-max-heavy-daily', 'maxHeavyDaily']
+            ];
+            fields.forEach(([elementId, settingKey]) => {
+                const input = document.getElementById(elementId);
+                if(input) input.value = generationSettings[settingKey];
+            });
+            const balanceInput = document.getElementById('generation-balance-weekly');
+            if(balanceInput) balanceInput.checked = generationSettings.balanceWeekly;
+        }
+        window.cancelGenerationSettings = function() {
+            renderGenerationSettings();
+        };
+        window.saveGenerationSettings = async function() {
+            const fields = [
+                ['generation-max-consecutive', 'maxTeacherConsecutive'],
+                ['generation-max-teacher-daily', 'maxTeacherDaily'],
+                ['generation-max-subject-daily', 'maxSubjectDaily'],
+                ['generation-max-heavy-daily', 'maxHeavyDaily']
+            ];
+            const nextSettings = {};
+            for(const [elementId, settingKey] of fields) {
+                const input = document.getElementById(elementId);
+                const value = input ? Number(input.value) : NaN;
+                if(!Number.isInteger(value) || value < 1 || value > 30) {
+                    if(input) input.focus();
+                    return showCustomAlert('Sila masukkan had antara 1 hingga 30 bagi setiap tetapan penjanaan.');
+                }
+                nextSettings[settingKey] = value;
+            }
+            const balanceInput = document.getElementById('generation-balance-weekly');
+            nextSettings.balanceWeekly = Boolean(balanceInput && balanceInput.checked);
+            generationSettings = nextSettings;
+            const savedToCloud = await saveDatabaseToCloud();
+            showCustomAlert(savedToCloud
+                ? 'Tetapan penjanaan berjaya disimpan.'
+                : 'Tetapan penjanaan disimpan pada peranti ini, tetapi gagal disimpan ke awan. Semak sambungan dan cuba simpan semula.');
+        };
         function initJanaAutoTab() {
             const selectClass = document.getElementById('auto-select-class');
-            if(!selectClass) return;
-            selectClass.innerHTML = '<option value="Semua">Semua kelas</option>';
-            (databaseRecords.kelas || []).forEach(k => {
-                selectClass.innerHTML += `<option value="${k.name}">${k.name}</option>`;
-            });
+            if(selectClass) {
+                selectClass.innerHTML = '<option value="Semua">Semua kelas</option>';
+                (databaseRecords.kelas || []).forEach(k => {
+                    selectClass.innerHTML += `<option value="${k.name}">${k.name}</option>`;
+                });
+            }
+            renderGenerationSettings();
             renderClassStatusTable();
         }
         function renderClassStatusTable() {
@@ -3170,7 +3283,31 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
                     remaining[classRecord.name][subject.code] = (remaining[classRecord.name][subject.code] || 0) + 1;
                 });
             });
+            const settings = afzNormaliseGenerationSettings(generationSettings);
             const teacherKey = teacherName => String(teacherName || '').trim().toLocaleLowerCase('ms-MY');
+            const teacherDayKey = (key, day) => `${key}::${day}`;
+            const classSubjectDayKey = (className, day, subjectCode) => `${className}::${day}::${subjectCode}`;
+            const heavySubjectCodes = new Set((databaseRecords.subjek || [])
+                .filter(subject => /\b(teras|berat)\b/i.test(String(subject.category || subject.details || subject.kategori || '')))
+                .map(subject => String(subject.code)));
+            const teacherDayCounts = new Map();
+            const teacherPeriodAssignments = new Map();
+            const classSubjectDayCounts = new Map();
+            const classHeavyDayCounts = new Map();
+            const incrementCount = (counts, key, amount) => {
+                const nextCount = (counts.get(key) || 0) + amount;
+                if(nextCount > 0) counts.set(key, nextCount);
+                else counts.delete(key);
+                return nextCount;
+            };
+            const fixedIssues = [];
+            const fixedIssueSet = new Set();
+            const addFixedIssue = message => {
+                if(!fixedIssueSet.has(message)) {
+                    fixedIssueSet.add(message);
+                    fixedIssues.push(message);
+                }
+            };
             const fixedBusy = periods.map(() => new Set());
             periods.forEach((period, periodIndex) => {
                 Object.keys(generatedTimetableData || {}).forEach(className => {
@@ -3188,13 +3325,58 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
                             generatedTimetableData[className][period.day][period.slot.label] = locked;
                         }
                         remaining[className][fixed.subjectCode]--;
+                        const subjectDayKey = classSubjectDayKey(className, period.day, fixed.subjectCode);
+                        const subjectCount = incrementCount(classSubjectDayCounts, subjectDayKey, 1);
+                        if(subjectCount > settings.maxSubjectDaily) {
+                            addFixedIssue(`${className}, ${period.day}: subjek ${fixed.subjectCode} melebihi had ${settings.maxSubjectDaily} waktu sehari.`);
+                        }
+                        if(heavySubjectCodes.has(String(fixed.subjectCode))) {
+                            const heavyCount = incrementCount(classHeavyDayCounts, `${className}::${period.day}`, 1);
+                            if(heavyCount > settings.maxHeavyDaily) {
+                                addFixedIssue(`${className}, ${period.day}: subjek teras/berat melebihi had ${settings.maxHeavyDaily} waktu sehari.`);
+                            }
+                        }
                     }
                     if(fixed.teacherName) {
                         const knownTeacher = afzTeacherNameFromCode(fixed.teacherName) || fixed.teacherName;
-                        fixedBusy[periodIndex].add(teacherKey(knownTeacher));
+                        const key = teacherKey(knownTeacher);
+                        fixedBusy[periodIndex].add(key);
+                        incrementCount(teacherDayCounts, teacherDayKey(key, period.day), 1);
+                        if(!teacherPeriodAssignments.has(key)) teacherPeriodAssignments.set(key, new Set());
+                        teacherPeriodAssignments.get(key).add(periodIndex);
                     }
                 });
             });
+            teacherDayCounts.forEach((count, key) => {
+                if(count > settings.maxTeacherDaily) {
+                    const [teacher, day] = key.split('::');
+                    addFixedIssue(`${afzTeacherNameFromCode(teacher) || teacher}, ${day}: melebihi had ${settings.maxTeacherDaily} waktu mengajar sehari.`);
+                }
+            });
+            const periodSlotIndexes = periods.map(period => timeSlotsData.indexOf(period.slot));
+            teacherPeriodAssignments.forEach((assignedPeriods, teacher) => {
+                const sortedPeriods = [...assignedPeriods].sort((a, b) => a - b);
+                let streak = 0;
+                let previousDay = '';
+                let previousSlotIndex = -2;
+                sortedPeriods.forEach(periodIndex => {
+                    const period = periods[periodIndex];
+                    const slotIndex = periodSlotIndexes[periodIndex];
+                    streak = period.day === previousDay && slotIndex === previousSlotIndex + 1 ? streak + 1 : 1;
+                    if(streak > settings.maxTeacherConsecutive) {
+                        addFixedIssue(`${afzTeacherNameFromCode(teacher) || teacher}, ${period.day}: melebihi had ${settings.maxTeacherConsecutive} waktu mengajar berturut-turut.`);
+                    }
+                    previousDay = period.day;
+                    previousSlotIndex = slotIndex;
+                });
+            });
+            if(fixedIssues.length) {
+                generatedTimetableData = previousSchedule;
+                return {
+                    success: false,
+                    message: 'Tetapan Penjanaan bercanggah dengan slot sedia ada/kunci; perubahan dibatalkan:\n' + fixedIssues.slice(0, 8).join('\n')
+                };
+            }
             const teacherNames = new Map();
             const blockedByTeacher = new Map();
             (databaseRecords.senarai_guru || []).forEach(teacher => {
@@ -3223,6 +3405,22 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
                 futureAvailability.set(key, available);
             });
             const failures = [];
+            const hasConsecutiveCapacity = (teacher, candidatePeriodIndex) => {
+                const assignedPeriods = teacherPeriodAssignments.get(teacher) || new Set();
+                const sortedPeriods = [...assignedPeriods, candidatePeriodIndex].sort((a, b) => a - b);
+                let streak = 0;
+                let previousDay = '';
+                let previousSlotIndex = -2;
+                for(const assignedPeriodIndex of sortedPeriods) {
+                    const assignedPeriod = periods[assignedPeriodIndex];
+                    const slotIndex = periodSlotIndexes[assignedPeriodIndex];
+                    streak = assignedPeriod.day === previousDay && slotIndex === previousSlotIndex + 1 ? streak + 1 : 1;
+                    if(streak > settings.maxTeacherConsecutive) return false;
+                    previousDay = assignedPeriod.day;
+                    previousSlotIndex = slotIndex;
+                }
+                return true;
+            };
             for(let periodIndex = 0; periodIndex < periods.length; periodIndex++) {
                 const period = periods[periodIndex];
                 const busy = new Set(fixedBusy[periodIndex]);
@@ -3252,7 +3450,13 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
                             .filter(option => {
                                 const key = teacherKey(option.teacherName);
                                 const blocked = blockedByTeacher.get(key);
-                                return option.teacherName && blocked && !blocked[periodIndex] && !busy.has(key);
+                                const subjectDayKey = classSubjectDayKey(classRecord.name, period.day, option.subjectCode);
+                                const heavyCount = classHeavyDayCounts.get(`${classRecord.name}::${period.day}`) || 0;
+                                return option.teacherName && blocked && !blocked[periodIndex] && !busy.has(key) &&
+                                    (teacherDayCounts.get(teacherDayKey(key, period.day)) || 0) < settings.maxTeacherDaily &&
+                                    hasConsecutiveCapacity(key, periodIndex) &&
+                                    (classSubjectDayCounts.get(subjectDayKey) || 0) < settings.maxSubjectDaily &&
+                                    (!heavySubjectCodes.has(String(option.subjectCode)) || heavyCount < settings.maxHeavyDaily);
                             });
                         const slackFor = option => {
                             const key = teacherKey(option.teacherName);
@@ -3260,7 +3464,14 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
                             return (available ? available[periodIndex + 1] : 0) -
                                 ((remainingDemand.get(key) || 0) - 1);
                         };
-                        options.sort((a, b) => slackFor(a) - slackFor(b));
+                        options.sort((a, b) => {
+                            if(settings.balanceWeekly) {
+                                const aCount = classSubjectDayCounts.get(classSubjectDayKey(classRecord.name, period.day, a.subjectCode)) || 0;
+                                const bCount = classSubjectDayCounts.get(classSubjectDayKey(classRecord.name, period.day, b.subjectCode)) || 0;
+                                if(aCount !== bCount) return aCount - bCount;
+                            }
+                            return slackFor(a) - slackFor(b);
+                        });
                         const slack = options.length ? slackFor(options[0]) : Infinity;
                         if(!bestOptions || options.length < bestOptions.length ||
                             (options.length === bestOptions.length && slack < bestSlack)) {
@@ -3278,6 +3489,13 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
                         remaining[classRecord.name][option.subjectCode]--;
                         remainingDemand.set(key, (remainingDemand.get(key) || 0) - 1);
                         busy.add(key);
+                        incrementCount(teacherDayCounts, teacherDayKey(key, period.day), 1);
+                        if(!teacherPeriodAssignments.has(key)) teacherPeriodAssignments.set(key, new Set());
+                        teacherPeriodAssignments.get(key).add(periodIndex);
+                        incrementCount(classSubjectDayCounts, classSubjectDayKey(classRecord.name, period.day, option.subjectCode), 1);
+                        if(heavySubjectCodes.has(String(option.subjectCode))) {
+                            incrementCount(classHeavyDayCounts, `${classRecord.name}::${period.day}`, 1);
+                        }
                         if(!generatedTimetableData[classRecord.name][period.day]) {
                             generatedTimetableData[classRecord.name][period.day] = {};
                         }
@@ -3289,12 +3507,19 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
                         delete generatedTimetableData[classRecord.name][period.day][period.slot.label];
                         busy.delete(key);
                         remainingDemand.set(key, (remainingDemand.get(key) || 0) + 1);
+                        incrementCount(teacherDayCounts, teacherDayKey(key, period.day), -1);
+                        teacherPeriodAssignments.get(key).delete(periodIndex);
+                        if(teacherPeriodAssignments.get(key).size === 0) teacherPeriodAssignments.delete(key);
+                        incrementCount(classSubjectDayCounts, classSubjectDayKey(classRecord.name, period.day, option.subjectCode), -1);
+                        if(heavySubjectCodes.has(String(option.subjectCode))) {
+                            incrementCount(classHeavyDayCounts, `${classRecord.name}::${period.day}`, -1);
+                        }
                         remaining[classRecord.name][option.subjectCode]++;
                     }
                     return false;
                 };
                 if(!solvePeriod(pending)) {
-                    failures.push(`${period.day}, waktu ${period.slot.label}: guru yang tersedia tidak cukup untuk mengisi semua kelas.`);
+                    failures.push(`${period.day}, waktu ${period.slot.label}: tiada penempatan yang memenuhi kekangan guru dan Tetapan Penjanaan.`);
                     break;
                 }
             }
