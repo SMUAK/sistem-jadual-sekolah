@@ -1877,6 +1877,25 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
                 (parseInt(allocation.triple, 10) || 0) * 3
             );
         }
+        function removeGMPAssignmentFromTeacherCategories(className, subjectCode) {
+            const normalize = value => String(value || '').trim().toLocaleLowerCase('ms-MY');
+            const subject = (databaseRecords.subjek || []).find(item => normalize(item.code) === normalize(subjectCode));
+            const subjectIdentifiers = new Set([subjectCode, subject && subject.name].filter(Boolean).map(normalize));
+            (databaseRecords.guru || []).forEach(teacher => {
+                if(!teacher.category || teacher.category === 'Tiada Opsyen Dipilih') return;
+                const remainingSegments = teacher.category.split(' | ').flatMap(segment => {
+                    const match = segment.match(/^(.*?)\s*\[(.*?)\]$/);
+                    if(!match || normalize(match[1]) !== normalize(className)) return [segment];
+                    const remainingSubjects = match[2].split(', ').filter(detail => {
+                        const subjectMatch = detail.match(/^(.*?)\s*\((?:\d+\s*Masa|\d+)\)$/);
+                        const detailCode = subjectMatch ? subjectMatch[1].trim() : detail.trim();
+                        return !subjectIdentifiers.has(normalize(detailCode));
+                    });
+                    return remainingSubjects.length ? [`${match[1].trim()} [${remainingSubjects.join(', ')}]`] : [];
+                });
+                teacher.category = remainingSegments.length ? remainingSegments.join(' | ') : 'Tiada Opsyen Dipilih';
+            });
+        }
         function syncGMPAllocationsToGuruData() {
             (databaseRecords.guru || []).forEach(teacher => {
                 if(!teacher.category || teacher.category === 'Tiada Opsyen Dipilih') return;
@@ -2557,6 +2576,7 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
                                 delete gmpAllocations[k];
                             }
                         }
+                        removeGMPAssignmentFromTeacherCategories(kelas, subjekCode);
                         saveDatabaseToCloud();
                         renderGMPMatrix();
                         renderGMPTree();
