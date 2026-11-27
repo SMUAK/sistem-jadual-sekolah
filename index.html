@@ -2654,7 +2654,7 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
                             let cName = match[1].trim();
                             let sDetails = match[2].split(', ').map(s => s.trim());
                             sDetails.forEach(sd => {
-                                let subMatch = sd.match(/^(.*?ta)\s*\((\d+)\s*Masa\)$/) || sd.match(/^(.*?)\s*\((\d+)\)$/);
+                                let subMatch = sd.match(/^(.*?)\s*\((\d+)\s*(?:Masa)?\)$/);
                                 let sNameOrCode = subMatch ? subMatch[1].trim() : sd;
                                 let masa = subMatch ? parseInt(subMatch[2]) : 2;
                                 totalMasa += masa;
