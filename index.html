@@ -1075,38 +1075,11 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
         </section>
         <!-- TAB BERPUSAT: JADUAL GURU GANTI -->
         <section id="tab-jadual_guru_ganti" class="hidden space-y-6">
-            <!-- Pilihan Menu Utama (Landing View) -->
-            <div id="relief-landing-view" class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 space-y-6">
-                <div class="text-center max-w-xl mx-auto space-y-2">
-                    <h2 class="text-2xl font-bold text-[#0b1b3d]">Pusat Pengurusan Jadual Guru Ganti</h2>
-                    <p class="text-xs text-slate-500">Sila pilih modul pengurusan guru ganti harian atau paparan laporan lengkap.</p>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto pt-4">
-                    <!-- Butang 1: Guru Ganti Harian -->
-                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-4 text-center hover:border-indigo-300 transition shadow-sm">
-                        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-tr from-emerald-500 to-teal-400 text-white rounded-2xl shadow-md text-3xl mb-1">🪪</div>
-                        <h3 class="font-bold text-[#0b1b3d] text-base">1. Penetapan Guru Ganti</h3>
-                        <p class="text-xs text-slate-500">Tetapkan guru tidak hadir, guru dikecualikan, dan pilih penugasan guru ganti harian.</p>
-                        <button onclick="openReliefSubView('harian')" class="w-full bg-[#0b1b3d] hover:bg-[#132d60] text-white py-3 rounded-xl text-xs font-bold shadow transition flex items-center justify-center space-x-2">
-                            <span>📅</span><span>Guru Ganti (Harian)</span>
-                        </button>
-                    </div>
-                    <!-- Butang 2: Laporan -->
-                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-4 text-center hover:border-indigo-300 transition shadow-sm">
-                        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-tr from-indigo-500 to-blue-500 text-white rounded-2xl shadow-md text-3xl mb-1">📊</div>
-                        <h3 class="font-bold text-[#0b1b3d] text-base">2. Laporan Penugasan Relief</h3>
-                        <p class="text-xs text-slate-500">Lihat ringkasan penugasan harian/mingguan, cetak laporan dan analisis log simpanan.</p>
-                        <button onclick="openReliefSubView('laporan')" class="w-full bg-[#0b1b3d] hover:bg-[#132d60] text-white py-3 rounded-xl text-xs font-bold shadow transition flex items-center justify-center space-x-2">
-                            <span>📈</span><span>Laporan (Harian/Mingguan)</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
             <!-- Sub-View 1: Tetapan Guru Ganti Harian -->
             <div id="relief-harian-subview" class="hidden space-y-6">
                 <div class="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200">
-                    <button onclick="backToReliefLanding()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center space-x-1">
-                        <span>⬅️ Kembali ke Pusat Pengurusan</span>
+                    <button onclick="backToReliefDaily()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center space-x-1">
+                        <span>⬅️ Kembali ke Penetapan Relief Harian</span>
                     </button>
                     <div class="flex items-center gap-2">
                         <span class="text-xs font-bold text-[#0b1b3d] hidden sm:inline">Penetapan Relief Harian</span>
@@ -1195,8 +1168,8 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
             <!-- Sub-View 2: Laporan Relief -->
             <div id="relief-laporan-subview" class="hidden space-y-6">
                 <div class="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200">
-                    <button onclick="backToReliefLanding()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center space-x-1">
-                        <span>⬅️ Kembali ke Pusat Pengurusan</span>
+                    <button onclick="backToReliefDaily()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center space-x-1">
+                        <span>⬅️ Kembali ke Penetapan Relief Harian</span>
                     </button>
                     <div class="flex space-x-2">
                         <button onclick="window.print()" class="px-3 py-1.5 bg-slate-800 text-white rounded-lg text-xs font-bold shadow">🖨️ Cetak Laporan</button>
@@ -4605,13 +4578,10 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
             return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
         }
         
-        window.backToReliefLanding = function() {
-            document.getElementById('relief-landing-view').classList.remove('hidden');
-            document.getElementById('relief-harian-subview').classList.add('hidden');
-            document.getElementById('relief-laporan-subview').classList.add('hidden');
+        window.backToReliefDaily = function() {
+            openReliefSubView('harian');
         };
         window.openReliefSubView = function(viewType) {
-            document.getElementById('relief-landing-view').classList.add('hidden');
             if(viewType === 'harian') {
                 document.getElementById('relief-harian-subview').classList.remove('hidden');
                 document.getElementById('relief-laporan-subview').classList.add('hidden');
