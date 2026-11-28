@@ -1164,7 +1164,7 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
                                 </div>
                             </div>
                             <button onclick="saveReliefAssignments()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-bold shadow transition flex items-center space-x-1">
-                                <span>✓</span><span>Sahkan & Simpan Tugasan</span>
+                                <span>✓</span><span>Sahkan & Simpan Tugasan (Auto Jika Kosong)</span>
                             </button>
                         </div>
                         <div class="overflow-x-auto">
@@ -4818,7 +4818,42 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
             document.querySelectorAll('#relief-assignments-tbody select').forEach(sel => {
                 if(sel.value) busyTeacherNames.push(sel.value);
             });
-            return allGuru.filter(g => !busyTeacherNames.includes(g.name) && !reliefAbsentTeachers.includes(g.name));
+            return allGuru.filter(g =>
+                !busyTeacherNames.includes(g.name) &&
+                !reliefAbsentTeachers.includes(g.name) &&
+                !reliefExemptTeachers.includes(g.name)
+            );
+        }
+        function getFreeSlotCount(dayName, teacherName) {
+            let freeCount = 0;
+            let learningSlots = timeSlotsData.filter(slot => slot.type === 'Waktu belajar');
+            learningSlots.forEach(slot => {
+                let isBusy = false;
+                for(let cName in generatedTimetableData) {
+                    if(generatedTimetableData[cName][dayName] &&
+                       generatedTimetableData[cName][dayName][slot.label] &&
+                       generatedTimetableData[cName][dayName][slot.label].teacherName === teacherName) {
+                        isBusy = true;
+                        break;
+                    }
+                }
+                if(!isBusy) freeCount++;
+            });
+            return freeCount;
+        }
+        function chooseRandomTeacherWithMostFreeSlots(dayName, slotLabel, assignedTeachers) {
+            let candidates = getFreeTeachersForSlot(dayName, slotLabel).filter(ft =>
+                !assignedTeachers.has(ft.name)
+            );
+            if(candidates.length === 0) return '';
+
+            let maxFreeSlots = Math.max(...candidates.map(ft =>
+                getFreeSlotCount(dayName, ft.name)
+            ));
+            let bestCandidates = candidates.filter(ft =>
+                getFreeSlotCount(dayName, ft.name) === maxFreeSlots
+            );
+            return bestCandidates[Math.floor(Math.random() * bestCandidates.length)].name;
         }
         window.saveReliefAssignments = function() {
             let picker = document.getElementById('relief-date-picker');
@@ -4836,6 +4871,14 @@ afzRunPrint(n, 'guru', list, scope === 'dipilih');
                 let slotLabel = sel.getAttribute('data-slot');
                 let absentTeacher = sel.getAttribute('data-absent');
                 let subjectCode = sel.getAttribute('data-subject');
+                if(!subTeacher) {
+                    subTeacher = chooseRandomTeacherWithMostFreeSlots(
+                        document.getElementById('relief-current-day').innerText,
+                        slotLabel,
+                        assignedTeachers
+                    );
+                    if(subTeacher) sel.value = subTeacher;
+                }
                 if(subTeacher) {
                     if(assignedTeachers.has(subTeacher)) {
                         return;
