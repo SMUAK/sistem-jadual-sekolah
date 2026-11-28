@@ -1108,7 +1108,12 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
                     <button onclick="backToReliefLanding()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center space-x-1">
                         <span>⬅️ Kembali ke Pusat Pengurusan</span>
                     </button>
-                    <span class="text-xs font-bold text-[#0b1b3d]">Penetapan Relief Harian</span>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-bold text-[#0b1b3d] hidden sm:inline">Penetapan Relief Harian</span>
+                        <button onclick="openReliefSubView('laporan')" class="px-4 py-2 bg-indigo-900 hover:bg-indigo-800 text-white rounded-xl text-xs font-bold shadow transition flex items-center space-x-1">
+                            <span>📊</span><span>Laporan Penugasan Relief</span>
+                        </button>
+                    </div>
                 </div>
                 
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -2266,7 +2271,7 @@ body.afz-print2 #afz-print2-area.p2-s1, body.afz-print2 #afz-print2-area.p2-s2, 
             if(tabId === 'tetapan_masa_subjek') renderSubjectTimeConfigTable();
             if(tabId === 'jana') { initJanaAutoTab(); renderSavedVersionsList(); }
             if(tabId === 'jadual_induk') initMasterTimetableTab();
-            if(tabId === 'jadual_guru_ganti') backToReliefLanding();
+            if(tabId === 'jadual_guru_ganti') openReliefSubView('harian');
             if(tabId === 'analisa_jadual') renderScheduleAnalysis();
             if(tabId === 'tetapan') updateHeaderSchoolInfoDisplay();
         }
